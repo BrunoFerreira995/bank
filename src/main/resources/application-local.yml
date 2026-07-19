@@ -1,0 +1,5 @@
+celcoin:
+  demo-enabled: true
+logging:
+  level:
+    com.brunopedraca.celcoin: INFO

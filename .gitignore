@@ -1,0 +1,5 @@
+target/
+.mvn/wrapper/apache-maven-*/
+.mvn/wrapper/*-bin.zip
+.env
+.DS_Store

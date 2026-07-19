@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:tc:postgresql:16-alpine:///celcoin
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+celcoin:
+  base-url: http://localhost:8089
+  client-id: test-client
+  client-secret: test-secret
+  webhook:
+    secret: test-webhook-secret

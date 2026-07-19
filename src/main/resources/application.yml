@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: celcoin-spring-sdk
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/celcoin}
+    username: ${SPRING_DATASOURCE_USERNAME:celcoin}
+    password: ${SPRING_DATASOURCE_PASSWORD:celcoin}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+celcoin:
+  enabled: true
+  environment: sandbox
+  base-url: ${CELCOIN_BASE_URL:}
+  client-id: ${CELCOIN_CLIENT_ID:}
+  client-secret: ${CELCOIN_CLIENT_SECRET:}
+  token-path: /v5/token
+  connect-timeout: 5s
+  read-timeout: 20s
+  token-refresh-margin: 60s
+  demo-enabled: ${CELCOIN_DEMO_ENABLED:false}
+  webhook:
+    secret: ${CELCOIN_WEBHOOK_SECRET:}
+    max-payload-bytes: 262144
+    replay-window: 5m
+  retry:
+    max-attempts: 3
+    initial-backoff: 500ms
