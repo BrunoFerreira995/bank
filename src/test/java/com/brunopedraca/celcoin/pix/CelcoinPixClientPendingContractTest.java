@@ -8,6 +8,11 @@ import com.brunopedraca.celcoin.pix.PixDtos.CelcoinPixCashInCautionaryBlockReque
 import com.brunopedraca.celcoin.pix.PixDtos.CelcoinPixCashInDueDateQrCodeRequest;
 import com.brunopedraca.celcoin.pix.PixDtos.CelcoinPixCashInKeyRequest;
 import com.brunopedraca.celcoin.pix.PixDtos.CelcoinPixCashInStaticChargeRequest;
+import com.brunopedraca.celcoin.pix.PixDtos.CelcoinPixCashOutAccountRequest;
+import com.brunopedraca.celcoin.pix.PixDtos.CelcoinPixCashOutCautionaryBlockRequest;
+import com.brunopedraca.celcoin.pix.PixDtos.CelcoinPixCashOutDynamicQrCodeRequest;
+import com.brunopedraca.celcoin.pix.PixDtos.CelcoinPixCashOutStaticQrCodeRequest;
+import com.brunopedraca.celcoin.pix.PixDtos.CelcoinPixCashOutTransferListRequest;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,6 +71,40 @@ class CelcoinPixClientPendingContractTest {
     void shouldRejectCashInCautionaryBlockUntilOfficialContractIsAdded() {
         assertPendingContract(() -> client.createCashInCautionaryBlock(
                 new CelcoinPixCashInCautionaryBlockRequest("transaction-1", "suspected fraud", null), "block-1"));
+    }
+
+    @Test
+    void shouldRejectAccountCashOutUntilOfficialContractIsAdded() {
+        assertPendingContract(() -> client.cashOutToAccount(
+                new CelcoinPixCashOutAccountRequest(
+                        "source-1", "0001", "12345", "12345678901", "Maria Silva", BigDecimal.TEN, "cash-out", null),
+                "cash-out-1"));
+    }
+
+    @Test
+    void shouldRejectStaticQrCodeCashOutUntilOfficialContractIsAdded() {
+        assertPendingContract(() -> client.cashOutStaticQrCode(
+                new CelcoinPixCashOutStaticQrCodeRequest("account-1", "000201010212", BigDecimal.TEN, "cash-out", null),
+                "cash-out-2"));
+    }
+
+    @Test
+    void shouldRejectDynamicQrCodeCashOutUntilOfficialContractIsAdded() {
+        assertPendingContract(() -> client.cashOutDynamicQrCode(
+                new CelcoinPixCashOutDynamicQrCodeRequest("account-1", "000201010212", "cash-out", null),
+                "cash-out-3"));
+    }
+
+    @Test
+    void shouldRejectCashOutTransferListingUntilOfficialContractIsAdded() {
+        assertPendingContract(() -> client.listCashOutTransfers(
+                new CelcoinPixCashOutTransferListRequest("account-1", "CONFIRMED", null, null, 0, 20)));
+    }
+
+    @Test
+    void shouldRejectCashOutCautionaryBlockUntilOfficialContractIsAdded() {
+        assertPendingContract(() -> client.createCashOutCautionaryBlock(
+                new CelcoinPixCashOutCautionaryBlockRequest("transaction-1", "suspected fraud", null), "block-2"));
     }
 
     private void assertPendingContract(ThrowingCallable callable) {

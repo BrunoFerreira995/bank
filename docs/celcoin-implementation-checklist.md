@@ -146,14 +146,14 @@ Legenda:
 
 - [~] Implementar DICT.
 - [~] Consultar chaves Pix externas DICT.
-- [ ] Realizar Pix Cash-out por agência e conta.
+- [~] Realizar Pix Cash-out por agência e conta.
 - [~] Realizar Pix Cash-out por chave Pix.
-- [ ] Realizar Pix Cash-out por QR Code estático.
-- [ ] Realizar Pix Cash-out por QR Code dinâmico.
+- [~] Realizar Pix Cash-out por QR Code estático.
+- [~] Realizar Pix Cash-out por QR Code dinâmico.
 - [~] Consultar transferências, pagamentos e devoluções de Pix-out.
 - [ ] Mapear tabela de erros Cash-out.
-- [ ] Implementar modelo de webhook Cash-out.
-- [ ] Implementar bloqueio cautelar de envio Pix.
+- [~] Implementar modelo de webhook Cash-out.
+- [~] Implementar bloqueio cautelar de envio Pix.
 
 ### Gerenciamento de Chaves
 
@@ -320,49 +320,49 @@ Legenda:
 
 ## Subadquirência e AaaS
 
-- [ ] Consultar status do credenciamento da conta.
-- [ ] Criar cliente.
-- [ ] Listar clientes.
-- [ ] Editar cliente.
-- [ ] Excluir cliente.
-- [ ] Criar cartão.
-- [ ] Listar cartões.
-- [ ] Inativar cartão.
-- [ ] Criar cobrança avulsa no cartão.
-- [ ] Listar cobranças avulsas.
-- [ ] Editar cobrança avulsa.
-- [ ] Retentar cobrança avulsa.
-- [ ] Estornar cobrança avulsa.
-- [ ] Cancelar cobrança avulsa.
-- [ ] Capturar cobrança no cartão.
-- [ ] Solicitar relatório de recebíveis.
-- [ ] Verificar status do relatório de recebíveis.
-- [ ] Visualizar relatório de recebíveis.
-- [ ] Criar plano.
-- [ ] Listar planos.
-- [ ] Editar plano.
-- [ ] Excluir plano.
-- [ ] Criar assinatura com ou sem plano.
-- [ ] Criar assinatura/contrato manual.
-- [ ] Listar assinaturas/contratos.
-- [ ] Adicionar transação.
-- [ ] Editar informações da assinatura/contrato.
-- [ ] Editar pagamento da assinatura/contrato.
-- [ ] Editar transação.
-- [ ] Retentar cobrança no cartão.
-- [ ] Capturar cobrança no cartão.
-- [ ] Estornar cobrança no cartão.
-- [ ] Cancelar assinatura/contrato.
-- [ ] Cancelar transação.
-- [ ] Listar chargebacks.
-- [ ] Enviar documentação de defesa de chargeback.
-- [ ] Desistir da disputa de chargeback.
-- [ ] Cadastrar webhooks de chargeback.
-- [ ] Simular fluxo chargeback sandbox.
-- [ ] Implementar tokenização de cartão via JS.
-- [ ] Listar taxas.
-- [ ] Listar transações.
-- [ ] Implementar extrato de recebíveis.
+- [~] Consultar status do credenciamento da conta.
+- [~] Criar cliente.
+- [~] Listar clientes.
+- [~] Editar cliente.
+- [~] Excluir cliente.
+- [~] Criar cartão.
+- [~] Listar cartões.
+- [~] Inativar cartão.
+- [~] Criar cobrança avulsa no cartão.
+- [~] Listar cobranças avulsas.
+- [~] Editar cobrança avulsa.
+- [~] Retentar cobrança avulsa.
+- [~] Estornar cobrança avulsa.
+- [~] Cancelar cobrança avulsa.
+- [~] Capturar cobrança no cartão.
+- [~] Solicitar relatório de recebíveis.
+- [~] Verificar status do relatório de recebíveis.
+- [~] Visualizar relatório de recebíveis.
+- [~] Criar plano.
+- [~] Listar planos.
+- [~] Editar plano.
+- [~] Excluir plano.
+- [~] Criar assinatura com ou sem plano.
+- [~] Criar assinatura/contrato manual.
+- [~] Listar assinaturas/contratos.
+- [~] Adicionar transação.
+- [~] Editar informações da assinatura/contrato.
+- [~] Editar pagamento da assinatura/contrato.
+- [~] Editar transação.
+- [~] Retentar cobrança no cartão.
+- [~] Capturar cobrança no cartão.
+- [~] Estornar cobrança no cartão.
+- [~] Cancelar assinatura/contrato.
+- [~] Cancelar transação.
+- [~] Listar chargebacks.
+- [~] Enviar documentação de defesa de chargeback.
+- [~] Desistir da disputa de chargeback.
+- [~] Cadastrar webhooks de chargeback.
+- [~] Simular fluxo chargeback sandbox.
+- [~] Implementar tokenização de cartão via JS.
+- [~] Listar taxas.
+- [~] Listar transações.
+- [~] Implementar extrato de recebíveis.
 
 ## Pagamento de Boletos
 
@@ -442,27 +442,27 @@ Legenda:
 ## cel_banking - cards
 
 - [ ] Documentar sobre cel_card.
-- [ ] Criar conta cartão.
-- [ ] Consultar dados de conta cartão.
-- [ ] Consultar limites da conta cartão.
-- [ ] Atualizar dados cadastrais.
-- [ ] Atualizar telefone.
-- [ ] Cancelar conta e cartão.
-- [ ] Implementar endereços.
-- [ ] Emitir cartão.
-- [ ] Emitir segunda via de cartão.
-- [ ] Consultar rastreio.
-- [ ] Simular rastreio.
-- [ ] Ativar cartão.
-- [ ] Alterar status.
-- [ ] Visualizar dados do cartão.
-- [ ] Listar cartões.
-- [ ] Alterar senha Pin Online e Pin Offline.
-- [ ] Implementar simulador de transações.
-- [ ] Cadastrar e gerenciar webhooks de cartão.
-- [ ] Template de webhooks de cartão.
-- [ ] Reenvio de webhook pendente.
-- [ ] Consultar dados de fatura pós-paga.
+- [~] Criar conta cartão.
+- [~] Consultar dados de conta cartão.
+- [~] Consultar limites da conta cartão.
+- [~] Atualizar dados cadastrais.
+- [~] Atualizar telefone.
+- [~] Cancelar conta e cartão.
+- [~] Implementar endereços.
+- [~] Emitir cartão.
+- [~] Emitir segunda via de cartão.
+- [~] Consultar rastreio.
+- [~] Simular rastreio.
+- [~] Ativar cartão.
+- [~] Alterar status.
+- [~] Visualizar dados do cartão.
+- [~] Listar cartões.
+- [~] Alterar senha Pin Online e Pin Offline.
+- [~] Implementar simulador de transações.
+- [~] Cadastrar e gerenciar webhooks de cartão.
+- [~] Template de webhooks de cartão.
+- [~] Reenvio de webhook pendente.
+- [~] Consultar dados de fatura pós-paga.
 
 ## cel_credit
 

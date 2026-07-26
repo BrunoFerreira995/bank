@@ -72,6 +72,34 @@ public interface CelcoinPixOperations {
 
     CelcoinPixPaymentResponse cashOut(CelcoinPixPaymentRequest request, String idempotencyKey);
 
+    default CelcoinPixPaymentResponse cashOutToAccount(CelcoinPixCashOutAccountRequest request) {
+        return cashOutToAccount(request, null);
+    }
+
+    CelcoinPixPaymentResponse cashOutToAccount(CelcoinPixCashOutAccountRequest request, String idempotencyKey);
+
+    default CelcoinPixPaymentResponse cashOutStaticQrCode(CelcoinPixCashOutStaticQrCodeRequest request) {
+        return cashOutStaticQrCode(request, null);
+    }
+
+    CelcoinPixPaymentResponse cashOutStaticQrCode(CelcoinPixCashOutStaticQrCodeRequest request, String idempotencyKey);
+
+    default CelcoinPixPaymentResponse cashOutDynamicQrCode(CelcoinPixCashOutDynamicQrCodeRequest request) {
+        return cashOutDynamicQrCode(request, null);
+    }
+
+    CelcoinPixPaymentResponse cashOutDynamicQrCode(CelcoinPixCashOutDynamicQrCodeRequest request, String idempotencyKey);
+
+    CelcoinPixCashOutTransferListResponse listCashOutTransfers(CelcoinPixCashOutTransferListRequest request);
+
+    default CelcoinPixCashOutCautionaryBlockResponse createCashOutCautionaryBlock(
+            CelcoinPixCashOutCautionaryBlockRequest request) {
+        return createCashOutCautionaryBlock(request, null);
+    }
+
+    CelcoinPixCashOutCautionaryBlockResponse createCashOutCautionaryBlock(
+            CelcoinPixCashOutCautionaryBlockRequest request, String idempotencyKey);
+
     CelcoinPixStatusResponse getStatus(String transactionId);
 
     List<CelcoinPixParticipantResponse> participants();

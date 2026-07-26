@@ -77,6 +77,43 @@ public final class PixDtos {
 
     public record CelcoinPixPaymentResponse(String transactionId, String status, Map<String, Object> raw) {}
 
+    public record CelcoinPixCashOutAccountRequest(
+            @NotBlank String sourceAccountId,
+            @NotBlank String targetBranch,
+            @NotBlank String targetAccount,
+            String targetDocument,
+            String targetName,
+            BigDecimal amount,
+            String description,
+            Map<String, Object> metadata) {}
+
+    public record CelcoinPixCashOutStaticQrCodeRequest(
+            @NotBlank String accountId, @NotBlank String emv, BigDecimal amount, String description, Map<String, Object> metadata) {}
+
+    public record CelcoinPixCashOutDynamicQrCodeRequest(
+            @NotBlank String accountId, @NotBlank String emv, String description, Map<String, Object> metadata) {}
+
+    public record CelcoinPixCashOutTransferListRequest(
+            String accountId, String status, OffsetDateTime startAt, OffsetDateTime endAt, Integer page, Integer size) {}
+
+    public record CelcoinPixCashOutTransferListResponse(
+            List<CelcoinPixPaymentResponse> transfers, Integer page, Integer size, Long total, Map<String, Object> raw) {}
+
+    public record CelcoinPixCashOutWebhookEvent(
+            String eventId,
+            String eventType,
+            String transactionId,
+            String accountId,
+            BigDecimal amount,
+            String status,
+            OffsetDateTime occurredAt,
+            Map<String, Object> raw) {}
+
+    public record CelcoinPixCashOutCautionaryBlockRequest(
+            @NotBlank String transactionId, String reason, Map<String, Object> metadata) {}
+
+    public record CelcoinPixCashOutCautionaryBlockResponse(String blockId, String transactionId, String status, Map<String, Object> raw) {}
+
     public record CelcoinPixStatusResponse(String transactionId, String status, OffsetDateTime updatedAt, Map<String, Object> raw) {}
 
     public record CelcoinPixRefundRequest(@NotBlank String transactionId, BigDecimal amount, String reason) {}

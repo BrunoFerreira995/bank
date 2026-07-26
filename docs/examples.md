@@ -84,6 +84,34 @@ curl -X POST http://localhost:8080/demo/pix/cash-out \
   -d '{"accountId":"acc","pixKey":"chave","amount":10.00,"description":"teste"}'
 ```
 
+## Pix Cash-out por Agencia e Conta
+
+```java
+CelcoinPixCashOutAccountRequest request = new CelcoinPixCashOutAccountRequest(
+        "source-account-1",
+        "0001",
+        "12345",
+        "12345678901",
+        "Maria Silva",
+        BigDecimal.TEN,
+        "cash-out",
+        metadata);
+
+CelcoinPixPaymentResponse response =
+        celcoinClient.pix().cashOutToAccount(request, "cash-out-account-1");
+```
+
+## Pix Cash-out por QR Code
+
+```java
+CelcoinPixCashOutStaticQrCodeRequest request =
+        new CelcoinPixCashOutStaticQrCodeRequest(
+                "account-1", "000201010212", BigDecimal.TEN, "cash-out", metadata);
+
+CelcoinPixPaymentResponse response =
+        celcoinClient.pix().cashOutStaticQrCode(request, "cash-out-qr-1");
+```
+
 ## QR Code Pix
 
 ```bash
@@ -135,6 +163,47 @@ curl -X POST http://localhost:8080/demo/boletos \
   -H 'Content-Type: application/json' \
   -H 'Idempotency-Key: boleto-1' \
   -d '{"accountId":"acc","amount":50.00,"dueDate":"2026-08-10","payer":{}}'
+```
+
+## Subadquirencia e AaaS
+
+```java
+CelcoinAcquiringCustomerRequest customer = new CelcoinAcquiringCustomerRequest(
+        null,
+        "12345678901",
+        "Maria Silva",
+        "maria@example.com",
+        "+5511999999999",
+        address,
+        metadata);
+
+CelcoinAcquiringCustomerResponse response =
+        celcoinClient.acquiring().createCustomer(customer, "acquiring-customer-1");
+```
+
+## Cartoes
+
+```java
+CelcoinCardAccountRequest account = new CelcoinCardAccountRequest(
+        "12345678901",
+        "Maria Silva",
+        "maria@example.com",
+        "+5511999999999",
+        address,
+        metadata);
+
+CelcoinCardAccountResponse accountResponse =
+        celcoinClient.cards().createCardAccount(account, "card-account-1");
+
+CelcoinCardIssueRequest card = new CelcoinCardIssueRequest(
+        accountResponse.cardAccountId(),
+        "Maria Silva",
+        "PHYSICAL",
+        deliveryAddress,
+        metadata);
+
+CelcoinCardResponse cardResponse =
+        celcoinClient.cards().issueCard(card, "issue-card-1");
 ```
 
 ## Webhook

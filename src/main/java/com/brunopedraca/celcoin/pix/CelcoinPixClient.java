@@ -76,6 +76,27 @@ public class CelcoinPixClient implements CelcoinPixOperations {
         throw unspecified();
     }
 
+    public CelcoinPixPaymentResponse cashOutToAccount(CelcoinPixCashOutAccountRequest request, String idempotencyKey) {
+        throw unspecified();
+    }
+
+    public CelcoinPixPaymentResponse cashOutStaticQrCode(CelcoinPixCashOutStaticQrCodeRequest request, String idempotencyKey) {
+        throw unspecified();
+    }
+
+    public CelcoinPixPaymentResponse cashOutDynamicQrCode(CelcoinPixCashOutDynamicQrCodeRequest request, String idempotencyKey) {
+        throw unspecified();
+    }
+
+    public CelcoinPixCashOutTransferListResponse listCashOutTransfers(CelcoinPixCashOutTransferListRequest request) {
+        throw unspecified();
+    }
+
+    public CelcoinPixCashOutCautionaryBlockResponse createCashOutCautionaryBlock(
+            CelcoinPixCashOutCautionaryBlockRequest request, String idempotencyKey) {
+        throw unspecified();
+    }
+
     public CelcoinPixStatusResponse getStatus(String transactionId) {
         throw unspecified();
     }
