@@ -13,6 +13,66 @@ public final class PixDtos {
 
     public record CelcoinPixQrCodeResponse(String qrCodeId, String emv, String status, Map<String, Object> raw) {}
 
+    public record CelcoinPixCashInAccountRequest(
+            @NotBlank String branch,
+            @NotBlank String account,
+            BigDecimal amount,
+            String description,
+            Map<String, Object> metadata) {}
+
+    public record CelcoinPixCashInKeyRequest(
+            @NotBlank String accountId,
+            String keyType,
+            String key,
+            BigDecimal amount,
+            String description,
+            Map<String, Object> metadata) {}
+
+    public record CelcoinPixCashInStaticChargeRequest(
+            @NotBlank String accountId,
+            BigDecimal amount,
+            String description,
+            String payerDocument,
+            String payerName,
+            Map<String, Object> metadata) {}
+
+    public record CelcoinPixCashInDueDateQrCodeRequest(
+            @NotBlank String accountId,
+            BigDecimal amount,
+            OffsetDateTime dueAt,
+            String description,
+            String payerDocument,
+            String payerName,
+            Map<String, Object> metadata) {}
+
+    public record CelcoinPixCashInResponse(
+            String cashInId, String transactionId, String qrCodeId, String emv, String status, Map<String, Object> raw) {}
+
+    public record CelcoinPixCashInReceiptResponse(
+            String cashInId,
+            String transactionId,
+            String accountId,
+            BigDecimal amount,
+            String status,
+            OffsetDateTime receivedAt,
+            Map<String, Object> raw) {}
+
+    public record CelcoinPixCashInWebhookEvent(
+            String eventId,
+            String eventType,
+            String cashInId,
+            String transactionId,
+            String accountId,
+            BigDecimal amount,
+            String status,
+            OffsetDateTime occurredAt,
+            Map<String, Object> raw) {}
+
+    public record CelcoinPixCashInCautionaryBlockRequest(
+            @NotBlank String transactionId, String reason, Map<String, Object> metadata) {}
+
+    public record CelcoinPixCashInCautionaryBlockResponse(String blockId, String transactionId, String status, Map<String, Object> raw) {}
+
     public record CelcoinPixPaymentRequest(@NotBlank String accountId, @NotBlank String pixKey, BigDecimal amount, String description) {}
 
     public record CelcoinPixPaymentResponse(String transactionId, String status, Map<String, Object> raw) {}

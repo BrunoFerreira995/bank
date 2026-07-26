@@ -29,11 +29,29 @@ Legenda:
 
 ## Onboarding KYC
 
-- [ ] Implementar módulo `onboarding`.
+- [~] Criar pacote base `onboarding`.
+- [x] Criar interface pública `CelcoinOnboardingOperations`.
+- [x] Criar cliente HTTP `CelcoinOnboardingClient`.
+- [x] Registrar `CelcoinOnboardingOperations` no `CelcoinAutoConfiguration`.
+- [x] Expor operações de onboarding em `CelcoinClient`.
+- [ ] Mapear endpoints oficiais de onboarding KYC.
+- [~] Implementar criação de onboarding PF.
+- [~] Implementar criação de onboarding PJ.
+- [~] Implementar consulta de status de onboarding.
+- [~] Implementar atualização ou complementação cadastral.
+- [ ] Implementar envio de documentos.
 - [ ] Implementar autenticação biométrica.
-- [ ] Criar DTOs de KYC PF.
-- [ ] Criar DTOs de KYC PJ.
-- [ ] Implementar testes WireMock de onboarding.
+- [ ] Implementar validação de prova de vida, quando disponível no contrato oficial.
+- [~] Criar DTOs de KYC PF.
+- [~] Criar DTOs de KYC PJ.
+- [~] Criar DTOs de documentos e anexos.
+- [~] Criar DTOs de resposta e status de análise.
+- [~] Mapear webhooks de onboarding KYC.
+- [ ] Mapear tabela de erros de onboarding.
+- [~] Adicionar exemplos de uso em `docs/examples.md`.
+- [ ] Documentar fluxo funcional de onboarding KYC.
+- [ ] Implementar testes unitários de serialização dos DTOs.
+- [~] Implementar testes WireMock de onboarding.
 
 ## cel_banking - BaaS & Core
 
@@ -61,31 +79,32 @@ Legenda:
 
 ### Abertura de Contas KYC
 
-- [ ] Implementar criação de contas via onboarding.
-- [ ] Implementar informações financeiras.
-- [ ] Implementar webhooks de onboarding.
+- [~] Implementar criação de contas via onboarding.
+- [~] Implementar informações financeiras.
+- [~] Implementar webhooks de onboarding.
+- [~] Implementar simulação de status de onboarding para sandbox.
 - [ ] Implementar BC Protege+.
-- [ ] Criar cenários práticos de abertura de conta PJ.
-- [ ] Implementar onboarding sem WebView.
+- [~] Criar cenários práticos de abertura de conta PJ.
+- [~] Implementar onboarding sem WebView.
 - [ ] Criar FAQs de abertura de contas.
 
 ### Gestão de Contas
 
 - [~] Criar interface de gestão de contas.
 - [~] Criar DTOs mínimos de conta.
-- [ ] Criar conta apenas Core Banking.
-- [ ] Implementar informações financeiras de conta.
-- [ ] Atualizar dados do cliente.
-- [ ] Desativar ou encerrar conta.
-- [ ] Listar contas.
+- [~] Criar conta apenas Core Banking.
+- [~] Implementar informações financeiras de conta.
+- [~] Atualizar dados do cliente.
+- [~] Desativar ou encerrar conta.
+- [~] Listar contas.
 - [ ] Mapear tabela de erros de gestão de contas.
-- [ ] Consultar número de contas.
-- [ ] Implementar bloqueios judiciais.
-- [ ] Implementar atualização de status de conta.
-- [ ] Adicionar saldo em sandbox.
-- [ ] Implementar monitoramento cadastral.
-- [ ] Implementar webhooks de monitoramento cadastral.
-- [ ] Implementar simulação de monitoramento cadastral.
+- [~] Consultar número de contas.
+- [~] Implementar bloqueios judiciais.
+- [~] Implementar atualização de status de conta.
+- [~] Adicionar saldo em sandbox.
+- [~] Implementar monitoramento cadastral.
+- [~] Implementar webhooks de monitoramento cadastral.
+- [~] Implementar simulação de monitoramento cadastral.
 
 ### Relatórios
 
@@ -107,16 +126,16 @@ Legenda:
 
 ### Cash-in
 
-- [ ] Receber Pix Cash-in por agência e conta.
-- [ ] Receber Pix Cash-in por chave aleatória.
-- [ ] Receber Pix Cash-in por chaves individualizadas.
-- [ ] Receber Pix Cash-in por cobrança estática.
+- [~] Receber Pix Cash-in por agência e conta.
+- [~] Receber Pix Cash-in por chave aleatória.
+- [~] Receber Pix Cash-in por chaves individualizadas.
+- [~] Receber Pix Cash-in por cobrança estática.
 - [~] Receber Pix Cash-in por QR Code dinâmico immediate.
 - [~] Receber Pix Cash-in por QR Code dinâmico duedate.
-- [ ] Implementar bloqueio cautelar de recebimento Pix.
+- [~] Implementar bloqueio cautelar de recebimento Pix.
 - [~] Consultar recebimentos Pix.
 - [~] Devolver Pix Cash-in.
-- [ ] Implementar modelo de webhook Cash-in.
+- [~] Implementar modelo de webhook Cash-in.
 
 ### Split Pix
 

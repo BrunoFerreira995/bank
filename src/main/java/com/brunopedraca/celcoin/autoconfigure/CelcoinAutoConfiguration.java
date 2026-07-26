@@ -11,6 +11,8 @@ import com.brunopedraca.celcoin.boleto.CelcoinBoletoOperations;
 import com.brunopedraca.celcoin.common.http.CelcoinHttpClient;
 import com.brunopedraca.celcoin.common.http.CelcoinWebClientFactory;
 import com.brunopedraca.celcoin.config.CelcoinProperties;
+import com.brunopedraca.celcoin.onboarding.CelcoinOnboardingClient;
+import com.brunopedraca.celcoin.onboarding.CelcoinOnboardingOperations;
 import com.brunopedraca.celcoin.pix.CelcoinPixClient;
 import com.brunopedraca.celcoin.pix.CelcoinPixOperations;
 import com.brunopedraca.celcoin.webhook.CelcoinWebhookOperations;
@@ -59,6 +61,12 @@ public class CelcoinAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    CelcoinOnboardingOperations celcoinOnboardingOperations(CelcoinHttpClient httpClient) {
+        return new CelcoinOnboardingClient(httpClient);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
     CelcoinPixOperations celcoinPixOperations(CelcoinHttpClient httpClient) {
         return new CelcoinPixClient(httpClient);
     }
@@ -80,9 +88,10 @@ public class CelcoinAutoConfiguration {
     CelcoinClient celcoinClient(
             CelcoinTokenService tokenService,
             CelcoinAccountOperations accounts,
+            CelcoinOnboardingOperations onboarding,
             CelcoinPixOperations pix,
             CelcoinBoletoOperations boletos,
             CelcoinWebhookOperations webhooks) {
-        return new DefaultCelcoinClient(tokenService, accounts, pix, boletos, webhooks);
+        return new DefaultCelcoinClient(tokenService, accounts, onboarding, pix, boletos, webhooks);
     }
 }

@@ -21,7 +21,33 @@ public class CelcoinPixClient implements CelcoinPixOperations {
         throw unspecified();
     }
 
+    public CelcoinPixCashInResponse createAccountCashIn(CelcoinPixCashInAccountRequest request, String idempotencyKey) {
+        throw unspecified();
+    }
+
+    public CelcoinPixCashInResponse createRandomKeyCashIn(CelcoinPixCashInKeyRequest request, String idempotencyKey) {
+        throw unspecified();
+    }
+
+    public CelcoinPixCashInResponse createIndividualKeyCashIn(CelcoinPixCashInKeyRequest request, String idempotencyKey) {
+        throw unspecified();
+    }
+
+    public CelcoinPixCashInResponse createStaticChargeCashIn(
+            CelcoinPixCashInStaticChargeRequest request, String idempotencyKey) {
+        throw unspecified();
+    }
+
+    public CelcoinPixCashInResponse createDueDateQrCodeCashIn(
+            CelcoinPixCashInDueDateQrCodeRequest request, String idempotencyKey) {
+        throw unspecified();
+    }
+
     public List<CelcoinPixPaymentResponse> listReceipts(String accountId) {
+        throw unspecified();
+    }
+
+    public List<CelcoinPixCashInReceiptResponse> listCashInReceipts(String accountId) {
         throw unspecified();
     }
 
@@ -30,6 +56,11 @@ public class CelcoinPixClient implements CelcoinPixOperations {
     }
 
     public CelcoinPixRefundResponse getRefund(String refundId) {
+        throw unspecified();
+    }
+
+    public CelcoinPixCashInCautionaryBlockResponse createCashInCautionaryBlock(
+            CelcoinPixCashInCautionaryBlockRequest request, String idempotencyKey) {
         throw unspecified();
     }
 

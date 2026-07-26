@@ -3,6 +3,7 @@ package com.brunopedraca.celcoin;
 import com.brunopedraca.celcoin.auth.CelcoinTokenService;
 import com.brunopedraca.celcoin.banking.CelcoinAccountOperations;
 import com.brunopedraca.celcoin.boleto.CelcoinBoletoOperations;
+import com.brunopedraca.celcoin.onboarding.CelcoinOnboardingOperations;
 import com.brunopedraca.celcoin.pix.CelcoinPixOperations;
 import com.brunopedraca.celcoin.webhook.CelcoinWebhookOperations;
 
@@ -11,6 +12,8 @@ public interface CelcoinClient {
     CelcoinTokenService authentication();
 
     CelcoinAccountOperations accounts();
+
+    CelcoinOnboardingOperations onboarding();
 
     CelcoinPixOperations pix();
 
