@@ -24,7 +24,9 @@ class PersistenceMigrationTest {
         try (Connection connection =
                 DriverManager.getConnection(postgres.getJdbcUrl(), postgres.getUsername(), postgres.getPassword())) {
             assertThat(connection.isValid(2)).isTrue();
-            assertThat(connection.getMetaData().getTables(null, null, "celcoin_webhook_event", null)
+            assertThat(connection
+                            .getMetaData()
+                            .getTables(null, null, "celcoin_webhook_event", null)
                             .next())
                     .isTrue();
         }

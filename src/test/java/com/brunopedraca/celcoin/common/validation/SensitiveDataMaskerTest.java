@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 class SensitiveDataMaskerTest {
     @Test
     void masksDocumentsAndSecrets() {
-        String masked = SensitiveDataMasker.mask(
-                "cpf 12345678910 cnpj 12345678000190 access_token: abc client_secret=def");
+        String masked =
+                SensitiveDataMasker.mask("cpf 12345678910 cnpj 12345678000190 access_token: abc client_secret=def");
 
         assertThat(masked)
                 .contains("123.***.***-10")

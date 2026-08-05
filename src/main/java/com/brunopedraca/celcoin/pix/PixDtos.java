@@ -46,7 +46,12 @@ public final class PixDtos {
             Map<String, Object> metadata) {}
 
     public record CelcoinPixCashInResponse(
-            String cashInId, String transactionId, String qrCodeId, String emv, String status, Map<String, Object> raw) {}
+            String cashInId,
+            String transactionId,
+            String qrCodeId,
+            String emv,
+            String status,
+            Map<String, Object> raw) {}
 
     public record CelcoinPixCashInReceiptResponse(
             String cashInId,
@@ -71,9 +76,11 @@ public final class PixDtos {
     public record CelcoinPixCashInCautionaryBlockRequest(
             @NotBlank String transactionId, String reason, Map<String, Object> metadata) {}
 
-    public record CelcoinPixCashInCautionaryBlockResponse(String blockId, String transactionId, String status, Map<String, Object> raw) {}
+    public record CelcoinPixCashInCautionaryBlockResponse(
+            String blockId, String transactionId, String status, Map<String, Object> raw) {}
 
-    public record CelcoinPixPaymentRequest(@NotBlank String accountId, @NotBlank String pixKey, BigDecimal amount, String description) {}
+    public record CelcoinPixPaymentRequest(
+            @NotBlank String accountId, @NotBlank String pixKey, BigDecimal amount, String description) {}
 
     public record CelcoinPixPaymentResponse(String transactionId, String status, Map<String, Object> raw) {}
 
@@ -88,16 +95,29 @@ public final class PixDtos {
             Map<String, Object> metadata) {}
 
     public record CelcoinPixCashOutStaticQrCodeRequest(
-            @NotBlank String accountId, @NotBlank String emv, BigDecimal amount, String description, Map<String, Object> metadata) {}
+            @NotBlank String accountId,
+            @NotBlank String emv,
+            BigDecimal amount,
+            String description,
+            Map<String, Object> metadata) {}
 
     public record CelcoinPixCashOutDynamicQrCodeRequest(
             @NotBlank String accountId, @NotBlank String emv, String description, Map<String, Object> metadata) {}
 
     public record CelcoinPixCashOutTransferListRequest(
-            String accountId, String status, OffsetDateTime startAt, OffsetDateTime endAt, Integer page, Integer size) {}
+            String accountId,
+            String status,
+            OffsetDateTime startAt,
+            OffsetDateTime endAt,
+            Integer page,
+            Integer size) {}
 
     public record CelcoinPixCashOutTransferListResponse(
-            List<CelcoinPixPaymentResponse> transfers, Integer page, Integer size, Long total, Map<String, Object> raw) {}
+            List<CelcoinPixPaymentResponse> transfers,
+            Integer page,
+            Integer size,
+            Long total,
+            Map<String, Object> raw) {}
 
     public record CelcoinPixCashOutWebhookEvent(
             String eventId,
@@ -112,9 +132,11 @@ public final class PixDtos {
     public record CelcoinPixCashOutCautionaryBlockRequest(
             @NotBlank String transactionId, String reason, Map<String, Object> metadata) {}
 
-    public record CelcoinPixCashOutCautionaryBlockResponse(String blockId, String transactionId, String status, Map<String, Object> raw) {}
+    public record CelcoinPixCashOutCautionaryBlockResponse(
+            String blockId, String transactionId, String status, Map<String, Object> raw) {}
 
-    public record CelcoinPixStatusResponse(String transactionId, String status, OffsetDateTime updatedAt, Map<String, Object> raw) {}
+    public record CelcoinPixStatusResponse(
+            String transactionId, String status, OffsetDateTime updatedAt, Map<String, Object> raw) {}
 
     public record CelcoinPixRefundRequest(@NotBlank String transactionId, BigDecimal amount, String reason) {}
 
@@ -122,7 +144,8 @@ public final class PixDtos {
 
     public record CelcoinPixKeyRequest(@NotBlank String accountId, @NotBlank String keyType, String key) {}
 
-    public record CelcoinPixKeyResponse(String keyId, String keyType, String key, String status, Map<String, Object> raw) {}
+    public record CelcoinPixKeyResponse(
+            String keyId, String keyType, String key, String status, Map<String, Object> raw) {}
 
     public record CelcoinPixScheduleRequest(CelcoinPixPaymentRequest payment, OffsetDateTime scheduledAt) {}
 

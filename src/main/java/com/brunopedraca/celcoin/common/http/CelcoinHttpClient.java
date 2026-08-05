@@ -1,12 +1,14 @@
 package com.brunopedraca.celcoin.common.http;
 
 import com.brunopedraca.celcoin.common.exception.CelcoinIntegrationException;
+import com.brunopedraca.celcoin.common.exception.CelcoinRateLimitException;
+import com.brunopedraca.celcoin.common.idempotency.CelcoinIdempotencyService;
 import com.brunopedraca.celcoin.common.validation.SensitiveDataMasker;
 import com.brunopedraca.celcoin.config.CelcoinProperties;
 import java.time.Duration;
 import java.util.Objects;
+import java.util.Optional;
 import org.springframework.core.io.buffer.DataBuffer;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -16,10 +18,17 @@ import reactor.util.retry.Retry;
 public class CelcoinHttpClient {
     private final WebClient webClient;
     private final CelcoinProperties properties;
+    private final CelcoinIdempotencyService idempotencyService;
 
     public CelcoinHttpClient(WebClient webClient, CelcoinProperties properties) {
+        this(webClient, properties, null);
+    }
+
+    public CelcoinHttpClient(
+            WebClient webClient, CelcoinProperties properties, CelcoinIdempotencyService idempotencyService) {
         this.webClient = webClient;
         this.properties = properties;
+        this.idempotencyService = idempotencyService;
     }
 
     public <T> T get(String path, Class<T> responseType, CelcoinRequestContext context) {
@@ -27,7 +36,9 @@ public class CelcoinHttpClient {
     }
 
     public <T> T post(String path, Object body, Class<T> responseType, CelcoinRequestContext context) {
-        boolean idempotent = context != null && context.idempotencyKey() != null && !context.idempotencyKey().isBlank();
+        boolean idempotent = context != null
+                && context.idempotencyKey() != null
+                && !context.idempotencyKey().isBlank();
         return exchange(HttpMethod.POST, path, body, responseType, context, idempotent);
     }
 
@@ -60,40 +71,68 @@ public class CelcoinHttpClient {
             Class<T> responseType,
             CelcoinRequestContext context,
             boolean retryAllowed) {
+        String idempotencyKey = context == null ? null : context.idempotencyKey();
+        boolean idempotent =
+                idempotencyService != null && idempotencyKey != null && !idempotencyKey.isBlank() && retryAllowed;
+        Optional<String> replayed =
+                idempotent ? idempotencyService.begin(idempotencyKey, path, body) : Optional.empty();
+        if (replayed.isPresent()) {
+            return idempotencyService.deserialize(replayed.get(), responseType);
+        }
         try {
-            WebClient.RequestBodySpec spec = webClient
-                    .method(method)
-                    .uri(path)
-                    .header("X-Correlation-Id", correlation(context));
-            if (context != null && context.idempotencyKey() != null) {
-                spec.header("Idempotency-Key", context.idempotencyKey());
+            WebClient.RequestBodySpec spec =
+                    webClient.method(method).uri(path).header("X-Correlation-Id", correlation(context));
+            if (idempotencyKey != null) {
+                spec.header("Idempotency-Key", idempotencyKey);
             }
             Mono<T> mono = spec.bodyValue(Objects.requireNonNullElse(body, ""))
                     .retrieve()
-                    .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(), response -> response.bodyToMono(String.class)
+                    .onStatus(status -> status.value() == 429, response -> response.bodyToMono(String.class)
                             .defaultIfEmpty("")
-                            .map(payload -> new CelcoinApiException(
-                                    SensitiveDataMasker.mask(payload.isBlank()
-                                            ? "Celcoin API error"
-                                            : payload),
-                                    response.statusCode(),
-                                    correlation(context),
-                                    response.headers().asHttpHeaders().getFirst("X-Request-Id"))))
+                            .map(payload -> new CelcoinRateLimitException(
+                                    "Rate limit exceeded by Celcoin API: " + SensitiveDataMasker.mask(payload),
+                                    RateLimitInfo.from(response.headers().asHttpHeaders()))))
+                    .onStatus(
+                            status -> status.is4xxClientError() || status.is5xxServerError(),
+                            response -> response.bodyToMono(String.class)
+                                    .defaultIfEmpty("")
+                                    .map(payload -> new CelcoinApiException(
+                                            SensitiveDataMasker.mask(payload.isBlank() ? "Celcoin API error" : payload),
+                                            response.statusCode(),
+                                            correlation(context),
+                                            response.headers().asHttpHeaders().getFirst("X-Request-Id"))))
                     .bodyToMono(responseType);
             if (retryAllowed) {
                 Duration backoff = properties.retry().initialBackoff();
                 if (backoff.compareTo(Duration.ofMillis(1)) < 0) {
                     backoff = Duration.ofMillis(1);
                 }
-                mono = mono.retryWhen(Retry.backoff(
-                                Math.max(0, properties.retry().maxAttempts() - 1), backoff)
-                        .filter(this::isTransient));
+                mono = mono.retryWhen(
+                        Retry.backoff(Math.max(0, properties.retry().maxAttempts() - 1), backoff)
+                                .filter(this::isTransient)
+                                .onRetryExhaustedThrow((retrySpec, retrySignal) -> retrySignal.failure()));
             }
-            return mono.block(properties.readTimeout().plusSeconds(5));
+            T result = mono.block(properties.readTimeout().plusSeconds(5));
+            if (idempotent) {
+                idempotencyService.complete(idempotencyKey, result);
+            }
+            return result;
         } catch (CelcoinApiException e) {
+            if (idempotent) {
+                idempotencyService.fail(idempotencyKey, e.getMessage());
+            }
+            throw e;
+        } catch (CelcoinRateLimitException e) {
+            if (idempotent) {
+                idempotencyService.fail(idempotencyKey, e.getMessage());
+            }
             throw e;
         } catch (Exception e) {
-            throw new CelcoinIntegrationException("Celcoin HTTP call failed: " + SensitiveDataMasker.mask(e.getMessage()), e);
+            if (idempotent) {
+                idempotencyService.fail(idempotencyKey, e.getMessage());
+            }
+            throw new CelcoinIntegrationException(
+                    "Celcoin HTTP call failed: " + SensitiveDataMasker.mask(e.getMessage()), e);
         }
     }
 

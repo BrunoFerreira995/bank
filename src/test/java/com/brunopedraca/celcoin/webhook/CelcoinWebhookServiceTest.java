@@ -19,8 +19,8 @@ class CelcoinWebhookServiceTest {
         CelcoinWebhookEventRepository repository = mock(CelcoinWebhookEventRepository.class);
         CelcoinWebhookSignatureVerifier verifier =
                 new CelcoinWebhookSignatureVerifier(TestProperties.celcoin("http://localhost"));
-        CelcoinWebhookService service =
-                new CelcoinWebhookService(repository, verifier, TestProperties.celcoin("http://localhost"), new ObjectMapper());
+        CelcoinWebhookService service = new CelcoinWebhookService(
+                repository, verifier, TestProperties.celcoin("http://localhost"), new ObjectMapper());
         byte[] payload = "{\"id\":\"evt-1\",\"type\":\"pix.cashin\"}".getBytes(StandardCharsets.UTF_8);
 
         ArgumentCaptor<CelcoinWebhookEvent> eventCaptor = ArgumentCaptor.forClass(CelcoinWebhookEvent.class);

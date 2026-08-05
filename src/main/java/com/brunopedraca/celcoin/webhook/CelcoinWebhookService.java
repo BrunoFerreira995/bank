@@ -59,7 +59,8 @@ public class CelcoinWebhookService implements CelcoinWebhookOperations {
                             headersToJson(headers));
                     CelcoinWebhookEvent saved = repository.save(event);
                     processAsync(saved.getId());
-                    return new CelcoinWebhookReceipt(saved.getId(), saved.getExternalEventId(), saved.getProcessingStatus(), false);
+                    return new CelcoinWebhookReceipt(
+                            saved.getId(), saved.getExternalEventId(), saved.getProcessingStatus(), false);
                 });
     }
 

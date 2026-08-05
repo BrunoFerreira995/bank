@@ -16,7 +16,8 @@ public class CelcoinAcquiringClient implements CelcoinAcquiringOperations {
         throw unspecified();
     }
 
-    public CelcoinAcquiringCustomerResponse createCustomer(CelcoinAcquiringCustomerRequest request, String idempotencyKey) {
+    public CelcoinAcquiringCustomerResponse createCustomer(
+            CelcoinAcquiringCustomerRequest request, String idempotencyKey) {
         throw unspecified();
     }
 
@@ -72,7 +73,8 @@ public class CelcoinAcquiringClient implements CelcoinAcquiringOperations {
         throw unspecified();
     }
 
-    public CelcoinAcquiringReceivablesReportResponse requestReceivablesReport(CelcoinAcquiringReceivablesReportRequest request) {
+    public CelcoinAcquiringReceivablesReportResponse requestReceivablesReport(
+            CelcoinAcquiringReceivablesReportRequest request) {
         throw unspecified();
     }
 
@@ -123,11 +125,13 @@ public class CelcoinAcquiringClient implements CelcoinAcquiringOperations {
         throw unspecified();
     }
 
-    public CelcoinAcquiringSubscriptionResponse updateSubscriptionPayment(CelcoinAcquiringSubscriptionPaymentUpdateRequest request) {
+    public CelcoinAcquiringSubscriptionResponse updateSubscriptionPayment(
+            CelcoinAcquiringSubscriptionPaymentUpdateRequest request) {
         throw unspecified();
     }
 
-    public CelcoinAcquiringChargeResponse updateSubscriptionTransaction(CelcoinAcquiringSubscriptionTransactionRequest request) {
+    public CelcoinAcquiringChargeResponse updateSubscriptionTransaction(
+            CelcoinAcquiringSubscriptionTransactionRequest request) {
         throw unspecified();
     }
 

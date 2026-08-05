@@ -59,7 +59,8 @@ class CelcoinAcquiringClientPendingContractTest {
                 () -> client.listSubscriptions(listRequest()),
                 () -> client.addSubscriptionTransaction(subscriptionTransactionRequest(), "subscription-transaction-1"),
                 () -> client.updateSubscription(subscriptionRequest()),
-                () -> client.updateSubscriptionPayment(new CelcoinAcquiringSubscriptionPaymentUpdateRequest("subscription-1", "card-1", null)),
+                () -> client.updateSubscriptionPayment(
+                        new CelcoinAcquiringSubscriptionPaymentUpdateRequest("subscription-1", "card-1", null)),
                 () -> client.updateSubscriptionTransaction(subscriptionTransactionRequest()),
                 () -> client.retrySubscriptionCharge("transaction-1", "retry-subscription-charge-1"),
                 () -> client.captureSubscriptionCharge("transaction-1", "capture-subscription-charge-1"),
@@ -67,12 +68,14 @@ class CelcoinAcquiringClientPendingContractTest {
                 () -> client.cancelSubscription("subscription-1", "cancel-subscription-1"),
                 () -> client.cancelSubscriptionTransaction("transaction-1", "cancel-transaction-1"),
                 () -> client.listChargebacks(listRequest()),
-                () -> client.sendChargebackDefense(new CelcoinAcquiringChargebackDefenseRequest("chargeback-1", List.of(), "defense")),
+                () -> client.sendChargebackDefense(
+                        new CelcoinAcquiringChargebackDefenseRequest("chargeback-1", List.of(), "defense")),
                 () -> client.withdrawChargebackDispute("chargeback-1", "withdraw-chargeback-1"),
                 () -> client.createChargebackWebhook(new CelcoinAcquiringWebhookRequest(
                         "chargeback.created", "https://example.com/webhook", null, null)),
                 () -> client.simulateChargeback("transaction-1", "OPEN"),
-                () -> client.tokenizeCard(new CelcoinAcquiringCardTokenRequest("Maria Silva", "4111111111111111", "12", "2030", "123")),
+                () -> client.tokenizeCard(
+                        new CelcoinAcquiringCardTokenRequest("Maria Silva", "4111111111111111", "12", "2030", "123")),
                 () -> client.listFees("account-1"),
                 () -> client.listTransactions(listRequest()),
                 () -> client.getReceivablesStatement(listRequest()));
@@ -87,11 +90,13 @@ class CelcoinAcquiringClientPendingContractTest {
     }
 
     private CelcoinAcquiringCustomerRequest customerRequest() {
-        return new CelcoinAcquiringCustomerRequest("customer-1", "12345678901", "Maria Silva", "maria@example.com", null, null, null);
+        return new CelcoinAcquiringCustomerRequest(
+                "customer-1", "12345678901", "Maria Silva", "maria@example.com", null, null, null);
     }
 
     private CelcoinAcquiringCardRequest cardRequest() {
-        return new CelcoinAcquiringCardRequest("customer-1", "Maria Silva", "4111111111111111", "12", "2030", "123", null);
+        return new CelcoinAcquiringCardRequest(
+                "customer-1", "Maria Silva", "4111111111111111", "12", "2030", "123", null);
     }
 
     private CelcoinAcquiringChargeRequest chargeRequest() {
@@ -100,7 +105,8 @@ class CelcoinAcquiringClientPendingContractTest {
     }
 
     private CelcoinAcquiringReceivablesReportRequest reportRequest() {
-        return new CelcoinAcquiringReceivablesReportRequest("account-1", LocalDate.now().minusDays(7), LocalDate.now(), null);
+        return new CelcoinAcquiringReceivablesReportRequest(
+                "account-1", LocalDate.now().minusDays(7), LocalDate.now(), null);
     }
 
     private CelcoinAcquiringPlanRequest planRequest() {
@@ -113,7 +119,8 @@ class CelcoinAcquiringClientPendingContractTest {
     }
 
     private CelcoinAcquiringSubscriptionTransactionRequest subscriptionTransactionRequest() {
-        return new CelcoinAcquiringSubscriptionTransactionRequest("transaction-1", "subscription-1", BigDecimal.TEN, LocalDate.now(), null);
+        return new CelcoinAcquiringSubscriptionTransactionRequest(
+                "transaction-1", "subscription-1", BigDecimal.TEN, LocalDate.now(), null);
     }
 
     private CelcoinAcquiringListRequest listRequest() {

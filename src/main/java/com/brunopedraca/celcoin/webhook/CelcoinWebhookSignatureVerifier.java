@@ -35,7 +35,8 @@ public class CelcoinWebhookSignatureVerifier {
             throw new CelcoinUnauthorizedException("Celcoin webhook timestamp is outside the replay window");
         }
         String expected = hmac(secret, timestamp + "." + new String(payload, StandardCharsets.UTF_8));
-        if (!MessageDigest.isEqual(expected.getBytes(StandardCharsets.UTF_8), signature.getBytes(StandardCharsets.UTF_8))) {
+        if (!MessageDigest.isEqual(
+                expected.getBytes(StandardCharsets.UTF_8), signature.getBytes(StandardCharsets.UTF_8))) {
             throw new CelcoinUnauthorizedException("Invalid Celcoin webhook signature");
         }
     }

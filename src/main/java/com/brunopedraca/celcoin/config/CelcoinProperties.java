@@ -21,8 +21,28 @@ public record CelcoinProperties(
         @NotNull Duration tokenRefreshMargin,
         boolean demoEnabled,
         @Valid RetryProperties retry,
-        @Valid WebhookProperties webhook) {
+        @Valid WebhookProperties webhook,
+        @Valid SslProperties ssl) {
     public record RetryProperties(int maxAttempts, @NotNull Duration initialBackoff) {}
 
     public record WebhookProperties(String secret, long maxPayloadBytes, @NotNull Duration replayWindow) {}
+
+    public record SslProperties(
+            boolean enabled,
+            String keystorePath,
+            String keystoreType,
+            String keystorePassword,
+            String keyPassword,
+            String truststorePath,
+            String truststoreType,
+            String truststorePassword) {
+        public SslProperties {
+            if (keystoreType == null || keystoreType.isBlank()) {
+                keystoreType = "PKCS12";
+            }
+            if (truststoreType == null || truststoreType.isBlank()) {
+                truststoreType = "PKCS12";
+            }
+        }
+    }
 }

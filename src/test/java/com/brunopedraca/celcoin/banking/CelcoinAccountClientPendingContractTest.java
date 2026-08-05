@@ -37,55 +37,69 @@ class CelcoinAccountClientPendingContractTest {
         assertPendingContract(() -> client.updateFinancialInformation(new CelcoinAccountFinancialInformationRequest(
                 "account-1",
                 new CelcoinAccountFinancialInformation(
-                        BigDecimal.valueOf(5000), null, BigDecimal.valueOf(10000), "Engineer", null, "Salary", false))));
+                        BigDecimal.valueOf(5000),
+                        null,
+                        BigDecimal.valueOf(10000),
+                        "Engineer",
+                        null,
+                        "Salary",
+                        false))));
     }
 
     @Test
     void shouldRejectCustomerUpdateUntilOfficialContractIsAdded() {
-        assertPendingContract(() -> client.updateCustomer(
-                new CelcoinAccountCustomerUpdateRequest("account-1", "Maria Silva", "maria@example.com", null, null, null)));
+        assertPendingContract(() -> client.updateCustomer(new CelcoinAccountCustomerUpdateRequest(
+                "account-1", "Maria Silva", "maria@example.com", null, null, null)));
     }
 
     @Test
     void shouldRejectAccountClosureUntilOfficialContractIsAdded() {
-        assertPendingContract(() -> client.closeAccount(new CelcoinAccountClosureRequest("account-1", "requested", null)));
+        assertPendingContract(
+                () -> client.closeAccount(new CelcoinAccountClosureRequest("account-1", "requested", null)));
     }
 
     @Test
     void shouldRejectAccountDeactivationUntilOfficialContractIsAdded() {
-        assertPendingContract(() -> client.deactivateAccount(new CelcoinAccountClosureRequest("account-1", "risk", null)));
+        assertPendingContract(
+                () -> client.deactivateAccount(new CelcoinAccountClosureRequest("account-1", "risk", null)));
     }
 
     @Test
     void shouldRejectAccountListingUntilOfficialContractIsAdded() {
-        assertPendingContract(() -> client.listAccounts(new CelcoinAccountListRequest(null, "PERSON", "ACTIVE", 0, 20)));
+        assertPendingContract(
+                () -> client.listAccounts(new CelcoinAccountListRequest(null, "PERSON", "ACTIVE", 0, 20)));
     }
 
     @Test
     void shouldRejectAccountCountingUntilOfficialContractIsAdded() {
-        assertPendingContract(() -> client.countAccounts(new CelcoinAccountListRequest(null, null, "ACTIVE", null, null)));
+        assertPendingContract(
+                () -> client.countAccounts(new CelcoinAccountListRequest(null, null, "ACTIVE", null, null)));
     }
 
     @Test
     void shouldRejectJudicialBlockUntilOfficialContractIsAdded() {
         assertPendingContract(() -> client.createJudicialBlock(
-                new CelcoinJudicialBlockRequest("account-1", BigDecimal.TEN, "0000000-00.2026.0.00.0000", "court order"),
+                new CelcoinJudicialBlockRequest(
+                        "account-1", BigDecimal.TEN, "0000000-00.2026.0.00.0000", "court order"),
                 "block-1"));
     }
 
     @Test
     void shouldRejectStatusUpdateUntilOfficialContractIsAdded() {
-        assertPendingContract(() -> client.updateStatus(new CelcoinAccountStatusUpdateRequest("account-1", "BLOCKED", "risk")));
+        assertPendingContract(
+                () -> client.updateStatus(new CelcoinAccountStatusUpdateRequest("account-1", "BLOCKED", "risk")));
     }
 
     @Test
     void shouldRejectSandboxBalanceUntilOfficialContractIsAdded() {
-        assertPendingContract(() -> client.addSandboxBalance(new CelcoinSandboxBalanceRequest("account-1", BigDecimal.TEN, "sandbox")));
+        assertPendingContract(() ->
+                client.addSandboxBalance(new CelcoinSandboxBalanceRequest("account-1", BigDecimal.TEN, "sandbox")));
     }
 
     @Test
     void shouldRejectMonitoringUntilOfficialContractIsAdded() {
-        assertPendingContract(() -> client.createMonitoring(new CelcoinAccountMonitoringRequest("account-1", "KYC", null)));
+        assertPendingContract(
+                () -> client.createMonitoring(new CelcoinAccountMonitoringRequest("account-1", "KYC", null)));
     }
 
     @Test

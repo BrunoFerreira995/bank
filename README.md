@@ -112,6 +112,13 @@ Interfaces disponíveis:
 - agendamento
 - split Pix
 
+Pix Automático (recorrência) em `pixAuto()`:
+
+- consentimento e autorização (pagador e recebedor)
+- agendamento e consultas
+- liquidação e retentativas
+- cancelamento de consentimento, agendamento e recorrência
+
 Exemplo demo:
 
 ```bash
@@ -175,7 +182,9 @@ A assinatura é validada com HMAC-SHA256 sobre `timestamp.payload`.
 Cobertura atual:
 
 - cache e renovação de token
-- WireMock para `POST /v5/token`
+- WireMock para `POST /v5/token` (sucesso, erro de status e resposta sem token)
+- idempotência: registro por operação, replay de resposta, conflito por chave reutilizada e rate limit
+- mTLS: construção do `SslContext` e aplicação no `WebClient`
 - ausência de Bearer Token no endpoint de token
 - mascaramento de CPF, CNPJ e segredos
 - deduplicação de webhook
@@ -203,12 +212,18 @@ docker compose --profile redis up -d
 - Webhook possui limite de tamanho de payload.
 - Webhook possui deduplicação por ID externo.
 - Requisições financeiras não devem ser retentadas sem idempotency key.
-- Há interface `CelcoinSslContextProvider` para suporte futuro a mTLS.
+- Idempotência persistente por operação: `CelcoinIdempotencyService` registra cada `Idempotency-Key`, rejeita reuso com request diferente e reproduz respostas concluídas.
+- Rate limit: respostas `429` são convertidas em `CelcoinRateLimitException` com `Retry-After` e headers `X-RateLimit-*`.
+- mTLS habilitado via `celcoin.ssl.enabled=true` e `CelcoinSslContextProvider`.
+
+## CI
+
+O pipeline em `.github/workflows/ci.yml` executa `spotless:check`, `verify`
+(incluindo a régua JaCoCo) e publica o artefato `SNAPSHOT` no GitHub Packages.
 
 ## Roadmap
 
 1. Confirmar URLs e payloads oficiais de contas, Pix e boletos.
 2. Implementar auditoria sanitizada no `CelcoinHttpClient`.
 3. Adicionar Redis como implementação alternativa para cache de token.
-4. Implementar mTLS.
-5. Adicionar módulos Open Finance, ITP, crédito, escrow, NFS-e e antifraude.
+4. Adicionar módulos Open Finance, ITP, crédito, escrow, NFS-e e antifraude.

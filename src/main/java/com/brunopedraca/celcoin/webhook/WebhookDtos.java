@@ -6,7 +6,8 @@ import java.util.UUID;
 public final class WebhookDtos {
     private WebhookDtos() {}
 
-    public record CelcoinWebhookReceipt(UUID id, String externalEventId, WebhookProcessingStatus status, boolean duplicate) {}
+    public record CelcoinWebhookReceipt(
+            UUID id, String externalEventId, WebhookProcessingStatus status, boolean duplicate) {}
 
     public record CelcoinWebhookEventResponse(
             UUID id,

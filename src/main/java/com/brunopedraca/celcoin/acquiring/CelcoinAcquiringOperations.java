@@ -33,7 +33,8 @@ public interface CelcoinAcquiringOperations {
 
     CelcoinAcquiringChargeResponse captureCharge(String chargeId, String idempotencyKey);
 
-    CelcoinAcquiringReceivablesReportResponse requestReceivablesReport(CelcoinAcquiringReceivablesReportRequest request);
+    CelcoinAcquiringReceivablesReportResponse requestReceivablesReport(
+            CelcoinAcquiringReceivablesReportRequest request);
 
     CelcoinAcquiringReceivablesReportResponse getReceivablesReportStatus(String reportId);
 
@@ -47,9 +48,11 @@ public interface CelcoinAcquiringOperations {
 
     void deletePlan(String planId, String idempotencyKey);
 
-    CelcoinAcquiringSubscriptionResponse createSubscription(CelcoinAcquiringSubscriptionRequest request, String idempotencyKey);
+    CelcoinAcquiringSubscriptionResponse createSubscription(
+            CelcoinAcquiringSubscriptionRequest request, String idempotencyKey);
 
-    CelcoinAcquiringSubscriptionResponse createManualSubscription(CelcoinAcquiringSubscriptionRequest request, String idempotencyKey);
+    CelcoinAcquiringSubscriptionResponse createManualSubscription(
+            CelcoinAcquiringSubscriptionRequest request, String idempotencyKey);
 
     CelcoinAcquiringSubscriptionListResponse listSubscriptions(CelcoinAcquiringListRequest request);
 
@@ -58,9 +61,11 @@ public interface CelcoinAcquiringOperations {
 
     CelcoinAcquiringSubscriptionResponse updateSubscription(CelcoinAcquiringSubscriptionRequest request);
 
-    CelcoinAcquiringSubscriptionResponse updateSubscriptionPayment(CelcoinAcquiringSubscriptionPaymentUpdateRequest request);
+    CelcoinAcquiringSubscriptionResponse updateSubscriptionPayment(
+            CelcoinAcquiringSubscriptionPaymentUpdateRequest request);
 
-    CelcoinAcquiringChargeResponse updateSubscriptionTransaction(CelcoinAcquiringSubscriptionTransactionRequest request);
+    CelcoinAcquiringChargeResponse updateSubscriptionTransaction(
+            CelcoinAcquiringSubscriptionTransactionRequest request);
 
     CelcoinAcquiringChargeResponse retrySubscriptionCharge(String transactionId, String idempotencyKey);
 

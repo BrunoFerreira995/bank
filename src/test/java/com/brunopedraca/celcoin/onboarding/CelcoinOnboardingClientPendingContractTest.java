@@ -47,8 +47,8 @@ class CelcoinOnboardingClientPendingContractTest {
 
     @Test
     void shouldRejectWebhookSubscriptionUntilOfficialContractIsAdded() {
-        assertPendingContract(() -> client.createWebhookSubscription(
-                new CelcoinKycWebhookSubscriptionRequest("onboarding.status.updated", "https://example.com/webhook", null, null)));
+        assertPendingContract(() -> client.createWebhookSubscription(new CelcoinKycWebhookSubscriptionRequest(
+                "onboarding.status.updated", "https://example.com/webhook", null, null)));
     }
 
     @Test
@@ -100,8 +100,7 @@ class CelcoinOnboardingClientPendingContractTest {
     }
 
     private CelcoinKycAddress address() {
-        return new CelcoinKycAddress(
-                "Rua Exemplo", "100", null, "Centro", "Sao Paulo", "SP", "01001000", "BR");
+        return new CelcoinKycAddress("Rua Exemplo", "100", null, "Centro", "Sao Paulo", "SP", "01001000", "BR");
     }
 
     private CelcoinKycFinancialInformation financialInformation() {

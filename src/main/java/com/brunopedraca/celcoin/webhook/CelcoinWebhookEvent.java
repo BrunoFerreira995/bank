@@ -45,7 +45,8 @@ public class CelcoinWebhookEvent {
 
     protected CelcoinWebhookEvent() {}
 
-    public CelcoinWebhookEvent(UUID id, String externalEventId, String eventType, String payloadJson, String headersJson) {
+    public CelcoinWebhookEvent(
+            UUID id, String externalEventId, String eventType, String payloadJson, String headersJson) {
         this.id = id;
         this.externalEventId = externalEventId;
         this.eventType = eventType;

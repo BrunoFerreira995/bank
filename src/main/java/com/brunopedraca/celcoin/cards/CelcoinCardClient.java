@@ -32,7 +32,8 @@ public class CelcoinCardClient implements CelcoinCardOperations {
         throw unspecified();
     }
 
-    public CelcoinCardAccountResponse cancelAccountAndCards(String cardAccountId, String reason, String idempotencyKey) {
+    public CelcoinCardAccountResponse cancelAccountAndCards(
+            String cardAccountId, String reason, String idempotencyKey) {
         throw unspecified();
     }
 
@@ -93,7 +94,8 @@ public class CelcoinCardClient implements CelcoinCardOperations {
         throw unspecified();
     }
 
-    public CelcoinCardWebhookResponse resendPendingWebhook(CelcoinCardWebhookResendRequest request, String idempotencyKey) {
+    public CelcoinCardWebhookResponse resendPendingWebhook(
+            CelcoinCardWebhookResendRequest request, String idempotencyKey) {
         throw unspecified();
     }
 

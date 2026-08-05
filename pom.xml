@@ -112,6 +112,19 @@
         </dependency>
     </dependencies>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/BrunoFerreira995/bank</url>
+        </repository>
+        <snapshotRepository>
+            <id>github</id>
+            <name>GitHub Packages Snapshots</name>
+            <url>https://maven.pkg.github.com/BrunoFerreira995/bank</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <build>
         <plugins>
             <plugin>
@@ -167,7 +180,34 @@
                                         <limit>
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.00</minimum>
+                                            <minimum>0.60</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                                <rule>
+                                    <element>PACKAGE</element>
+                                    <includes>com.brunopedraca.celcoin.auth.*</includes>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>1.00</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                                <rule>
+                                    <element>PACKAGE</element>
+                                    <includes>
+                                        com.brunopedraca.celcoin.common.http.*
+                                        com.brunopedraca.celcoin.common.idempotency.*
+                                        com.brunopedraca.celcoin.common.validation.*
+                                        com.brunopedraca.celcoin.config.*
+                                    </includes>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.80</minimum>
                                         </limit>
                                     </limits>
                                 </rule>

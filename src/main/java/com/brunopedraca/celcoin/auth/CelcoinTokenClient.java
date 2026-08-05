@@ -29,12 +29,17 @@ public class CelcoinTokenClient {
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                     .body(BodyInserters.fromFormData(form))
                     .retrieve()
-                    .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(), clientResponse -> clientResponse.releaseBody()
-                            .thenReturn(new CelcoinAuthenticationException(
-                                    "Unable to authenticate with Celcoin", clientResponse.statusCode(), null)))
+                    .onStatus(
+                            status -> status.is4xxClientError() || status.is5xxServerError(),
+                            clientResponse -> clientResponse
+                                    .releaseBody()
+                                    .thenReturn(new CelcoinAuthenticationException(
+                                            "Unable to authenticate with Celcoin", clientResponse.statusCode(), null)))
                     .bodyToMono(CelcoinTokenResponse.class)
                     .block(properties.readTimeout().plusSeconds(5));
-            if (response == null || response.accessToken() == null || response.accessToken().isBlank()) {
+            if (response == null
+                    || response.accessToken() == null
+                    || response.accessToken().isBlank()) {
                 throw new CelcoinAuthenticationException("Celcoin token response did not include an access token");
             }
             return response.withObtainedAt(Instant.now());

@@ -36,7 +36,8 @@ public class CelcoinOnboardingClient implements CelcoinOnboardingOperations {
         throw unspecified();
     }
 
-    public CelcoinKycWebhookSubscriptionResponse createWebhookSubscription(CelcoinKycWebhookSubscriptionRequest request) {
+    public CelcoinKycWebhookSubscriptionResponse createWebhookSubscription(
+            CelcoinKycWebhookSubscriptionRequest request) {
         throw unspecified();
     }
 

@@ -46,18 +46,21 @@ public class CelcoinDemoController {
     public CelcoinStatementResponse statement(@PathVariable String accountId) {
         return celcoinClient
                 .accounts()
-                .getStatement(new CelcoinStatementRequest(accountId, LocalDate.now().minusDays(30), LocalDate.now()));
+                .getStatement(
+                        new CelcoinStatementRequest(accountId, LocalDate.now().minusDays(30), LocalDate.now()));
     }
 
     @PostMapping("/pix/cash-out")
     public CelcoinPixPaymentResponse pixCashOut(
-            @RequestBody CelcoinPixPaymentRequest request, @RequestHeader(value = "Idempotency-Key", required = false) String key) {
+            @RequestBody CelcoinPixPaymentRequest request,
+            @RequestHeader(value = "Idempotency-Key", required = false) String key) {
         return celcoinClient.pix().cashOut(request, key);
     }
 
     @PostMapping("/pix/qr-code")
     public CelcoinPixQrCodeResponse pixQrCode(
-            @RequestBody CelcoinPixQrCodeRequest request, @RequestHeader(value = "Idempotency-Key", required = false) String key) {
+            @RequestBody CelcoinPixQrCodeRequest request,
+            @RequestHeader(value = "Idempotency-Key", required = false) String key) {
         return celcoinClient.pix().createQrCode(request, key);
     }
 
@@ -68,7 +71,8 @@ public class CelcoinDemoController {
 
     @PostMapping("/boletos")
     public CelcoinBoletoResponse issueBoleto(
-            @RequestBody CelcoinBoletoRequest request, @RequestHeader(value = "Idempotency-Key", required = false) String key) {
+            @RequestBody CelcoinBoletoRequest request,
+            @RequestHeader(value = "Idempotency-Key", required = false) String key) {
         return celcoinClient.boletos().issue(request, key);
     }
 

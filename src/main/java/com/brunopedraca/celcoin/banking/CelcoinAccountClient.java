@@ -1,16 +1,16 @@
 package com.brunopedraca.celcoin.banking;
 
-import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinAccountResponse;
-import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinAccountStatusResponse;
-import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinAccountStatusUpdateRequest;
+import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinAccountClosureRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinAccountCountResponse;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinAccountCustomerUpdateRequest;
-import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinAccountClosureRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinAccountFinancialInformationRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinAccountListRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinAccountListResponse;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinAccountMonitoringRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinAccountMonitoringResponse;
+import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinAccountResponse;
+import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinAccountStatusResponse;
+import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinAccountStatusUpdateRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinBalanceResponse;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinCoreAccountRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinInternalTransferRequest;
@@ -71,7 +71,8 @@ public class CelcoinAccountClient implements CelcoinAccountOperations {
         throw unspecified();
     }
 
-    public CelcoinJudicialBlockResponse createJudicialBlock(CelcoinJudicialBlockRequest request, String idempotencyKey) {
+    public CelcoinJudicialBlockResponse createJudicialBlock(
+            CelcoinJudicialBlockRequest request, String idempotencyKey) {
         throw unspecified();
     }
 

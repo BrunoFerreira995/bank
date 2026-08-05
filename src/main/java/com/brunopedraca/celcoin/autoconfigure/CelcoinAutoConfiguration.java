@@ -13,14 +13,22 @@ import com.brunopedraca.celcoin.boleto.CelcoinBoletoOperations;
 import com.brunopedraca.celcoin.cards.CelcoinCardClient;
 import com.brunopedraca.celcoin.cards.CelcoinCardOperations;
 import com.brunopedraca.celcoin.common.http.CelcoinHttpClient;
+import com.brunopedraca.celcoin.common.http.CelcoinSslContextProvider;
 import com.brunopedraca.celcoin.common.http.CelcoinWebClientFactory;
+import com.brunopedraca.celcoin.common.http.NettyCelcoinSslContextProvider;
+import com.brunopedraca.celcoin.common.idempotency.CelcoinIdempotencyRecordRepository;
+import com.brunopedraca.celcoin.common.idempotency.CelcoinIdempotencyService;
 import com.brunopedraca.celcoin.config.CelcoinProperties;
 import com.brunopedraca.celcoin.onboarding.CelcoinOnboardingClient;
 import com.brunopedraca.celcoin.onboarding.CelcoinOnboardingOperations;
 import com.brunopedraca.celcoin.pix.CelcoinPixClient;
 import com.brunopedraca.celcoin.pix.CelcoinPixOperations;
+import com.brunopedraca.celcoin.pixauto.CelcoinPixAutoClient;
+import com.brunopedraca.celcoin.pixauto.CelcoinPixAutoOperations;
 import com.brunopedraca.celcoin.webhook.CelcoinWebhookOperations;
 import com.brunopedraca.celcoin.webhook.CelcoinWebhookService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -35,8 +43,9 @@ public class CelcoinAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    WebClient celcoinTokenWebClient(CelcoinProperties properties) {
-        return CelcoinWebClientFactory.create(properties, false, null);
+    WebClient celcoinTokenWebClient(
+            CelcoinProperties properties, ObjectProvider<CelcoinSslContextProvider> sslContextProvider) {
+        return CelcoinWebClientFactory.create(properties, false, null, sslContextProvider.getIfAvailable());
     }
 
     @Bean
@@ -53,8 +62,29 @@ public class CelcoinAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    CelcoinHttpClient celcoinHttpClient(CelcoinProperties properties, CelcoinTokenService tokenService) {
-        return new CelcoinHttpClient(CelcoinWebClientFactory.create(properties, true, tokenService), properties);
+    @ConditionalOnProperty(prefix = "celcoin.ssl", name = "enabled", havingValue = "true")
+    CelcoinSslContextProvider celcoinSslContextProvider(CelcoinProperties properties) {
+        return new NettyCelcoinSslContextProvider(properties.ssl());
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    CelcoinIdempotencyService celcoinIdempotencyService(
+            CelcoinIdempotencyRecordRepository repository, ObjectMapper objectMapper) {
+        return new CelcoinIdempotencyService(repository, objectMapper);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    CelcoinHttpClient celcoinHttpClient(
+            CelcoinProperties properties,
+            CelcoinTokenService tokenService,
+            ObjectProvider<CelcoinSslContextProvider> sslContextProvider,
+            ObjectProvider<CelcoinIdempotencyService> idempotencyService) {
+        return new CelcoinHttpClient(
+                CelcoinWebClientFactory.create(properties, true, tokenService, sslContextProvider.getIfAvailable()),
+                properties,
+                idempotencyService.getIfAvailable());
     }
 
     @Bean
@@ -83,6 +113,12 @@ public class CelcoinAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    CelcoinPixAutoOperations celcoinPixAutoOperations(CelcoinHttpClient httpClient) {
+        return new CelcoinPixAutoClient(httpClient);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
     CelcoinBoletoOperations celcoinBoletoOperations(CelcoinHttpClient httpClient) {
         return new CelcoinBoletoClient(httpClient);
     }
@@ -107,9 +143,11 @@ public class CelcoinAutoConfiguration {
             CelcoinAccountOperations accounts,
             CelcoinOnboardingOperations onboarding,
             CelcoinPixOperations pix,
+            CelcoinPixAutoOperations pixAuto,
             CelcoinBoletoOperations boletos,
             CelcoinCardOperations cards,
             CelcoinWebhookOperations webhooks) {
-        return new DefaultCelcoinClient(tokenService, acquiring, accounts, onboarding, pix, boletos, cards, webhooks);
+        return new DefaultCelcoinClient(
+                tokenService, acquiring, accounts, onboarding, pix, pixAuto, boletos, cards, webhooks);
     }
 }

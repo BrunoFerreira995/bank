@@ -50,8 +50,10 @@ class CelcoinCardClientPendingContractTest {
                 () -> client.simulateTransaction(
                         new CelcoinCardTransactionSimulationRequest("card-1", BigDecimal.TEN, "Merchant", "5411", null),
                         "simulation-1"),
-                () -> client.createWebhook(new CelcoinCardWebhookRequest("card.transaction", "https://example.com/webhook", null, null)),
-                () -> client.updateWebhook(new CelcoinCardWebhookRequest("card.transaction", "https://example.com/webhook", null, null)),
+                () -> client.createWebhook(
+                        new CelcoinCardWebhookRequest("card.transaction", "https://example.com/webhook", null, null)),
+                () -> client.updateWebhook(
+                        new CelcoinCardWebhookRequest("card.transaction", "https://example.com/webhook", null, null)),
                 () -> client.getWebhookTemplate("card.transaction"),
                 () -> client.resendPendingWebhook(new CelcoinCardWebhookResendRequest("event-1"), "resend-webhook-1"),
                 () -> client.getPostpaidInvoice("card-account-1", "invoice-1"));
@@ -66,7 +68,8 @@ class CelcoinCardClientPendingContractTest {
     }
 
     private CelcoinCardAccountRequest accountRequest() {
-        return new CelcoinCardAccountRequest("12345678901", "Maria Silva", "maria@example.com", "+5511999999999", null, null);
+        return new CelcoinCardAccountRequest(
+                "12345678901", "Maria Silva", "maria@example.com", "+5511999999999", null, null);
     }
 
     private CelcoinCardIssueRequest cardRequest() {

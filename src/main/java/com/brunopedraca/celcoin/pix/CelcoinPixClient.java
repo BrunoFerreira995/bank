@@ -29,7 +29,8 @@ public class CelcoinPixClient implements CelcoinPixOperations {
         throw unspecified();
     }
 
-    public CelcoinPixCashInResponse createIndividualKeyCashIn(CelcoinPixCashInKeyRequest request, String idempotencyKey) {
+    public CelcoinPixCashInResponse createIndividualKeyCashIn(
+            CelcoinPixCashInKeyRequest request, String idempotencyKey) {
         throw unspecified();
     }
 
@@ -80,11 +81,13 @@ public class CelcoinPixClient implements CelcoinPixOperations {
         throw unspecified();
     }
 
-    public CelcoinPixPaymentResponse cashOutStaticQrCode(CelcoinPixCashOutStaticQrCodeRequest request, String idempotencyKey) {
+    public CelcoinPixPaymentResponse cashOutStaticQrCode(
+            CelcoinPixCashOutStaticQrCodeRequest request, String idempotencyKey) {
         throw unspecified();
     }
 
-    public CelcoinPixPaymentResponse cashOutDynamicQrCode(CelcoinPixCashOutDynamicQrCodeRequest request, String idempotencyKey) {
+    public CelcoinPixPaymentResponse cashOutDynamicQrCode(
+            CelcoinPixCashOutDynamicQrCodeRequest request, String idempotencyKey) {
         throw unspecified();
     }
 

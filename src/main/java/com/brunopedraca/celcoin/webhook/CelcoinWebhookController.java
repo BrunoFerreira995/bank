@@ -22,7 +22,8 @@ public class CelcoinWebhookController {
     }
 
     @PostMapping("/webhooks/celcoin")
-    public ResponseEntity<CelcoinWebhookReceipt> receive(@RequestBody byte[] payload, @RequestHeader HttpHeaders headers) {
+    public ResponseEntity<CelcoinWebhookReceipt> receive(
+            @RequestBody byte[] payload, @RequestHeader HttpHeaders headers) {
         return ResponseEntity.accepted().body(service.receive(payload, headers));
     }
 

@@ -9,9 +9,11 @@ import java.util.Map;
 public final class BoletoDtos {
     private BoletoDtos() {}
 
-    public record CelcoinBoletoRequest(@NotBlank String accountId, BigDecimal amount, LocalDate dueDate, Map<String, Object> payer) {}
+    public record CelcoinBoletoRequest(
+            @NotBlank String accountId, BigDecimal amount, LocalDate dueDate, Map<String, Object> payer) {}
 
-    public record CelcoinBoletoResponse(String boletoId, String status, String digitableLine, Map<String, Object> raw) {}
+    public record CelcoinBoletoResponse(
+            String boletoId, String status, String digitableLine, Map<String, Object> raw) {}
 
     public record CelcoinBoletoPeriodRequest(LocalDate startDate, LocalDate endDate, String status) {}
 

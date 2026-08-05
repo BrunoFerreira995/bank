@@ -34,3 +34,12 @@ celcoin:
   retry:
     max-attempts: 3
     initial-backoff: 500ms
+  ssl:
+    enabled: ${CELCOIN_SSL_ENABLED:false}
+    keystore-path: ${CELCOIN_SSL_KEYSTORE_PATH:}
+    keystore-type: PKCS12
+    keystore-password: ${CELCOIN_SSL_KEYSTORE_PASSWORD:}
+    key-password: ${CELCOIN_SSL_KEY_PASSWORD:}
+    truststore-path: ${CELCOIN_SSL_TRUSTSTORE_PATH:}
+    truststore-type: PKCS12
+    truststore-password: ${CELCOIN_SSL_TRUSTSTORE_PASSWORD:}

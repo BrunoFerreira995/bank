@@ -12,7 +12,8 @@ public final class AccountDtos {
 
     public record CelcoinAccountStatusResponse(String accountId, String status, Map<String, Object> raw) {}
 
-    public record CelcoinAccountResponse(String accountId, String document, String type, String status, Map<String, Object> raw) {}
+    public record CelcoinAccountResponse(
+            String accountId, String document, String type, String status, Map<String, Object> raw) {}
 
     public record CelcoinCoreAccountRequest(
             @NotBlank String document,
@@ -24,7 +25,14 @@ public final class AccountDtos {
             Map<String, Object> metadata) {}
 
     public record CelcoinAccountAddress(
-            String street, String number, String complement, String neighborhood, String city, String state, String postalCode, String country) {}
+            String street,
+            String number,
+            String complement,
+            String neighborhood,
+            String city,
+            String state,
+            String postalCode,
+            String country) {}
 
     public record CelcoinAccountFinancialInformation(
             BigDecimal monthlyIncome,
@@ -46,25 +54,32 @@ public final class AccountDtos {
             CelcoinAccountAddress address,
             Map<String, Object> metadata) {}
 
-    public record CelcoinAccountClosureRequest(@NotBlank String accountId, String reason, Map<String, Object> metadata) {}
+    public record CelcoinAccountClosureRequest(
+            @NotBlank String accountId, String reason, Map<String, Object> metadata) {}
 
     public record CelcoinAccountListRequest(String document, String type, String status, Integer page, Integer size) {}
 
-    public record CelcoinAccountListResponse(List<CelcoinAccountResponse> accounts, Integer page, Integer size, Long total, Map<String, Object> raw) {}
+    public record CelcoinAccountListResponse(
+            List<CelcoinAccountResponse> accounts, Integer page, Integer size, Long total, Map<String, Object> raw) {}
 
     public record CelcoinAccountCountResponse(Long total, Map<String, Object> raw) {}
 
-    public record CelcoinJudicialBlockRequest(@NotBlank String accountId, BigDecimal amount, String processNumber, String reason) {}
+    public record CelcoinJudicialBlockRequest(
+            @NotBlank String accountId, BigDecimal amount, String processNumber, String reason) {}
 
-    public record CelcoinJudicialBlockResponse(String blockId, String accountId, BigDecimal amount, String status, Map<String, Object> raw) {}
+    public record CelcoinJudicialBlockResponse(
+            String blockId, String accountId, BigDecimal amount, String status, Map<String, Object> raw) {}
 
-    public record CelcoinAccountStatusUpdateRequest(@NotBlank String accountId, @NotBlank String status, String reason) {}
+    public record CelcoinAccountStatusUpdateRequest(
+            @NotBlank String accountId, @NotBlank String status, String reason) {}
 
     public record CelcoinSandboxBalanceRequest(@NotBlank String accountId, BigDecimal amount, String description) {}
 
-    public record CelcoinAccountMonitoringRequest(@NotBlank String accountId, String type, Map<String, Object> metadata) {}
+    public record CelcoinAccountMonitoringRequest(
+            @NotBlank String accountId, String type, Map<String, Object> metadata) {}
 
-    public record CelcoinAccountMonitoringResponse(String monitoringId, String accountId, String status, Map<String, Object> raw) {}
+    public record CelcoinAccountMonitoringResponse(
+            String monitoringId, String accountId, String status, Map<String, Object> raw) {}
 
     public record CelcoinAccountMonitoringWebhookEvent(
             String eventId,
@@ -75,17 +90,29 @@ public final class AccountDtos {
             OffsetDateTime occurredAt,
             Map<String, Object> raw) {}
 
-    public record CelcoinBalanceResponse(String accountId, BigDecimal available, BigDecimal blocked, String currency, Map<String, Object> raw) {}
+    public record CelcoinBalanceResponse(
+            String accountId, BigDecimal available, BigDecimal blocked, String currency, Map<String, Object> raw) {}
 
     public record CelcoinStatementRequest(@NotBlank String accountId, LocalDate startDate, LocalDate endDate) {}
 
-    public record CelcoinStatementResponse(String accountId, java.util.List<CelcoinStatementTransactionResponse> transactions, Map<String, Object> raw) {}
+    public record CelcoinStatementResponse(
+            String accountId,
+            java.util.List<CelcoinStatementTransactionResponse> transactions,
+            Map<String, Object> raw) {}
 
     public record CelcoinStatementTransactionResponse(
-            String transactionId, OffsetDateTime createdAt, BigDecimal amount, String type, String status, Map<String, Object> raw) {}
+            String transactionId,
+            OffsetDateTime createdAt,
+            BigDecimal amount,
+            String type,
+            String status,
+            Map<String, Object> raw) {}
 
     public record CelcoinInternalTransferRequest(
-            @NotBlank String sourceAccountId, @NotBlank String targetAccountId, BigDecimal amount, String description) {}
+            @NotBlank String sourceAccountId,
+            @NotBlank String targetAccountId,
+            BigDecimal amount,
+            String description) {}
 
     public record CelcoinInternalTransferResponse(String transferId, String status, Map<String, Object> raw) {}
 }

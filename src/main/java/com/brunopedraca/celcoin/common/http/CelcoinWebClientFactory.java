@@ -3,7 +3,6 @@ package com.brunopedraca.celcoin.common.http;
 import com.brunopedraca.celcoin.auth.CelcoinTokenService;
 import com.brunopedraca.celcoin.config.CelcoinProperties;
 import io.netty.channel.ChannelOption;
-import java.time.Duration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
@@ -14,10 +13,23 @@ import reactor.netty.http.client.HttpClient;
 public final class CelcoinWebClientFactory {
     private CelcoinWebClientFactory() {}
 
-    public static WebClient create(CelcoinProperties properties, boolean authenticated, CelcoinTokenService tokenService) {
+    public static WebClient create(
+            CelcoinProperties properties, boolean authenticated, CelcoinTokenService tokenService) {
+        return create(properties, authenticated, tokenService, null);
+    }
+
+    public static WebClient create(
+            CelcoinProperties properties,
+            boolean authenticated,
+            CelcoinTokenService tokenService,
+            CelcoinSslContextProvider sslContextProvider) {
         HttpClient httpClient = HttpClient.create()
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, (int) properties.connectTimeout().toMillis())
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, (int)
+                        properties.connectTimeout().toMillis())
                 .responseTimeout(properties.readTimeout());
+        if (sslContextProvider != null) {
+            httpClient = httpClient.secure(spec -> spec.sslContext(sslContextProvider.createSslContext()));
+        }
 
         WebClient.Builder builder = WebClient.builder()
                 .baseUrl(properties.baseUrl() == null ? "" : properties.baseUrl())
@@ -31,8 +43,9 @@ public final class CelcoinWebClientFactory {
     }
 
     private static ExchangeFilterFunction bearerFilter(CelcoinTokenService tokenService) {
-        return (request, next) -> next.exchange(org.springframework.web.reactive.function.client.ClientRequest.from(request)
-                .headers(headers -> headers.setBearerAuth(tokenService.getAccessToken()))
-                .build());
+        return (request, next) ->
+                next.exchange(org.springframework.web.reactive.function.client.ClientRequest.from(request)
+                        .headers(headers -> headers.setBearerAuth(tokenService.getAccessToken()))
+                        .build());
     }
 }

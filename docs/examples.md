@@ -156,6 +156,38 @@ CelcoinPixCashInResponse response =
         celcoinClient.pix().createStaticChargeCashIn(request, "cash-in-static-1");
 ```
 
+## Pix Automatico
+
+```java
+CelcoinPixAutoConsentRequest consentRequest = new CelcoinPixAutoConsentRequest(
+        "account-1",
+        "12345678901",
+        "Maria Silva",
+        "12345678",
+        new BigDecimal("1000.00"),
+        "MONTHLY",
+        10,
+        metadata);
+
+CelcoinPixAutoConsentResponse consent =
+        celcoinClient.pixAuto().createConsent(consentRequest, "pix-auto-consent-1");
+
+CelcoinPixAutoScheduleRequest scheduleRequest = new CelcoinPixAutoScheduleRequest(
+        "account-1",
+        consent.consentId(),
+        new BigDecimal("250.00"),
+        LocalDate.now().plusDays(7),
+        "MONTHLY",
+        10,
+        metadata);
+
+CelcoinPixAutoScheduleResponse schedule =
+        celcoinClient.pixAuto().schedule(scheduleRequest, "pix-auto-schedule-1");
+
+CelcoinPixAutoScheduleStatusResponse status =
+        celcoinClient.pixAuto().getScheduleStatus(schedule.scheduleId());
+```
+
 ## Boleto
 
 ```bash

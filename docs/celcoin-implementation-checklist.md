@@ -8,14 +8,14 @@ Legenda:
 
 ## Introdução
 
-- [ ] Escrever uma breve introdução funcional do SDK e dos produtos Celcoin.
+- [x] Escrever uma breve introdução funcional do SDK e dos produtos Celcoin.
 - [x] Documentar credenciais de acesso via `.env.example` e `CelcoinProperties`.
 - [x] Documentar segurança da API.
 - [x] Implementar base de idempotência das APIs.
-- [ ] Implementar persistência e consulta completa de idempotência por operação.
-- [~] Preparar certificado mTLS com `CelcoinSslContextProvider`.
-- [ ] Implementar mTLS no `WebClient`.
-- [ ] Implementar controle de taxa ou integração com headers de rate-control da Celcoin.
+- [x] Implementar persistência e consulta completa de idempotência por operação.
+- [x] Preparar certificado mTLS com `CelcoinSslContextProvider`.
+- [x] Implementar mTLS no `WebClient`.
+- [x] Implementar controle de taxa ou integração com headers de rate-control da Celcoin.
 - [x] Implementar primeira consulta funcional: autenticação `POST /v5/token`.
 - [ ] Implementar arquivo de movimentação via SFTP.
 - [ ] Avaliar e implementar servidor MCP da Celcoin.
@@ -174,29 +174,29 @@ Legenda:
 
 ### Jornada Pagadora
 
-- [ ] Autorização - visão geral.
-- [ ] Autorização - jornada 1.
-- [ ] Autorização - jornada 2.
-- [ ] Autorização - jornada 3.
-- [ ] Autorização - jornada 4.
-- [ ] Agendamento.
-- [ ] Liquidação.
-- [ ] Cancelamento do consentimento.
-- [ ] Cancelamento de agendamento.
-- [ ] Consultas - visão pagador.
+- [~] Autorização - visão geral.
+- [~] Autorização - jornada 1.
+- [~] Autorização - jornada 2.
+- [~] Autorização - jornada 3.
+- [~] Autorização - jornada 4.
+- [~] Agendamento.
+- [~] Liquidação.
+- [~] Cancelamento do consentimento.
+- [~] Cancelamento de agendamento.
+- [~] Consultas - visão pagador.
 
 ### Jornada Recebedora
 
-- [ ] Autorização - jornada 1.
-- [ ] Autorização - jornada 2.
-- [ ] Autorização - jornada 3.
-- [ ] Autorização - jornada 4.
-- [ ] Envio de agendamento.
-- [ ] Liquidação.
-- [ ] Retentativas de recebimento.
-- [ ] Cancelamento de agendamento.
-- [ ] Cancelamento de recorrência.
-- [ ] Motivos de rejeição pelo participante pagador.
+- [~] Autorização - jornada 1.
+- [~] Autorização - jornada 2.
+- [~] Autorização - jornada 3.
+- [~] Autorização - jornada 4.
+- [~] Envio de agendamento.
+- [~] Liquidação.
+- [~] Retentativas de recebimento.
+- [~] Cancelamento de agendamento.
+- [~] Cancelamento de recorrência.
+- [~] Motivos de rejeição pelo participante pagador.
 - [ ] FAQ Pix Automático.
 
 ## Pix Inteligente - Sweeping Accounts
@@ -744,7 +744,7 @@ Legenda:
 - [x] Maven Enforcer.
 - [x] JaCoCo.
 - [x] Spotless configurado.
-- [ ] Aplicar Spotless em CI.
-- [ ] Elevar regra JaCoCo para 80% domínio e 100% autenticação.
-- [ ] Criar pipeline CI.
-- [ ] Publicar artefato SNAPSHOT.
+- [x] Aplicar Spotless em CI.
+- [x] Elevar regra JaCoCo para 80% domínio e 100% autenticação.
+- [x] Criar pipeline CI.
+- [x] Publicar artefato SNAPSHOT.

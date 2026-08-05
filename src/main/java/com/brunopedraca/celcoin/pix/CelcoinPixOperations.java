@@ -34,13 +34,15 @@ public interface CelcoinPixOperations {
         return createStaticChargeCashIn(request, null);
     }
 
-    CelcoinPixCashInResponse createStaticChargeCashIn(CelcoinPixCashInStaticChargeRequest request, String idempotencyKey);
+    CelcoinPixCashInResponse createStaticChargeCashIn(
+            CelcoinPixCashInStaticChargeRequest request, String idempotencyKey);
 
     default CelcoinPixCashInResponse createDueDateQrCodeCashIn(CelcoinPixCashInDueDateQrCodeRequest request) {
         return createDueDateQrCodeCashIn(request, null);
     }
 
-    CelcoinPixCashInResponse createDueDateQrCodeCashIn(CelcoinPixCashInDueDateQrCodeRequest request, String idempotencyKey);
+    CelcoinPixCashInResponse createDueDateQrCodeCashIn(
+            CelcoinPixCashInDueDateQrCodeRequest request, String idempotencyKey);
 
     List<CelcoinPixPaymentResponse> listReceipts(String accountId);
 
@@ -88,7 +90,8 @@ public interface CelcoinPixOperations {
         return cashOutDynamicQrCode(request, null);
     }
 
-    CelcoinPixPaymentResponse cashOutDynamicQrCode(CelcoinPixCashOutDynamicQrCodeRequest request, String idempotencyKey);
+    CelcoinPixPaymentResponse cashOutDynamicQrCode(
+            CelcoinPixCashOutDynamicQrCodeRequest request, String idempotencyKey);
 
     CelcoinPixCashOutTransferListResponse listCashOutTransfers(CelcoinPixCashOutTransferListRequest request);
 
