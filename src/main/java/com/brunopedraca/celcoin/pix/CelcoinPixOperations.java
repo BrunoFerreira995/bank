@@ -4,49 +4,33 @@ import com.brunopedraca.celcoin.pix.PixDtos.*;
 import java.util.List;
 
 public interface CelcoinPixOperations {
+    // ===================== QR Code / cobranças (cash-in) =====================
+
     default CelcoinPixQrCodeResponse createQrCode(CelcoinPixQrCodeRequest request) {
         return createQrCode(request, null);
     }
 
     CelcoinPixQrCodeResponse createQrCode(CelcoinPixQrCodeRequest request, String idempotencyKey);
 
-    CelcoinPixStatusResponse getQrCodeStatus(String qrCodeId);
-
-    default CelcoinPixCashInResponse createAccountCashIn(CelcoinPixCashInAccountRequest request) {
-        return createAccountCashIn(request, null);
-    }
-
-    CelcoinPixCashInResponse createAccountCashIn(CelcoinPixCashInAccountRequest request, String idempotencyKey);
-
-    default CelcoinPixCashInResponse createRandomKeyCashIn(CelcoinPixCashInKeyRequest request) {
-        return createRandomKeyCashIn(request, null);
-    }
-
-    CelcoinPixCashInResponse createRandomKeyCashIn(CelcoinPixCashInKeyRequest request, String idempotencyKey);
-
-    default CelcoinPixCashInResponse createIndividualKeyCashIn(CelcoinPixCashInKeyRequest request) {
-        return createIndividualKeyCashIn(request, null);
-    }
-
-    CelcoinPixCashInResponse createIndividualKeyCashIn(CelcoinPixCashInKeyRequest request, String idempotencyKey);
-
-    default CelcoinPixCashInResponse createStaticChargeCashIn(CelcoinPixCashInStaticChargeRequest request) {
+    default CelcoinPixCashInResponse createStaticChargeCashIn(CelcoinPixStaticChargeRequest request) {
         return createStaticChargeCashIn(request, null);
     }
 
-    CelcoinPixCashInResponse createStaticChargeCashIn(
-            CelcoinPixCashInStaticChargeRequest request, String idempotencyKey);
+    CelcoinPixCashInResponse createStaticChargeCashIn(CelcoinPixStaticChargeRequest request, String idempotencyKey);
 
-    default CelcoinPixCashInResponse createDueDateQrCodeCashIn(CelcoinPixCashInDueDateQrCodeRequest request) {
+    default CelcoinPixCashInResponse createDueDateQrCodeCashIn(CelcoinPixDueDateQrCodeRequest request) {
         return createDueDateQrCodeCashIn(request, null);
     }
 
-    CelcoinPixCashInResponse createDueDateQrCodeCashIn(
-            CelcoinPixCashInDueDateQrCodeRequest request, String idempotencyKey);
+    CelcoinPixCashInResponse createDueDateQrCodeCashIn(CelcoinPixDueDateQrCodeRequest request, String idempotencyKey);
 
-    List<CelcoinPixPaymentResponse> listReceipts(String accountId);
+    CelcoinPixStaticChargeResponse getStaticCharge(String transactionIdBrCode, String transactionIdentification);
 
-    List<CelcoinPixCashInReceiptResponse> listCashInReceipts(String accountId);
+    CelcoinPixReceiptResponse getCashInReceipt(CelcoinPixReceiptRequest request);
+
+    CelcoinPixMovementResponse getMovements(CelcoinPixMovementRequest request);
+
+    // ===================== Devolução de cash-in =====================
 
     default CelcoinPixRefundResponse refund(CelcoinPixRefundRequest request) {
         return refund(request, null);
@@ -54,19 +38,19 @@ public interface CelcoinPixOperations {
 
     CelcoinPixRefundResponse refund(CelcoinPixRefundRequest request, String idempotencyKey);
 
-    CelcoinPixRefundResponse getRefund(String refundId);
+    CelcoinPixRefundResponse getRefund(String returnIdentification);
 
-    default CelcoinPixCashInCautionaryBlockResponse createCashInCautionaryBlock(
-            CelcoinPixCashInCautionaryBlockRequest request) {
-        return createCashInCautionaryBlock(request, null);
-    }
+    CelcoinPixDevolutionStatusResponse getDevolution(String returnIdentification);
 
-    CelcoinPixCashInCautionaryBlockResponse createCashInCautionaryBlock(
-            CelcoinPixCashInCautionaryBlockRequest request, String idempotencyKey);
+    // ===================== DICT =====================
 
-    CelcoinPixKeyResponse lookupKey(String pixKey);
+    CelcoinPixKeyLookupResponse lookupKey(String account, String pixKey);
 
-    CelcoinPixQrCodeResponse decodeEmv(String emv);
+    // ===================== EMV =====================
+
+    CelcoinPixEmvDecodeResponse decodeEmv(String emv);
+
+    // ===================== Cash-out / pagamentos =====================
 
     default CelcoinPixPaymentResponse cashOut(CelcoinPixPaymentRequest request) {
         return cashOut(request, null);
@@ -79,6 +63,12 @@ public interface CelcoinPixOperations {
     }
 
     CelcoinPixPaymentResponse cashOutToAccount(CelcoinPixCashOutAccountRequest request, String idempotencyKey);
+
+    default CelcoinPixPaymentResponse cashOutByKey(CelcoinPixCashOutKeyRequest request) {
+        return cashOutByKey(request, null);
+    }
+
+    CelcoinPixPaymentResponse cashOutByKey(CelcoinPixCashOutKeyRequest request, String idempotencyKey);
 
     default CelcoinPixPaymentResponse cashOutStaticQrCode(CelcoinPixCashOutStaticQrCodeRequest request) {
         return cashOutStaticQrCode(request, null);
@@ -93,19 +83,15 @@ public interface CelcoinPixOperations {
     CelcoinPixPaymentResponse cashOutDynamicQrCode(
             CelcoinPixCashOutDynamicQrCodeRequest request, String idempotencyKey);
 
-    CelcoinPixCashOutTransferListResponse listCashOutTransfers(CelcoinPixCashOutTransferListRequest request);
+    CelcoinPixStatusResponse getStatus(String id);
 
-    default CelcoinPixCashOutCautionaryBlockResponse createCashOutCautionaryBlock(
-            CelcoinPixCashOutCautionaryBlockRequest request) {
-        return createCashOutCautionaryBlock(request, null);
-    }
+    CelcoinPixStatusResponse getPaymentStatus(CelcoinPixPaymentStatusRequest request);
 
-    CelcoinPixCashOutCautionaryBlockResponse createCashOutCautionaryBlock(
-            CelcoinPixCashOutCautionaryBlockRequest request, String idempotencyKey);
-
-    CelcoinPixStatusResponse getStatus(String transactionId);
+    // ===================== Participantes =====================
 
     List<CelcoinPixParticipantResponse> participants();
+
+    // ===================== Gerenciamento de chaves =====================
 
     default CelcoinPixKeyResponse createKey(CelcoinPixKeyRequest request) {
         return createKey(request, null);
@@ -113,11 +99,35 @@ public interface CelcoinPixOperations {
 
     CelcoinPixKeyResponse createKey(CelcoinPixKeyRequest request, String idempotencyKey);
 
-    List<CelcoinPixKeyResponse> listKeys(String accountId);
+    CelcoinPixKeyListResponse listKeys(String account);
 
-    void deleteKey(String keyId, String idempotencyKey);
+    CelcoinPixKeyOperationResponse deleteKey(CelcoinPixDeleteKeyRequest request, String idempotencyKey);
 
-    CelcoinPixKeyResponse updateKeyName(String keyId, String name, String idempotencyKey);
+    default CelcoinPixKeyOperationResponse deleteKey(CelcoinPixDeleteKeyRequest request) {
+        return deleteKey(request, null);
+    }
+
+    CelcoinPixKeyUpdateResponse updateKeyName(CelcoinPixUpdateKeyRequest request, String idempotencyKey);
+
+    default CelcoinPixKeyUpdateResponse updateKeyName(CelcoinPixUpdateKeyRequest request) {
+        return updateKeyName(request, null);
+    }
+
+    // ===================== Split =====================
+
+    CelcoinPixSplitResponse createImmediateSplitQrCode(CelcoinPixImmediateSplitRequest request, String idempotencyKey);
+
+    default CelcoinPixSplitResponse createImmediateSplitQrCode(CelcoinPixImmediateSplitRequest request) {
+        return createImmediateSplitQrCode(request, null);
+    }
+
+    CelcoinPixSplitResponse createDueDateSplitQrCode(CelcoinPixDueDateSplitRequest request, String idempotencyKey);
+
+    default CelcoinPixSplitResponse createDueDateSplitQrCode(CelcoinPixDueDateSplitRequest request) {
+        return createDueDateSplitQrCode(request, null);
+    }
+
+    // ===================== Agendamento =====================
 
     default CelcoinPixScheduleResponse schedule(CelcoinPixScheduleRequest request) {
         return schedule(request, null);
@@ -127,11 +137,27 @@ public interface CelcoinPixOperations {
 
     CelcoinPixScheduleResponse getSchedule(String scheduleId);
 
-    void cancelSchedule(String scheduleId, String idempotencyKey);
+    CelcoinPixScheduleResponse cancelSchedule(String scheduleId, String idempotencyKey);
 
-    List<CelcoinPixScheduleResponse> listSchedules(String accountId);
+    default CelcoinPixScheduleResponse cancelSchedule(String scheduleId) {
+        return cancelSchedule(scheduleId, null);
+    }
 
-    CelcoinPixQrCodeResponse createImmediateSplitQrCode(CelcoinPixSplitRequest request, String idempotencyKey);
+    CelcoinPixScheduleListResponse listSchedules(CelcoinPixScheduleListRequest request);
 
-    CelcoinPixQrCodeResponse createDueDateSplitQrCode(CelcoinPixSplitRequest request, String idempotencyKey);
+    // ===================== Portabilidade / reivindicação =====================
+
+    default CelcoinPixClaimResponse claimKey(CelcoinPixClaimRequest request) {
+        return claimKey(request, null);
+    }
+
+    CelcoinPixClaimResponse claimKey(CelcoinPixClaimRequest request, String idempotencyKey);
+
+    CelcoinPixClaimResponse confirmClaim(String id, String reason, String idempotencyKey);
+
+    CelcoinPixClaimResponse cancelClaim(String id, String reason, String idempotencyKey);
+
+    CelcoinPixClaimResponse getClaim(String id);
+
+    CelcoinPixClaimListResponse listClaims(CelcoinPixClaimListRequest request);
 }

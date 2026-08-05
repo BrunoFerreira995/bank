@@ -42,10 +42,24 @@ public class CelcoinHttpClient {
         return exchange(HttpMethod.POST, path, body, responseType, context, idempotent);
     }
 
+    public <T> T put(String path, Object body, Class<T> responseType, CelcoinRequestContext context) {
+        boolean idempotent = context != null
+                && context.idempotencyKey() != null
+                && !context.idempotencyKey().isBlank();
+        return exchange(HttpMethod.PUT, path, body, responseType, context, idempotent);
+    }
+
+    public <T> T delete(String path, Object body, Class<T> responseType, CelcoinRequestContext context) {
+        boolean idempotent = context != null
+                && context.idempotencyKey() != null
+                && !context.idempotencyKey().isBlank();
+        return exchange(HttpMethod.DELETE, path, body, responseType, context, idempotent);
+    }
+
     public byte[] download(String path, CelcoinRequestContext context) {
         return webClient
                 .get()
-                .uri(path)
+                .uri(java.net.URI.create(absolute(path)))
                 .header("X-Correlation-Id", correlation(context))
                 .accept(MediaType.APPLICATION_PDF, MediaType.APPLICATION_OCTET_STREAM)
                 .retrieve()
@@ -80,8 +94,10 @@ public class CelcoinHttpClient {
             return idempotencyService.deserialize(replayed.get(), responseType);
         }
         try {
-            WebClient.RequestBodySpec spec =
-                    webClient.method(method).uri(path).header("X-Correlation-Id", correlation(context));
+            WebClient.RequestBodySpec spec = webClient
+                    .method(method)
+                    .uri(java.net.URI.create(absolute(path)))
+                    .header("X-Correlation-Id", correlation(context));
             if (idempotencyKey != null) {
                 spec.header("Idempotency-Key", idempotencyKey);
             }
@@ -134,6 +150,11 @@ public class CelcoinHttpClient {
             throw new CelcoinIntegrationException(
                     "Celcoin HTTP call failed: " + SensitiveDataMasker.mask(e.getMessage()), e);
         }
+    }
+
+    private String absolute(String path) {
+        String base = properties.baseUrl() == null ? "" : properties.baseUrl();
+        return base + path;
     }
 
     private boolean isTransient(Throwable throwable) {

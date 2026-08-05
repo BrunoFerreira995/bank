@@ -20,6 +20,20 @@ Legenda:
 - [ ] Implementar arquivo de movimentação via SFTP.
 - [ ] Avaliar e implementar servidor MCP da Celcoin.
 
+## Validação no Sandbox
+
+Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.celcoin.dev`):
+
+- [x] Credenciais de sandbox configuradas em `application-local.yml` e `.env.example`.
+- [x] Autenticação `POST /v5/token` validada (HTTP 200, token OAuth com validade de 2400s).
+- [x] Primeira consulta funcional `GET /pix/v1/participants` validada (lista real de participantes do SPI).
+- [x] Criação de QR Code dinâmico `POST /pix/v1/brcode/dynamic` validada (transactionId `4000715670`, EMV gerado).
+- [x] Decodificação de EMV `POST /pix/v1/emv/full` validada (type/key/amount/transactionIdentification).
+- [x] Cobrança estática `POST /pix/v1/brcode/static` validada (transactionId `40000046501`; `amount` deve ser numérico).
+- [x] Autenticação `POST /v5/token` via `application/x-www-form-urlencoded` (SDK já usa form-urlencoded).
+- [x] Suíte automatizada verde (`./mvnw clean verify`: 113 testes, 0 falhas, JaCoCo OK).
+- [x] Validação das migrations Flyway via Testcontainers (PostgreSQL em Docker).
+
 ## Homologação
 
 - [ ] Criar guia de homologação por produto.
@@ -51,7 +65,7 @@ Legenda:
 - [~] Adicionar exemplos de uso em `docs/examples.md`.
 - [ ] Documentar fluxo funcional de onboarding KYC.
 - [ ] Implementar testes unitários de serialização dos DTOs.
-- [~] Implementar testes WireMock de onboarding.
+- [ ] Implementar testes WireMock de onboarding.
 
 ## cel_banking - BaaS & Core
 
@@ -120,55 +134,55 @@ Legenda:
 
 ### Sobre o Pix
 
-- [ ] Documentar implantação Pix.
-- [~] Criar interfaces públicas Pix.
-- [~] Criar DTOs mínimos Pix.
+- [x] Documentar implantação Pix.
+- [x] Criar interfaces públicas Pix.
+- [x] Criar DTOs mínimos Pix.
 
 ### Cash-in
 
-- [~] Receber Pix Cash-in por agência e conta.
-- [~] Receber Pix Cash-in por chave aleatória.
-- [~] Receber Pix Cash-in por chaves individualizadas.
-- [~] Receber Pix Cash-in por cobrança estática.
-- [~] Receber Pix Cash-in por QR Code dinâmico immediate.
-- [~] Receber Pix Cash-in por QR Code dinâmico duedate.
-- [~] Implementar bloqueio cautelar de recebimento Pix.
-- [~] Consultar recebimentos Pix.
-- [~] Devolver Pix Cash-in.
-- [~] Implementar modelo de webhook Cash-in.
+- [x] Receber Pix Cash-in por agência e conta.
+- [x] Receber Pix Cash-in por chave aleatória.
+- [x] Receber Pix Cash-in por chaves individualizadas.
+- [x] Receber Pix Cash-in por cobrança estática.
+- [x] Receber Pix Cash-in por QR Code dinâmico immediate.
+- [x] Receber Pix Cash-in por QR Code dinâmico duedate.
+- [x] Implementar bloqueio cautelar de recebimento Pix.
+- [x] Consultar recebimentos Pix.
+- [x] Devolver Pix Cash-in.
+- [x] Implementar modelo de webhook Cash-in.
 
 ### Split Pix
 
-- [~] Preparar split de Pix Cash-in por QR Code dinâmico duedate.
-- [~] Preparar split de Pix Cash-in por QR Code dinâmico immediate.
+- [x] Preparar split de Pix Cash-in por QR Code dinâmico duedate.
+- [x] Preparar split de Pix Cash-in por QR Code dinâmico immediate.
 
 ### Cash-out
 
-- [~] Implementar DICT.
-- [~] Consultar chaves Pix externas DICT.
-- [~] Realizar Pix Cash-out por agência e conta.
-- [~] Realizar Pix Cash-out por chave Pix.
-- [~] Realizar Pix Cash-out por QR Code estático.
-- [~] Realizar Pix Cash-out por QR Code dinâmico.
-- [~] Consultar transferências, pagamentos e devoluções de Pix-out.
-- [ ] Mapear tabela de erros Cash-out.
-- [~] Implementar modelo de webhook Cash-out.
-- [~] Implementar bloqueio cautelar de envio Pix.
+- [x] Implementar DICT.
+- [x] Consultar chaves Pix externas DICT.
+- [x] Realizar Pix Cash-out por agência e conta.
+- [x] Realizar Pix Cash-out por chave Pix.
+- [x] Realizar Pix Cash-out por QR Code estático.
+- [x] Realizar Pix Cash-out por QR Code dinâmico.
+- [x] Consultar transferências, pagamentos e devoluções de Pix-out.
+- [x] Mapear tabela de erros Cash-out.
+- [x] Implementar modelo de webhook Cash-out.
+- [x] Implementar bloqueio cautelar de envio Pix.
 
 ### Gerenciamento de Chaves
 
-- [~] Cadastrar chave Pix.
-- [~] Excluir chaves Pix de uma conta.
-- [~] Consultar chaves Pix de uma conta.
-- [~] Alterar nome em uma chave Pix.
+- [x] Cadastrar chave Pix.
+- [x] Excluir chaves Pix de uma conta.
+- [x] Consultar chaves Pix de uma conta.
+- [x] Alterar nome em uma chave Pix.
 
 ### Portabilidade e Reivindicação de Chaves
 
-- [ ] Documentar primeiros passos.
-- [ ] Solicitar portabilidade de chave Pix.
-- [ ] Responder portabilidade de chave Pix.
-- [ ] Consultar pedidos de portabilidade ou reivindicação.
-- [ ] Mapear tabela de erros de portabilidade Pix.
+- [x] Documentar primeiros passos.
+- [x] Solicitar portabilidade de chave Pix.
+- [x] Responder portabilidade de chave Pix.
+- [x] Consultar pedidos de portabilidade ou reivindicação.
+- [x] Mapear tabela de erros de portabilidade Pix.
 
 ## Pix Automático
 
@@ -222,10 +236,10 @@ Legenda:
 
 ## Agendador de Transação Pix
 
-- [~] Agendar transação Pix.
-- [~] Consultar Pix agendado.
-- [~] Cancelar Pix agendado.
-- [~] Consultar lista de transações agendadas.
+- [x] Agendar transação Pix.
+- [x] Consultar Pix agendado.
+- [x] Cancelar Pix agendado.
+- [x] Consultar lista de transações agendadas.
 
 ## Emissão de Boletos
 
