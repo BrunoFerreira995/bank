@@ -41,38 +41,91 @@ CelcoinAccountListResponse response = celcoinClient.accounts().listAccounts(requ
 
 ```java
 CelcoinKycPersonAccountRequest request = new CelcoinKycPersonAccountRequest(
-        "12345678901",
-        "Maria Silva",
-        LocalDate.of(1990, 1, 10),
-        "maria@example.com",
-        "+5511999999999",
-        address,
-        financialInformation,
-        documents,
-        metadata);
+        "a7e9ea3f-69e4-4599-92b4-6cb8a79c3512", // clientCode
+        "91170215025", // CPF
+        "+5511912345678",
+        "testekyc@celcoin.com.br",
+        "Teste Mae",
+        "Teste teste",
+        "", // socialName
+        "31-12-2000", // birthDate no formato DD-MM-AAAA
+        new CelcoinKycAddress(
+                "06455030", "Alameda Xingu", "350", "", "Alphaville Industrial", "Barueri", "SP"),
+        false, // isPoliticallyExposedPerson
+        "BAAS",
+        List.of(new CelcoinKycDocument("SELFIE", "https://cloud.storage/selfie.jpeg")),
+        new CelcoinKycFinancialDetails("1DINP02", null, "ONP07", "NWNP02"));
 
 CelcoinKycOnboardingResponse response =
         celcoinClient.onboarding().createPersonAccount(request, "kyc-pf-1");
+String proposalId = response.proposalId();
 ```
 
 ## Abertura de Conta KYC PJ
 
 ```java
 CelcoinKycBusinessAccountRequest request = new CelcoinKycBusinessAccountRequest(
-        "12345678000190",
-        "Empresa Exemplo LTDA",
-        "Empresa Exemplo",
-        LocalDate.of(2020, 5, 15),
-        "contato@example.com",
-        "+551133333333",
-        address,
-        financialInformation,
-        owners,
-        documents,
-        metadata);
+        "a7e9ea3f-69e4-4599-92b4-6cb8a79c3512", // clientCode
+        "+5511912345678",
+        "87649940000194", // CNPJ
+        "testekyc@celcoin.com.br",
+        "Celcoin", // businessName (razão social)
+        "Celcoin Instituicao de Pagamento", // tradingName (nome fantasia)
+        "PJ",
+        List.of(new CelcoinKycBusinessOwner(
+                "SOCIO",
+                "72352781027",
+                "Nome Teste",
+                "+5511912345128",
+                "sociokyc@celcoin.com.br",
+                "Nome Mae",
+                "Nome",
+                "02-02-1990",
+                address,
+                false,
+                null)),
+        address, // businessAddress
+        "BAAS",
+        List.of(),
+        null); // financialCompanyDetails
 
 CelcoinKycOnboardingResponse response =
         celcoinClient.onboarding().createBusinessAccount(request, "kyc-pj-1");
+```
+
+## Consultar status de uma proposta de onboarding
+
+```java
+CelcoinKycProposalSearchResponse search =
+        celcoinClient.onboarding().getProposal("de20636c-5361-4df4-8a34-c01995a6976d");
+CelcoinKycProposal proposal = search.proposals().get(0);
+String status = proposal.status(); // APPROVED, REPROVED, PENDING, ...
+```
+
+## Atualização cadastral PF
+
+```java
+CelcoinKycUpdateResponse response = celcoinClient.onboarding().updatePersonAccount(
+        "30053913714179",
+        new CelcoinKycPersonAccountUpdateRequest(
+                "123456",
+                "+5512981175554",
+                "email@email.com",
+                "Celia Silva",
+                "Carlos Silva",
+                "Carlos",
+                address));
+```
+
+## Cadastrar webhook de onboarding
+
+```java
+CelcoinKycWebhookSubscriptionResponse response =
+        celcoinClient.onboarding().createWebhookSubscription(
+                new CelcoinKycWebhookSubscriptionRequest(
+                        "onboarding-proposal",
+                        "https://example.com/webhook",
+                        new CelcoinKycWebhookAuth("login", "password", "basic")));
 ```
 
 ## Pix Cash-out

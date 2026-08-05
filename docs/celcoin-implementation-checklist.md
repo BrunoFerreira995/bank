@@ -31,7 +31,7 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 - [x] Decodificação de EMV `POST /pix/v1/emv/full` validada (type/key/amount/transactionIdentification).
 - [x] Cobrança estática `POST /pix/v1/brcode/static` validada (transactionId `40000046501`; `amount` deve ser numérico).
 - [x] Autenticação `POST /v5/token` via `application/x-www-form-urlencoded` (SDK já usa form-urlencoded).
-- [x] Suíte automatizada verde (`./mvnw clean verify`: 113 testes, 0 falhas, JaCoCo OK).
+- [x] Suíte automatizada verde (`./mvnw clean verify`: 119 testes, 0 falhas, JaCoCo OK).
 - [x] Validação das migrations Flyway via Testcontainers (PostgreSQL em Docker).
 
 ## Homologação
@@ -43,29 +43,29 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 
 ## Onboarding KYC
 
-- [~] Criar pacote base `onboarding`.
+- [x] Criar pacote base `onboarding`.
 - [x] Criar interface pública `CelcoinOnboardingOperations`.
 - [x] Criar cliente HTTP `CelcoinOnboardingClient`.
 - [x] Registrar `CelcoinOnboardingOperations` no `CelcoinAutoConfiguration`.
 - [x] Expor operações de onboarding em `CelcoinClient`.
-- [ ] Mapear endpoints oficiais de onboarding KYC.
-- [~] Implementar criação de onboarding PF.
-- [~] Implementar criação de onboarding PJ.
-- [~] Implementar consulta de status de onboarding.
-- [~] Implementar atualização ou complementação cadastral.
-- [ ] Implementar envio de documentos.
-- [ ] Implementar autenticação biométrica.
-- [ ] Implementar validação de prova de vida, quando disponível no contrato oficial.
-- [~] Criar DTOs de KYC PF.
-- [~] Criar DTOs de KYC PJ.
-- [~] Criar DTOs de documentos e anexos.
-- [~] Criar DTOs de resposta e status de análise.
-- [~] Mapear webhooks de onboarding KYC.
+- [x] Mapear endpoints oficiais de onboarding KYC.
+- [x] Implementar criação de onboarding PF.
+- [x] Implementar criação de onboarding PJ.
+- [x] Implementar consulta de status de onboarding.
+- [x] Implementar atualização ou complementação cadastral.
+- [x] Implementar envio de documentos (via `files[]` com URL pública dentro da proposta).
+- [ ] Implementar autenticação biométrica (produto separado da Celcoin; via `SELFIE` na proposta).
+- [ ] Implementar validação de prova de vida (sem endpoint dedicado no contrato oficial; via webview).
+- [x] Criar DTOs de KYC PF.
+- [x] Criar DTOs de KYC PJ.
+- [x] Criar DTOs de documentos e anexos.
+- [x] Criar DTOs de resposta e status de análise.
+- [x] Mapear webhooks de onboarding KYC.
 - [ ] Mapear tabela de erros de onboarding.
-- [~] Adicionar exemplos de uso em `docs/examples.md`.
-- [ ] Documentar fluxo funcional de onboarding KYC.
-- [ ] Implementar testes unitários de serialização dos DTOs.
-- [ ] Implementar testes WireMock de onboarding.
+- [x] Adicionar exemplos de uso em `docs/examples.md`.
+- [x] Documentar fluxo funcional de onboarding KYC em `docs/onboarding.md`.
+- [x] Implementar testes unitários de serialização dos DTOs.
+- [x] Implementar testes WireMock de onboarding.
 
 ## cel_banking - BaaS & Core
 
