@@ -1,5 +1,35 @@
 # Webhooks
 
+Além do recebimento local, `client.webhooks()` gerencia as configurações e o
+histórico remoto de webhooks BaaS na Celcoin:
+
+```java
+var subscription = client.webhooks().register(
+        new WebhookDtos.WebhookSubscriptionRequest(
+                "pix-payment-in", "https://api.example.com/webhooks/celcoin",
+                new WebhookDtos.WebhookAuth("user", "password", "basic")),
+        "webhook-register-001");
+
+var configured = client.webhooks().listSubscriptions("pix-payment-in", true);
+var entities = client.webhooks().listEntities();
+var templates = client.webhooks().listTemplates(
+        new WebhookDtos.WebhookTemplateQuery(1, 200, 200, "pix-payment-in", "CONFIRMED"));
+```
+
+O módulo também oferece `update`, `delete`, `countReplays`, `replayDetails` e
+`resend`. O histórico de reenvio da Celcoin é limitado a sete dias; para datas
+anteriores, consulte o status da transação.
+
+O endpoint local `/webhooks/celcoin` valida a assinatura configurada, persiste
+o payload, deduplica pelo identificador externo e permite reprocessamento em
+`/admin/webhooks/{id}/retry`. O payload deve ser tratado como notificação
+transacional; o extrato da Celcoin continua sendo a fonte oficial de
+conciliação.
+
+Eventos de infração de saldo são aceitos pelo mesmo receptor e podem ser
+desserializados em `WebhookDtos.CelcoinInfractionBalanceEvent`. As entidades
+oficiais são `pix-med-balance-blocked` e `pix-med-balance-unblocked`.
+
 O endpoint público é:
 
 ```text
