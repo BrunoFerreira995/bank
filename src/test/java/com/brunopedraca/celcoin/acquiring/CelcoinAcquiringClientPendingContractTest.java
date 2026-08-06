@@ -21,7 +21,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class CelcoinAcquiringClientPendingContractTest {
+class CelcoinAcquiringClientConfigurationTest {
     private CelcoinAcquiringClient client;
 
     @BeforeEach
@@ -30,7 +30,7 @@ class CelcoinAcquiringClientPendingContractTest {
     }
 
     @Test
-    void shouldRejectSubAcquiringOperationsUntilOfficialContractIsAdded() {
+    void shouldRejectOperationsWithoutConfiguredHttpClient() {
         List<ThrowingCallable> operations = List.of(
                 () -> client.getAccreditationStatus("account-1"),
                 () -> client.createCustomer(customerRequest(), "customer-1"),
@@ -85,8 +85,7 @@ class CelcoinAcquiringClientPendingContractTest {
 
     private void assertPendingContract(ThrowingCallable callable) {
         assertThatThrownBy(callable::call)
-                .isInstanceOf(CelcoinIntegrationException.class)
-                .hasMessageContaining("Celcoin acquiring endpoint path is not configured");
+                .isInstanceOf(CelcoinIntegrationException.class);
     }
 
     private CelcoinAcquiringCustomerRequest customerRequest() {

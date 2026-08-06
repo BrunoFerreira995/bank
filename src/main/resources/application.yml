@@ -43,6 +43,11 @@ celcoin:
     truststore-path: ${CELCOIN_SSL_TRUSTSTORE_PATH:}
     truststore-type: PKCS12
     truststore-password: ${CELCOIN_SSL_TRUSTSTORE_PASSWORD:}
+  mcp:
+    enabled: ${CELCOIN_MCP_ENABLED:false}
+    path: ${CELCOIN_MCP_PATH:/mcp}
+    server-name: celcoin-spring-sdk
+    server-version: 0.1.0
   credit:
     enabled: ${CELCOIN_CREDIT_ENABLED:false}
     api-base-url: ${CELCOIN_CREDIT_API_BASE_URL:https://sandbox.platform.flowfinance.com.br}

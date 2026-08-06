@@ -57,6 +57,7 @@ import com.brunopedraca.celcoin.reconciliation.CelcoinReconciliationClient;
 import com.brunopedraca.celcoin.reconciliation.CelcoinReconciliationOperations;
 import com.brunopedraca.celcoin.antifraud.CelcoinAntifraudClient;
 import com.brunopedraca.celcoin.antifraud.CelcoinAntifraudOperations;
+import com.brunopedraca.celcoin.mcp.CelcoinMcpProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -67,7 +68,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @AutoConfiguration
-@EnableConfigurationProperties({CelcoinProperties.class, CelcoinCreditProperties.class, CelcoinEscrowProperties.class})
+@EnableConfigurationProperties({CelcoinProperties.class, CelcoinCreditProperties.class, CelcoinEscrowProperties.class,
+    CelcoinMcpProperties.class})
 @ConditionalOnProperty(prefix = "celcoin", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class CelcoinAutoConfiguration {
 

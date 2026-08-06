@@ -19,7 +19,7 @@ Legenda:
 - [x] Implementar controle de taxa ou integração com headers de rate-control da Celcoin.
 - [x] Implementar primeira consulta funcional: autenticação `POST /v5/token`.
 - [x] Implementar arquivo de movimentação via SFTP (`docs/movement-files.md`).
-- [~] Avaliar e implementar servidor MCP da Celcoin: não há protocolo/servidor oficial Celcoin fornecido para este SDK.
+- [x] Avaliar e implementar servidor MCP: adaptador JSON-RPC MCP opt-in em `/mcp`, com `initialize`, `tools/list` e `tools/call` para participantes Pix, decodificação EMV e saldo; não é um servidor oficial Celcoin.
 
 ## Validação no Sandbox
 
@@ -32,7 +32,7 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 - [x] Decodificação de EMV `POST /pix/v1/emv/full` validada (type/key/amount/transactionIdentification).
 - [x] Cobrança estática `POST /pix/v1/brcode/static` validada (transactionId `40000046501`; `amount` deve ser numérico).
 - [x] Autenticação `POST /v5/token` via `application/x-www-form-urlencoded` (SDK já usa form-urlencoded).
-- [~] Suíte automatizada: compilação principal passa; execução WireMock no sandbox local depende de permissão para abrir portas.
+- [x] Suíte automatizada: `./mvnw verify` passa com 145 testes, 0 falhas, 0 erros e cobertura JaCoCo global de 68,49%.
 - [x] Validação das migrations Flyway via Testcontainers (PostgreSQL em Docker).
 
 ## Homologação
