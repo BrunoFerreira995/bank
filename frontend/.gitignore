@@ -6,6 +6,9 @@ ios/Pods/
 ios/build/
 dist/
 coverage/
+dist-web/
+.env.web
+test-results/
 .env
 .env.*
 !.env.example

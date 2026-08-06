@@ -1,0 +1,10 @@
+{
+  "environment": "sandbox",
+  "endpoints": {
+    "session": "/mobile/v1/session",
+    "accounts": "/mobile/v1/accounts",
+    "pix": "/mobile/v1/pix",
+    "openFinance": "/mobile/v1/open-finance"
+  },
+  "requiredHeaders": ["Authorization", "Idempotency-Key"]
+}

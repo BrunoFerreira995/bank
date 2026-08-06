@@ -10,6 +10,7 @@ credenciais SFTP ou regras antifraude.
 - Android Studio/SDK para Android;
 - Xcode e CocoaPods para iOS;
 - CocoaPods instalado e configurado para iOS.
+- Navegador moderno para a distribuição web.
 
 ## Inicialização
 
@@ -22,6 +23,20 @@ npm start
 
 O baseline usa React Native 0.86, a New Architecture e os projetos nativos
 Android/iOS gerados pelo React Native CLI.
+
+## Web
+
+O mesmo código compartilhado também pode ser executado com `react-native-web`:
+
+```bash
+cp .env.web.example .env
+npm run web
+npm run web:build
+```
+
+Na web, os valores usam o prefixo `VITE_`. O adaptador web de sessão é apenas
+uma compatibilidade de navegador; autenticação, segredos, mTLS e operações
+financeiras continuam no BFF.
 
 ## Configuração
 

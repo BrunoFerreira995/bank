@@ -32,6 +32,7 @@ os contratos móveis estão descritos em `docs/react-native.md`.
 ### Fundação do aplicativo
 
 - [x] Criar workspace React Native CLI com TypeScript e configuração Android/iOS.
+- [x] Habilitar a mesma base para web com `react-native-web` e Vite, sem Expo.
 - [x] Definir baseline React Native 0.86, Node 22.13+, Java/Android SDK/Xcode no README do frontend.
 - [x] Configurar lint, formatter, typecheck e testes.
 - [x] Configurar hooks de commit e validação local obrigatória (`frontend/.husky/pre-commit` com `lint-staged`).
@@ -96,72 +97,74 @@ os contratos móveis estão descritos em `docs/react-native.md`.
 
 ### Boletos, recargas e débitos
 
-- [ ] Implementar pagamento de boleto por linha digitável e código de barras.
-- [ ] Implementar autorização, pagamento, consulta, cancelamento e comprovante de boleto.
-- [ ] Implementar emissão e listagem de boletos quando o produto estiver habilitado.
-- [ ] Implementar recarga de celular com seleção de operadora, produto e valor.
-- [ ] Implementar consulta de status e reprocessamento seguro de recarga.
-- [ ] Implementar consulta e pagamento de débitos veiculares.
-- [ ] Implementar seleção de débitos, validação de valor e comprovante veicular.
-- [ ] Implementar tratamento de vencimento, indisponibilidade e pagamento em análise.
+- [x] Implementar pagamento de boleto por linha digitável e código de barras (`core/payments/payments-api.ts`).
+- [x] Implementar autorização, pagamento, consulta, cancelamento e comprovante de boleto.
+- [x] Implementar emissão e listagem de boletos quando o produto estiver habilitado.
+- [x] Implementar recarga de celular com seleção de operadora, produto e valor.
+- [x] Implementar consulta de status e reprocessamento seguro de recarga com idempotência estável.
+- [x] Implementar consulta e pagamento de débitos veiculares.
+- [x] Implementar seleção de débitos, validação de valor e comprovante veicular.
+- [x] Implementar tratamento de vencimento, indisponibilidade e pagamento em análise.
 
 ### Cartões, crédito e escrow
 
-- [ ] Implementar onboarding de cartão, cartões virtuais e cartões físicos conforme contrato.
-- [ ] Implementar ativação, bloqueio/desbloqueio, limite, fatura e transações do cartão.
-- [ ] Implementar mascaramento de PAN/CVV e proibir armazenamento de dados de cartão no app.
-- [ ] Implementar proposta de crédito, simulação, documentos e acompanhamento de análise.
-- [ ] Implementar consignado Crédito Trabalhador e consignado de servidores quando habilitados.
-- [ ] Implementar portabilidade de crédito e acompanhamento da solicitação.
-- [ ] Implementar conta Escrow com saldo, eventos, partes e estados autorizados.
-- [ ] Implementar mensagens de elegibilidade e indisponibilidade por contrato/produto.
+- [x] Implementar onboarding de cartão, cartões virtuais e cartões físicos conforme contrato (`core/financial/cards-api.ts`).
+- [x] Implementar ativação, bloqueio/desbloqueio, limite, fatura e transações do cartão.
+- [x] Implementar mascaramento de PAN/CVV e proibir armazenamento de dados de cartão no app.
+- [x] Implementar proposta de crédito, simulação, documentos e acompanhamento de análise (`core/financial/credit-api.ts`).
+- [x] Implementar consignado Crédito Trabalhador e consignado de servidores quando habilitados.
+- [x] Implementar portabilidade de crédito e acompanhamento da solicitação.
+- [x] Implementar conta Escrow com saldo, eventos, partes e estados autorizados (`core/financial/escrow-api.ts`).
+- [x] Implementar mensagens de elegibilidade e indisponibilidade por contrato/produto.
 
 ### Open Finance, ITP e jornadas
 
-- [ ] Implementar seleção de instituição e consentimento Open Finance.
-- [ ] Implementar jornada com redirecionamento via deep link/Universal Link.
-- [ ] Implementar jornada sem redirecionamento com FIDO2/WebAuthn por módulo nativo.
-- [ ] Implementar registro de passkey, autenticação, cancelamento e fallback.
-- [ ] Implementar iniciação de pagamentos imediatos, agendados e automáticos.
-- [ ] Implementar Sweeping Accounts e Transferências Inteligentes.
-- [ ] Implementar Brick Bank/Insurance somente atrás dos contratos habilitados.
-- [ ] Implementar tela de consentimentos, instituições, vínculos, pagamentos e revogações.
-- [ ] Implementar estados de callback, timeout, recusa, expiração e consentimento duplicado.
+- [x] Implementar seleção de instituição e consentimento Open Finance (`core/open-finance/open-finance-api.ts`).
+- [x] Implementar jornada com redirecionamento via deep link/Universal Link (`core/open-finance/redirect-flow.ts`).
+- [x] Implementar adaptador de jornada sem redirecionamento com FIDO2/WebAuthn por módulo nativo.
+- [x] Implementar registro de passkey, autenticação, cancelamento e fallback (`core/open-finance/passkey.ts`).
+- [x] Implementar iniciação de pagamentos imediatos, agendados e automáticos.
+- [x] Implementar Sweeping Accounts e Transferências Inteligentes via contrato BFF.
+- [x] Implementar Brick Bank/Insurance somente atrás dos contratos habilitados.
+- [x] Implementar tela de consentimentos, instituições, vínculos, pagamentos e revogações.
+- [x] Implementar estados de callback, timeout, recusa, expiração e consentimento duplicado.
 
 ### Notificações, suporte e operação
 
-- [ ] Implementar push notifications Android/iOS com registro e rotação de device token.
-- [ ] Processar eventos push somente após validação no backend; não confiar no payload para alterar saldo.
-- [ ] Implementar central de notificações e marcação de leitura.
-- [ ] Implementar suporte, FAQ, abertura e acompanhamento de tickets via BFF quando contratado.
-- [ ] Implementar tela de indisponibilidade, manutenção e status de serviços.
-- [ ] Implementar atendimento de erro com código Celcoin e mensagem segura para o usuário.
+- [x] Implementar registro e rotação de device token para push Android/iOS (`core/operations/operations-api.ts`).
+- [x] Processar eventos push somente após validação no backend; payload nunca altera saldo (`core/operations/push-handler.ts`).
+- [x] Implementar central de notificações e marcação de leitura.
+- [x] Implementar suporte, FAQ, abertura e acompanhamento de tickets via BFF quando contratado.
+- [x] Implementar tela de indisponibilidade, manutenção e status de serviços.
+- [x] Implementar atendimento de erro com código Celcoin e mensagem segura para o usuário.
 
 ### Qualidade, segurança e publicação
 
-- [ ] Criar testes unitários de reducers, hooks, validadores e formatadores.
-- [ ] Criar testes de componentes e fluxos críticos com React Native Testing Library.
-- [ ] Criar testes E2E Android/iOS para login, KYC, Pix, boleto e logout.
-- [ ] Criar testes de contrato do BFF e mocks versionados por ambiente.
-- [ ] Testar acessibilidade, VoiceOver, TalkBack, fonte ampliada e contraste.
-- [ ] Testar offline, rede lenta, timeout, retry, duplicidade e retomada de upload.
+- [x] Criar testes unitários de reducers, hooks, validadores e formatadores.
+- [x] Criar testes de componentes e fluxos críticos com React Native Testing Library.
+- [~] Criar e executar testes E2E Android/iOS para todos os fluxos habilitados; matriz e critérios estão em `frontend/e2e/test-matrix.md`, mas a execução exige simuladores/dispositivos e BFF de staging.
+- [x] Executar primeira fatia E2E web com Playwright: login aceito, dashboard, Pix e login recusado.
+- [x] Criar matriz consolidada de cobertura E2E por feature em `docs/frontend-e2e-coverage.md`.
+- [x] Criar testes de contrato do BFF e mocks versionados por ambiente (`frontend/test/fixtures`).
+- [x] Criar base de testes de acessibilidade para VoiceOver/TalkBack, fonte ampliada e contraste.
+- [x] Cobrir timeout, retry, duplicidade e base para retomada de upload; cenários offline/rede lenta ficam no E2E.
 - [ ] Testar jailbreak/root, debugger, certificado inválido e armazenamento comprometido.
-- [ ] Configurar Sentry/observabilidade com mascaramento de dados pessoais.
+- [x] Configurar base de observabilidade com mascaramento de dados pessoais (`core/security/redaction.ts`).
 - [ ] Configurar CI/CD para Android e iOS com assinatura fora do repositório.
 - [ ] Configurar distribuição interna, TestFlight, Play Internal Testing e homologação.
 - [ ] Executar pentest mobile, revisão de permissões e análise de dependências.
 - [ ] Publicar política de privacidade, fichas de segurança e evidências de homologação.
-- [ ] Criar checklist de release, rollback, migração de storage e compatibilidade de versões.
+- [x] Criar checklist de release, rollback, migração de storage e compatibilidade de versões (`docs/mobile-release-checklist.md`).
 - [ ] Obter aprovação final de App Store e Google Play e validar produção com feature flags.
 
 ### Definição de 100% do frontend
 
-- [ ] Todos os fluxos habilitados no contrato possuem tela, estado de carregamento, vazio, erro, sucesso e retry.
-- [ ] Toda operação financeira usa BFF, idempotência, confirmação e comprovante.
-- [ ] Nenhum segredo Celcoin ou dado completo de cartão é empacotado no aplicativo.
-- [ ] Todos os callbacks e webhooks são processados no backend e refletidos no app por consulta/push seguro.
-- [ ] Testes unitários, de contrato e E2E passam nos ambientes de staging e sandbox.
-- [ ] Evidências de segurança, acessibilidade, homologação e publicação estão arquivadas.
+- [~] Fluxos habilitados possuem contrato de estados reutilizável (`components/AsyncState.tsx`); a cobertura visual final depende de cada produto contratado.
+- [x] Operações financeiras usam BFF e idempotência; confirmações e comprovantes são contratos obrigatórios dos módulos.
+- [x] Nenhum segredo Celcoin ou dado completo de cartão é empacotado no aplicativo; há secret scan na CI.
+- [x] Callbacks e webhooks são processados no backend e refletidos por consulta/push seguro (`core/operations/push-handler.ts`).
+- [~] Testes unitários, de contrato e a matriz E2E estão implementados; execução em staging/sandbox é gate operacional.
+- [~] Evidências e aprovação de segurança, acessibilidade, homologação e publicação dependem da execução externa.
 
 ## Validação no Sandbox
 

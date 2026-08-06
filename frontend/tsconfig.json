@@ -10,5 +10,6 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx"]
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "web", "src/web", "vite.config.ts"]
 }

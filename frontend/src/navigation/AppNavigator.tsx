@@ -1,5 +1,5 @@
 import { NavigationContainer, type LinkingOptions } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createStackNavigator } from "@react-navigation/stack";
 import { useEffect } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { useSessionStore } from "@/core/auth/session-store";
@@ -8,6 +8,10 @@ import { AccountDashboardScreen } from "@/screens/AccountDashboardScreen";
 import { ProfileScreen } from "@/screens/ProfileScreen";
 import { StatementScreen } from "@/screens/StatementScreen";
 import { PixScreen } from "@/screens/PixScreen";
+import { PaymentsScreen } from "@/screens/PaymentsScreen";
+import { FinancialProductsScreen } from "@/screens/FinancialProductsScreen";
+import { OpenFinanceScreen } from "@/screens/OpenFinanceScreen";
+import { OperationsScreen } from "@/screens/OperationsScreen";
 import { OnboardingScreen } from "@/screens/OnboardingScreen";
 
 type RootStackParamList = {
@@ -17,9 +21,13 @@ type RootStackParamList = {
   Statement: undefined;
   Profile: undefined;
   Pix: undefined;
+  Payments: undefined;
+  FinancialProducts: undefined;
+  OpenFinance: undefined;
+  Operations: undefined;
 };
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const Stack = createStackNavigator<RootStackParamList>();
 const linking: LinkingOptions<RootStackParamList> = {
   prefixes: ["celcoin://", "https://app.example.com"],
   config: { screens: { Login: "login", Onboarding: "onboarding", Home: "home" } },
@@ -56,6 +64,26 @@ export function AppNavigator() {
             />
             <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: "Perfil" }} />
             <Stack.Screen name="Pix" component={PixScreen} options={{ title: "Pix" }} />
+            <Stack.Screen
+              name="Payments"
+              component={PaymentsScreen}
+              options={{ title: "Boletos e pagamentos" }}
+            />
+            <Stack.Screen
+              name="FinancialProducts"
+              component={FinancialProductsScreen}
+              options={{ title: "Produtos financeiros" }}
+            />
+            <Stack.Screen
+              name="OpenFinance"
+              component={OpenFinanceScreen}
+              options={{ title: "Open Finance" }}
+            />
+            <Stack.Screen
+              name="Operations"
+              component={OperationsScreen}
+              options={{ title: "Suporte e operação" }}
+            />
           </>
         ) : (
           <>

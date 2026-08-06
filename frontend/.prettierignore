@@ -1,5 +1,7 @@
 node_modules/
 coverage/
+dist-web/
+test-results/
 android/.gradle/
 android/build/
 android/app/build/

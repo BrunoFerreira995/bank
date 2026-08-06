@@ -14,7 +14,18 @@ import { useActiveAccount } from "@/core/account/account-store";
 export function AccountDashboardScreen({
   navigation,
 }: {
-  navigation: { navigate: (route: "Statement" | "Profile" | "Pix") => void };
+  navigation: {
+    navigate: (
+      route:
+        | "Statement"
+        | "Profile"
+        | "Pix"
+        | "Payments"
+        | "FinancialProducts"
+        | "OpenFinance"
+        | "Operations",
+    ) => void;
+  };
 }) {
   const { accountId, setAccount } = useActiveAccount();
   const accounts = useQuery({ queryKey: ["accounts"], queryFn: listAccounts });
@@ -66,6 +77,13 @@ export function AccountDashboardScreen({
       <Button title="Ver extrato" onPress={() => navigation.navigate("Statement")} />
       <Button title="Dados cadastrais" onPress={() => navigation.navigate("Profile")} />
       <Button title="Pix" onPress={() => navigation.navigate("Pix")} />
+      <Button title="Boletos e recargas" onPress={() => navigation.navigate("Payments")} />
+      <Button
+        title="Cartões, crédito e Escrow"
+        onPress={() => navigation.navigate("FinancialProducts")}
+      />
+      <Button title="Open Finance" onPress={() => navigation.navigate("OpenFinance")} />
+      <Button title="Suporte e notificações" onPress={() => navigation.navigate("Operations")} />
       <Text style={styles.subtitle}>Movimentações de hoje</Text>
       {daily.data?.slice(0, 5).map((item) => (
         <Text key={item.id}>

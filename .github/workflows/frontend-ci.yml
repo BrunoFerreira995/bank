@@ -30,3 +30,17 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
       - run: npm run validate
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e:web
+
+  secret-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reject credentials and private keys in mobile source
+        run: |
+          if rg -n --glob '!frontend/.env.example' --glob '!frontend/package-lock.json' \
+            "client_secret|clientSecret|BEGIN (RSA |EC )?PRIVATE KEY|pan[[:space:]]*[:=]|cvv[[:space:]]*[:=]" frontend; then
+            echo "Potential secret or full card data found in frontend source"
+            exit 1
+          fi
