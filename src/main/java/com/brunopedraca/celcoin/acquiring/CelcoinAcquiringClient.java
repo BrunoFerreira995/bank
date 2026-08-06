@@ -1,6 +1,7 @@
 package com.brunopedraca.celcoin.acquiring;
 
 import com.brunopedraca.celcoin.acquiring.AcquiringDtos.*;
+import com.brunopedraca.celcoin.common.exception.CelcoinIntegrationException;
 import com.brunopedraca.celcoin.common.http.CelcoinHttpClient;
 import com.brunopedraca.celcoin.common.http.CelcoinRequestContext;
 import java.net.URLEncoder;
@@ -148,6 +149,137 @@ public class CelcoinAcquiringClient implements CelcoinAcquiringOperations {
         return httpClient.download("/baas/v1/cash/receivables/" + encode(reportId) + "/download", context(null));
     }
 
+    @Override
+    public CelcoinAcquiringPlanResponse createPlan(CelcoinAcquiringPlanRequest request, String key) {
+        return pending();
+    }
+
+    @Override
+    public CelcoinAcquiringPlanListResponse listPlans(CelcoinAcquiringListRequest request) {
+        return pending();
+    }
+
+    @Override
+    public CelcoinAcquiringPlanResponse updatePlan(CelcoinAcquiringPlanRequest request) {
+        return pending();
+    }
+
+    @Override
+    public void deletePlan(String planId, String key) {
+        pendingVoid();
+    }
+
+    @Override
+    public CelcoinAcquiringSubscriptionResponse createSubscription(
+            CelcoinAcquiringSubscriptionRequest request, String key) {
+        return pending();
+    }
+
+    @Override
+    public CelcoinAcquiringSubscriptionResponse createManualSubscription(
+            CelcoinAcquiringSubscriptionRequest request, String key) {
+        return pending();
+    }
+
+    @Override
+    public CelcoinAcquiringSubscriptionListResponse listSubscriptions(CelcoinAcquiringListRequest request) {
+        return pending();
+    }
+
+    @Override
+    public CelcoinAcquiringChargeResponse addSubscriptionTransaction(
+            CelcoinAcquiringSubscriptionTransactionRequest request, String key) {
+        return pending();
+    }
+
+    @Override
+    public CelcoinAcquiringSubscriptionResponse updateSubscription(CelcoinAcquiringSubscriptionRequest request) {
+        return pending();
+    }
+
+    @Override
+    public CelcoinAcquiringSubscriptionResponse updateSubscriptionPayment(
+            CelcoinAcquiringSubscriptionPaymentUpdateRequest request) {
+        return pending();
+    }
+
+    @Override
+    public CelcoinAcquiringChargeResponse updateSubscriptionTransaction(
+            CelcoinAcquiringSubscriptionTransactionRequest request) {
+        return pending();
+    }
+
+    @Override
+    public CelcoinAcquiringChargeResponse retrySubscriptionCharge(String transactionId, String key) {
+        return pending();
+    }
+
+    @Override
+    public CelcoinAcquiringChargeResponse captureSubscriptionCharge(String transactionId, String key) {
+        return pending();
+    }
+
+    @Override
+    public CelcoinAcquiringChargeResponse refundSubscriptionCharge(String transactionId, String key) {
+        return pending();
+    }
+
+    @Override
+    public CelcoinAcquiringSubscriptionResponse cancelSubscription(String subscriptionId, String key) {
+        return pending();
+    }
+
+    @Override
+    public CelcoinAcquiringChargeResponse cancelSubscriptionTransaction(String transactionId, String key) {
+        return pending();
+    }
+
+    @Override
+    public CelcoinAcquiringChargebackListResponse listChargebacks(CelcoinAcquiringListRequest request) {
+        return pending();
+    }
+
+    @Override
+    public CelcoinAcquiringChargebackResponse sendChargebackDefense(CelcoinAcquiringChargebackDefenseRequest request) {
+        return pending();
+    }
+
+    @Override
+    public CelcoinAcquiringChargebackResponse withdrawChargebackDispute(String chargebackId, String key) {
+        return pending();
+    }
+
+    @Override
+    public CelcoinAcquiringWebhookResponse createChargebackWebhook(CelcoinAcquiringWebhookRequest request) {
+        return pending();
+    }
+
+    @Override
+    public CelcoinAcquiringChargebackResponse simulateChargeback(String transactionId, String status) {
+        return pending();
+    }
+
+    @Override
+    public CelcoinAcquiringCardTokenResponse tokenizeCard(CelcoinAcquiringCardTokenRequest request) {
+        return pending();
+    }
+
+    @Override
+    public CelcoinAcquiringFeeListResponse listFees(String accountId) {
+        return pending();
+    }
+
+    @Override
+    public CelcoinAcquiringTransactionListResponse listTransactions(CelcoinAcquiringListRequest request) {
+        return pending();
+    }
+
+    @Override
+    public CelcoinAcquiringReceivablesStatementResponse getReceivablesStatement(
+            CelcoinAcquiringListRequest request) {
+        return pending();
+    }
+
     private String chargePath(String chargeId) {
         return "/baas/v1/cash/charges/" + encode(chargeId);
     }
@@ -181,6 +313,19 @@ public class CelcoinAcquiringClient implements CelcoinAcquiringOperations {
     private CelcoinRequestContext context(String key) { return CelcoinRequestContext.create(key); }
 
     private void ensureConfigured() {
-        if (httpClient == null) throw new IllegalStateException("Celcoin acquiring endpoint is not configured");
+        if (httpClient == null) throw pendingException();
+    }
+
+    private <T> T pending() {
+        throw pendingException();
+    }
+
+    private void pendingVoid() {
+        throw pendingException();
+    }
+
+    private CelcoinIntegrationException pendingException() {
+        return new CelcoinIntegrationException(
+                "Celcoin acquiring endpoint path is not configured because the official contract was not provided");
     }
 }

@@ -152,7 +152,8 @@ public class CelcoinAccountClient implements CelcoinAccountOperations {
     public CelcoinStatementResponse getStatement(CelcoinStatementRequest request) {
         ensureConfigured();
         String path = "/baas/v2/wallet/movement?" + query().param("Account", request.accountId())
-                .param("DateFrom", request.startDate()).param("DateTo", request.endDate());
+                .param("DateFrom", request.startDate()).param("DateTo", request.endDate())
+                .param("Page", request.page()).param("Limit", request.size());
         return httpClient.get(path, CelcoinStatementResponse.class, context(null));
     }
 

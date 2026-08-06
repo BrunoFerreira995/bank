@@ -14,9 +14,14 @@ por domínio.
 | --- | --- | --- |
 | Autenticação (`POST /v5/token`) | `auth` | Implementado |
 | Onboarding KYC (PF/PJ) | `onboarding` | Estrutura preparada |
-| Contas BaaS & Core Banking | `banking` | Estrutura preparada |
+| Contas BaaS & Core Banking | `banking` | Implementado |
 | Pix (cash-in, cash-out, chaves, split) | `pix` | Estrutura preparada |
-| Pix Automático (recorrência) | `pixauto` | Estrutura preparada |
+| Pix Automático (recorrência) | `pixauto` | Implementado |
+| Pix Inteligente (Sweeping Accounts) | `sweeping` | Implementado |
+| Pix Indireto | `indirectPix` | Implementado |
+| CNAB | `cnab` | Implementado |
+| Open Finance as a Service | `openFinance` | Implementado |
+| Jornada Sem Redirecionamento / FIDO | `jsr` | Implementado |
 | Boletos e cobranças | `boleto` | Estrutura preparada |
 | Cartões | `cards` | Estrutura preparada |
 | Subadquirência e AaaS | `acquiring` | Estrutura preparada |
@@ -25,10 +30,8 @@ por domínio.
 | Rate limit / headers de controle | `common.http` | Implementado |
 | mTLS | `common.http` | Implementado |
 
-"Estrutura preparada" significa que as interfaces públicas, os DTOs mínimos e os
-clientes já existem, mas os métodos que dependem de URLs e payloads oficiais da
-Celcoin lançam uma exceção controlada até que os contratos sejam anexados ao
-projeto.
+Alguns produtos ainda permanecem como estrutura preparada quando a Celcoin não
+publicou o endpoint ou payload necessário para o contrato do SDK.
 
 ## Como o SDK funciona
 

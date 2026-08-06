@@ -9,6 +9,9 @@ import java.time.Duration;
 import java.util.Objects;
 import java.util.Optional;
 import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.Resource;
+import org.springframework.http.client.MultipartBodyBuilder;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -47,6 +50,45 @@ public class CelcoinHttpClient {
                 && context.idempotencyKey() != null
                 && !context.idempotencyKey().isBlank();
         return exchange(HttpMethod.PUT, path, body, responseType, context, idempotent);
+    }
+
+    public <T> T patch(String path, Object body, Class<T> responseType, CelcoinRequestContext context) {
+        boolean idempotent = context != null
+                && context.idempotencyKey() != null
+                && !context.idempotencyKey().isBlank();
+        return exchange(HttpMethod.PATCH, path, body, responseType, context, idempotent);
+    }
+
+    public <T> T postMultipart(
+            String path,
+            Resource file,
+            String clientRequestId,
+            String account,
+            Class<T> responseType,
+            CelcoinRequestContext context) {
+        MultipartBodyBuilder multipart = new MultipartBodyBuilder();
+        multipart.part("file", file);
+        multipart.part("clientRequestId", clientRequestId);
+        if (account != null && !account.isBlank()) multipart.part("account", account);
+        String idempotencyKey = context == null ? null : context.idempotencyKey();
+        try {
+            WebClient.RequestBodySpec spec = webClient.post()
+                    .uri(java.net.URI.create(absolute(path)))
+                    .header("X-Correlation-Id", correlation(context));
+            if (idempotencyKey != null) spec.header("Idempotency-Key", idempotencyKey);
+            return spec.body(BodyInserters.fromMultipartData(multipart.build())).retrieve()
+                    .onStatus(status -> status.isError(), response -> response.bodyToMono(String.class)
+                            .defaultIfEmpty("Celcoin API error")
+                            .map(payload -> new CelcoinApiException(
+                                    SensitiveDataMasker.mask(payload), response.statusCode(), correlation(context),
+                                    response.headers().asHttpHeaders().getFirst("X-Request-Id"))))
+                    .bodyToMono(responseType)
+                    .block(properties.readTimeout().plusSeconds(5));
+        } catch (CelcoinApiException exception) {
+            throw exception;
+        } catch (RuntimeException exception) {
+            throw new CelcoinIntegrationException("Celcoin multipart request failed", exception);
+        }
     }
 
     public <T> T delete(String path, Object body, Class<T> responseType, CelcoinRequestContext context) {

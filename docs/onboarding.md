@@ -39,6 +39,28 @@ atualização cadastral e os webhooks de acompanhamento.
 | Atualização cadastral PF | `updatePersonAccount` | `PUT /onboarding/v1/onboarding-proposal/account/{account}/natural-person` |
 | Cadastro de webhook | `createWebhookSubscription` | `POST /baas/v2/webhook/subscription` |
 
+## Biometria, prova de vida e erros
+
+`SELFIE` pode ser enviado em `files[]` para os fluxos de análise documental.
+Autenticação biométrica e prova de vida interativa, entretanto, são produtos
+ou jornadas específicas da Celcoin; o contrato consultado não expõe endpoint
+REST dedicado para o SDK. A aplicação deve habilitar a jornada Celcoin/WebView
+correspondente e tratar o resultado por webhook/status, sem simular aprovação
+localmente.
+
+| HTTP/código | Cenário KYC | Ação |
+|---|---|---|
+| 400 | payload, data ou documento inválido | corrigir a proposta |
+| 401/403 | token, mTLS ou escopo inválido | renovar credencial/verificar habilitação |
+| 404 | proposta inexistente | confirmar `proposalId` |
+| 409 | proposta duplicada ou estado incompatível | consultar a proposta antes de repetir |
+| 422 | regra de KYC, documento ou dado obrigatório não atendido | solicitar correção cadastral |
+| 429 | limite de requisições | obedecer `Retry-After` |
+| 5xx/timeout | falha transitória | repetir com idempotência e consultar status |
+
+Os códigos funcionais retornados no corpo (`errorCode`/`message`) devem ser
+preservados junto do `proposalId`, correlation ID e request ID para suporte.
+
 ## Proposta Pessoa Física (PF)
 
 `POST /onboarding/v1/onboarding-proposal/natural-person`

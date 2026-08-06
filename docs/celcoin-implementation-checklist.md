@@ -4,7 +4,8 @@ Legenda:
 
 - `[x]` já existe no SDK atual.
 - `[ ]` pendente.
-- `[~]` estrutura preparada, aguardando contrato oficial de endpoint/payload.
+- `[~]` estrutura preparada, aguardando contrato oficial de endpoint/payload ou
+  dependência de ambiente/produto externo.
 
 ## Introdução
 
@@ -17,8 +18,8 @@ Legenda:
 - [x] Implementar mTLS no `WebClient`.
 - [x] Implementar controle de taxa ou integração com headers de rate-control da Celcoin.
 - [x] Implementar primeira consulta funcional: autenticação `POST /v5/token`.
-- [ ] Implementar arquivo de movimentação via SFTP.
-- [ ] Avaliar e implementar servidor MCP da Celcoin.
+- [x] Implementar arquivo de movimentação via SFTP (`docs/movement-files.md`).
+- [~] Avaliar e implementar servidor MCP da Celcoin: não há protocolo/servidor oficial Celcoin fornecido para este SDK.
 
 ## Validação no Sandbox
 
@@ -31,7 +32,7 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 - [x] Decodificação de EMV `POST /pix/v1/emv/full` validada (type/key/amount/transactionIdentification).
 - [x] Cobrança estática `POST /pix/v1/brcode/static` validada (transactionId `40000046501`; `amount` deve ser numérico).
 - [x] Autenticação `POST /v5/token` via `application/x-www-form-urlencoded` (SDK já usa form-urlencoded).
-- [x] Suíte automatizada verde (`./mvnw clean verify`: 119 testes, 0 falhas, JaCoCo OK).
+- [~] Suíte automatizada: compilação principal passa; execução WireMock no sandbox local depende de permissão para abrir portas.
 - [x] Validação das migrations Flyway via Testcontainers (PostgreSQL em Docker).
 
 ## Homologação
@@ -54,14 +55,14 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 - [x] Implementar consulta de status de onboarding.
 - [x] Implementar atualização ou complementação cadastral.
 - [x] Implementar envio de documentos (via `files[]` com URL pública dentro da proposta).
-- [ ] Implementar autenticação biométrica (produto separado da Celcoin; via `SELFIE` na proposta).
-- [ ] Implementar validação de prova de vida (sem endpoint dedicado no contrato oficial; via webview).
+- [~] Implementar autenticação biométrica: `SELFIE` é suportado em `files[]`, mas a jornada biométrica é produto separado.
+- [~] Implementar validação de prova de vida: depende da jornada WebView/contrato Celcoin, sem endpoint REST dedicado.
 - [x] Criar DTOs de KYC PF.
 - [x] Criar DTOs de KYC PJ.
 - [x] Criar DTOs de documentos e anexos.
 - [x] Criar DTOs de resposta e status de análise.
 - [x] Mapear webhooks de onboarding KYC.
-- [ ] Mapear tabela de erros de onboarding.
+- [x] Mapear tabela de erros de onboarding.
 - [x] Adicionar exemplos de uso em `docs/examples.md`.
 - [x] Documentar fluxo funcional de onboarding KYC em `docs/onboarding.md`.
 - [x] Implementar testes unitários de serialização dos DTOs.
@@ -72,24 +73,24 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 ### Sobre o BaaS & Core Banking
 
 - [x] Documentar visão geral do BaaS & Core Banking.
-- [ ] Documentar FAQs.
-- [ ] Documentar diretriz de Termos de Uso - BaaS.
+- [x] Documentar FAQs.
+- [x] Documentar diretriz de Termos de Uso - BaaS.
 
 ### Follow the Money
 
-- [ ] Mapear endpoints de antifraude e PLD.
-- [ ] Implementar DTOs e interfaces.
-- [ ] Implementar webhooks relacionados.
+- [~] Mapear Follow the Money: configuração e operação dependem de contrato/Painel; não há endpoints públicos no contrato consultado.
+- [~] Implementar DTOs e interfaces: aguardando contrato público de integração.
+- [x] Documentar o tratamento de decisões e webhooks relacionados.
 
 ### APP e Internet Banking Whitelabel
 
-- [ ] Documentar integração MyBenk.
-- [ ] Mapear APIs disponíveis.
+- [x] Documentar integração MyBenk.
+- [~] Mapear APIs disponíveis: canais white-label dependem de contratação e configuração Celcoin.
 
 ### Painel do Cliente
 
-- [ ] Documentar recursos do painel do contratante.
-- [ ] Mapear APIs administrativas disponíveis.
+- [x] Documentar recursos do painel do contratante.
+- [~] Mapear APIs administrativas disponíveis: acesso pelo portal e contrato específico.
 
 ### Abertura de Contas KYC
 
@@ -111,7 +112,7 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 - [x] Atualizar dados do cliente.
 - [x] Desativar ou encerrar conta.
 - [x] Listar contas.
-- [ ] Mapear tabela de erros de gestão de contas.
+- [x] Mapear tabela de erros de gestão de contas.
 - [x] Consultar número de contas.
 - [x] Implementar bloqueios judiciais.
 - [x] Implementar atualização de status de conta.
@@ -127,8 +128,8 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 - [x] Consultar extrato.
 - [~] Consultar extrato detalhado.
 - [~] Consultar transações do extrato.
-- [ ] Implementar paginação oficial dos relatórios.
-- [ ] Implementar testes WireMock dos relatórios.
+- [x] Implementar paginação oficial dos relatórios.
+- [x] Implementar testes WireMock dos relatórios.
 
 ## Pix BaaS
 
@@ -188,51 +189,51 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 
 ### Jornada Pagadora
 
-- [~] Autorização - visão geral.
-- [~] Autorização - jornada 1.
-- [~] Autorização - jornada 2.
-- [~] Autorização - jornada 3.
-- [~] Autorização - jornada 4.
-- [~] Agendamento.
-- [~] Liquidação.
-- [~] Cancelamento do consentimento.
-- [~] Cancelamento de agendamento.
-- [~] Consultas - visão pagador.
+- [x] Autorização - visão geral.
+- [x] Autorização - jornada 1.
+- [x] Autorização - jornada 2.
+- [x] Autorização - jornada 3.
+- [x] Autorização - jornada 4.
+- [x] Agendamento.
+- [x] Liquidação.
+- [x] Cancelamento do consentimento.
+- [x] Cancelamento de agendamento.
+- [x] Consultas - visão pagador.
 
 ### Jornada Recebedora
 
-- [~] Autorização - jornada 1.
-- [~] Autorização - jornada 2.
-- [~] Autorização - jornada 3.
-- [~] Autorização - jornada 4.
-- [~] Envio de agendamento.
-- [~] Liquidação.
-- [~] Retentativas de recebimento.
-- [~] Cancelamento de agendamento.
-- [~] Cancelamento de recorrência.
-- [~] Motivos de rejeição pelo participante pagador.
-- [ ] FAQ Pix Automático.
+- [x] Autorização - jornada 1.
+- [x] Autorização - jornada 2.
+- [x] Autorização - jornada 3.
+- [x] Autorização - jornada 4.
+- [x] Envio de agendamento.
+- [x] Liquidação.
+- [x] Retentativas de recebimento.
+- [x] Cancelamento de agendamento.
+- [x] Cancelamento de recorrência.
+- [x] Motivos de rejeição pelo participante pagador.
+- [x] FAQ Pix Automático (`docs/pix-automatico.md`).
 
 ## Pix Inteligente - Sweeping Accounts
 
-- [ ] Listar marcas do diretório de participantes.
-- [ ] Criar consentimento.
-- [ ] Callback do consentimento.
-- [ ] Cancelar consentimento.
-- [ ] Listar consentimentos.
-- [ ] Buscar informações de consentimento.
-- [ ] Criar Pix inteligente recorrente.
+- [x] Listar marcas do diretório de participantes.
+- [x] Criar consentimento.
+- [x] Callback do consentimento.
+- [x] Cancelar consentimento.
+- [x] Listar consentimentos.
+- [x] Buscar informações de consentimento.
+- [x] Criar Pix inteligente recorrente.
 
 ## Pix Indireto
 
-- [ ] Documentar sobre Pix Indireto.
-- [ ] Documentar pré-requisitos do participante.
-- [ ] Documentar fases de adesão do participante indireto.
-- [ ] Implementar DICT para participante indireto.
-- [ ] Implementar gestão de chaves Pix.
-- [ ] Implementar portabilidade e reivindicação.
-- [ ] Implementar infrações.
-- [ ] Implementar MED.
+- [x] Documentar sobre Pix Indireto (`docs/pix-indireto.md`).
+- [x] Documentar pré-requisitos do participante.
+- [x] Documentar fases de adesão do participante indireto.
+- [x] Implementar DICT para participante indireto.
+- [x] Implementar gestão de chaves Pix.
+- [x] Implementar portabilidade e reivindicação.
+- [x] Implementar infrações.
+- [x] Implementar MED.
 
 ## Agendador de Transação Pix
 
@@ -252,43 +253,43 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 
 ## CNAB
 
-- [ ] Processar CNAB.
-- [ ] Consultar CNAB.
-- [ ] Baixar CNAB.
+- [x] Processar CNAB (`docs/cnab.md`).
+- [x] Consultar CNAB.
+- [x] Baixar CNAB.
 
 ## Open Finance as a Service
 
-- [ ] Listar marcas no diretório de participantes.
-- [ ] Obter detalhes de marcas.
-- [ ] Documentar uso e disponibilização de logotipos.
-- [ ] Documentar termos e condições de uso.
-- [ ] Implementar consentimento e consumo de dados.
-- [ ] Implementar API Resources.
-- [ ] Implementar API de dados cadastrais.
-- [ ] Implementar API cartões de crédito.
-- [ ] Implementar API contas.
-- [ ] Implementar API operações de crédito - empréstimos.
-- [ ] Implementar API operações de crédito - financiamento.
-- [ ] Implementar investimentos - renda fixa bancária.
-- [ ] Implementar investimentos - renda fixa crédito.
-- [ ] Implementar investimentos - renda variável.
-- [ ] Implementar investimentos - Tesouro Direto.
-- [ ] Implementar investimentos - fundos.
-- [ ] Mapear códigos de resposta e cenários de erro.
+- [x] Listar marcas no diretório de participantes.
+- [x] Obter detalhes de marcas.
+- [x] Documentar uso e disponibilização de logotipos (`docs/open-finance.md`).
+- [x] Documentar termos e condições de uso.
+- [x] Implementar consentimento e consumo de dados.
+- [x] Implementar API Resources.
+- [x] Implementar API de dados cadastrais.
+- [x] Implementar API cartões de crédito.
+- [x] Implementar API contas.
+- [x] Implementar API operações de crédito - empréstimos.
+- [x] Implementar API operações de crédito - financiamento.
+- [x] Implementar investimentos - renda fixa bancária.
+- [x] Implementar investimentos - renda fixa crédito.
+- [x] Implementar investimentos - renda variável.
+- [x] Implementar investimentos - Tesouro Direto.
+- [x] Implementar investimentos - fundos.
+- [x] Mapear códigos de resposta e cenários de erro.
 
 ### Jornada Sem Redirecionamento
 
-- [ ] Documentar vínculo de dispositivo.
-- [ ] Implementar pagamento.
-- [ ] Criar vínculo.
-- [ ] Callback do vínculo.
-- [ ] FIDO Registration Options.
-- [ ] FIDO Registration.
-- [ ] Criar iniciação de pagamento v4.
-- [ ] FIDO Sign Options.
-- [ ] Autorização FIDO.
-- [ ] PIX v4.
-- [ ] Validação de biometria FIDO.
+- [x] Documentar vínculo de dispositivo.
+- [x] Implementar pagamento.
+- [x] Criar vínculo.
+- [x] Callback do vínculo.
+- [x] FIDO Registration Options.
+- [x] FIDO Registration.
+- [x] Criar iniciação de pagamento v4.
+- [x] FIDO Sign Options.
+- [x] Autorização FIDO.
+- [x] PIX v4.
+- [~] Validação de biometria FIDO: o SDK valida o payload WebAuthn; a prova criptográfica e a biometria são executadas pelo dispositivo/navegador.
 
 ### Transferências Inteligentes - Sweeping Accounts
 
@@ -615,21 +616,21 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 
 ### Jornada Sem Redirecionamento
 
-- [ ] Criar vínculo.
-- [ ] Pagamento.
-- [ ] Callback do vínculo.
-- [ ] FIDO Registration Options.
-- [ ] FIDO Registration.
-- [ ] Criar iniciação de pagamento v4.
-- [ ] FIDO Sign Options.
-- [ ] Autorização FIDO.
-- [ ] PIX v4.
-- [ ] Criar jornada de vínculo.
-- [ ] Listar jornadas de vínculo.
-- [ ] Buscar jornada de vínculo.
-- [ ] Criar jornada de pagamento v4.
-- [ ] Listar jornadas de pagamento v4.
-- [ ] Buscar jornada de pagamento v4.
+- [x] Criar vínculo.
+- [x] Pagamento.
+- [x] Callback do vínculo.
+- [x] FIDO Registration Options.
+- [x] FIDO Registration.
+- [x] Criar iniciação de pagamento v4.
+- [x] FIDO Sign Options.
+- [x] Autorização FIDO.
+- [x] PIX v4.
+- [x] Criar jornada de vínculo.
+- [~] Listar jornadas de vínculo: endpoint de listagem não publicado no contrato consultado.
+- [~] Buscar jornada de vínculo: endpoint de consulta não publicado no contrato consultado.
+- [x] Criar jornada de pagamento v4.
+- [~] Listar jornadas de pagamento v4: endpoint de listagem não publicado no contrato consultado.
+- [~] Buscar jornada de pagamento v4: endpoint de consulta não publicado no contrato consultado.
 
 ### Brick Bank e Brick Insurance
 

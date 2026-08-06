@@ -94,12 +94,32 @@ public final class AccountDtos {
     public record CelcoinBalanceResponse(
             String accountId, BigDecimal available, BigDecimal blocked, String currency, Map<String, Object> raw) {}
 
-    public record CelcoinStatementRequest(@NotBlank String accountId, LocalDate startDate, LocalDate endDate) {}
+    public record CelcoinStatementRequest(
+            @NotBlank String accountId,
+            LocalDate startDate,
+            LocalDate endDate,
+            Integer page,
+            Integer size) {
+        public CelcoinStatementRequest(String accountId, LocalDate startDate, LocalDate endDate) {
+            this(accountId, startDate, endDate, null, null);
+        }
+    }
 
     public record CelcoinStatementResponse(
             String accountId,
             java.util.List<CelcoinStatementTransactionResponse> transactions,
-            Map<String, Object> raw) {}
+            Integer page,
+            Integer size,
+            Long total,
+            Boolean hasNext,
+            Map<String, Object> raw) {
+        public CelcoinStatementResponse(
+                String accountId,
+                java.util.List<CelcoinStatementTransactionResponse> transactions,
+                Map<String, Object> raw) {
+            this(accountId, transactions, null, null, null, null, raw);
+        }
+    }
 
     public record CelcoinStatementTransactionResponse(
             String transactionId,

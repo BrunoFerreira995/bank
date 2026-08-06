@@ -26,6 +26,8 @@ public interface CelcoinPixAutoOperations {
 
     CelcoinPixAutoConsentStatusResponse cancelConsent(String consentId, String idempotencyKey);
 
+    CelcoinPixAutoCallbackResponse processCallback(CelcoinPixAutoCallbackRequest request);
+
     // Agendamento
 
     default CelcoinPixAutoScheduleResponse schedule(CelcoinPixAutoScheduleRequest request) {

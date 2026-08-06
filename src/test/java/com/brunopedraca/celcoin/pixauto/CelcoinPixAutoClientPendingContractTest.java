@@ -1,6 +1,7 @@
 package com.brunopedraca.celcoin.pixauto;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.brunopedraca.celcoin.common.exception.CelcoinIntegrationException;
 import com.brunopedraca.celcoin.pixauto.PixAutoDtos.CelcoinPixAutoConsentRequest;
@@ -106,8 +107,8 @@ class CelcoinPixAutoClientPendingContractTest {
     }
 
     @Test
-    void shouldRejectRejectionReasonsUntilOfficialContractIsAdded() {
-        assertPendingContract(() -> client.rejectionReasons());
+    void exposesDocumentedRejectionReasonsWithoutRemoteCall() {
+        assertThat(client.rejectionReasons()).isNotEmpty();
     }
 
     private void assertPendingContract(ThrowingCallable callable) {

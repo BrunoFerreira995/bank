@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonAlias;
 
 /**
  * DTOs mínimos do Pix Automático (pagamentos recorrentes). Os contratos oficiais
@@ -31,12 +32,23 @@ public final class PixAutoDtos {
             Map<String, Object> metadata) {}
 
     public record CelcoinPixAutoConsentResponse(
-            String consentId,
+            @JsonAlias("id") String consentId,
             String status,
             String paymentFlow,
             String authorizationCode,
             OffsetDateTime createdAt,
-            Map<String, Object> raw) {}
+            String authorizationUrl,
+            Map<String, Object> raw) {
+        public CelcoinPixAutoConsentResponse(
+                String consentId,
+                String status,
+                String paymentFlow,
+                String authorizationCode,
+                OffsetDateTime createdAt,
+                Map<String, Object> raw) {
+            this(consentId, status, paymentFlow, authorizationCode, createdAt, null, raw);
+        }
+    }
 
     public record CelcoinPixAutoConsentStatusResponse(
             String consentId,
@@ -139,4 +151,10 @@ public final class PixAutoDtos {
             @NotBlank String scheduleId, Integer attempt, String reason, Map<String, Object> metadata) {}
 
     public record CelcoinPixAutoRejectionReason(String code, String description) {}
+
+    public record CelcoinPixAutoCallbackRequest(
+            @NotBlank String code, @NotBlank String state, String idToken, Map<String, Object> metadata) {}
+
+    public record CelcoinPixAutoCallbackResponse(
+            String consentId, String status, String recurringConsentId, Map<String, Object> raw) {}
 }
