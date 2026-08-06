@@ -195,6 +195,7 @@ public class CelcoinHttpClient {
     }
 
     private String absolute(String path) {
+        if (path != null && (path.startsWith("https://") || path.startsWith("http://"))) return path;
         String base = properties.baseUrl() == null ? "" : properties.baseUrl();
         return base + path;
     }

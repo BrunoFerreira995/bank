@@ -25,6 +25,9 @@ public interface CelcoinCreditOperations {
 
     Map<String, Object> sendTimestampSignature(String applicationId, Map<String, Object> request);
 
+    /** Envia a evidência de assinatura física da CCB em PDF. */
+    String sendPhysicalSignature(String applicationId, byte[] pdf, String filename);
+
     /** Simula as condições econômicas de uma portabilidade do Crédito do Trabalhador. */
     Map<String, Object> simulatePortability(String productId, Map<String, Object> request);
 

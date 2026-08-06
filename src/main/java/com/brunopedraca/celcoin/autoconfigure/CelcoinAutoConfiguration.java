@@ -55,6 +55,8 @@ import com.brunopedraca.celcoin.slc.CelcoinSlcClient;
 import com.brunopedraca.celcoin.slc.CelcoinSlcOperations;
 import com.brunopedraca.celcoin.reconciliation.CelcoinReconciliationClient;
 import com.brunopedraca.celcoin.reconciliation.CelcoinReconciliationOperations;
+import com.brunopedraca.celcoin.antifraud.CelcoinAntifraudClient;
+import com.brunopedraca.celcoin.antifraud.CelcoinAntifraudOperations;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -231,6 +233,12 @@ public class CelcoinAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    CelcoinAntifraudOperations celcoinAntifraudOperations(CelcoinHttpClient httpClient) {
+        return new CelcoinAntifraudClient(httpClient);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
     CelcoinVehicleOperations celcoinVehicleOperations(CelcoinHttpClient httpClient) {
         return new CelcoinVehicleClient(httpClient);
     }
@@ -265,10 +273,11 @@ public class CelcoinAutoConfiguration {
             CelcoinEscrowOperations escrow,
             CelcoinEmbeddedOperations embedded,
             CelcoinVehicleOperations vehicles,
-            CelcoinReconciliationOperations reconciliation) {
+            CelcoinReconciliationOperations reconciliation,
+            CelcoinAntifraudOperations antifraud) {
         return new DefaultCelcoinClient(
                 tokenService, acquiring, accounts, onboarding, pix, pixAuto, sweeping, indirectPix, cnab,
                 openFinance, jsr, itp, topups, slc, boletos, cards, webhooks, credit, escrow, embedded, vehicles,
-                reconciliation);
+                reconciliation, antifraud);
     }
 }

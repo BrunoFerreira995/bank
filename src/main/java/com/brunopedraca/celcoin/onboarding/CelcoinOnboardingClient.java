@@ -10,6 +10,10 @@ import com.brunopedraca.celcoin.onboarding.OnboardingDtos.CelcoinKycProposalSear
 import com.brunopedraca.celcoin.onboarding.OnboardingDtos.CelcoinKycUpdateResponse;
 import com.brunopedraca.celcoin.onboarding.OnboardingDtos.CelcoinKycWebhookSubscriptionRequest;
 import com.brunopedraca.celcoin.onboarding.OnboardingDtos.CelcoinKycWebhookSubscriptionResponse;
+import com.brunopedraca.celcoin.onboarding.OnboardingDtos.CelcoinBiometricAuthRequest;
+import com.brunopedraca.celcoin.onboarding.OnboardingDtos.CelcoinBiometricAuthResponse;
+import com.brunopedraca.celcoin.onboarding.OnboardingDtos.CelcoinBiometricFilesResponse;
+import java.util.Map;
 import org.springframework.util.StringUtils;
 
 public class CelcoinOnboardingClient implements CelcoinOnboardingOperations {
@@ -60,6 +64,35 @@ public class CelcoinOnboardingClient implements CelcoinOnboardingOperations {
             CelcoinKycWebhookSubscriptionRequest request) {
         return httpClient.post(
                 "/baas/v2/webhook/subscription", request, CelcoinKycWebhookSubscriptionResponse.class, context(null));
+    }
+
+    @Override
+    public CelcoinBiometricAuthResponse createBiometricAuthentication(CelcoinBiometricAuthRequest request) {
+        return httpClient.post("/onboarding/v1/biometric-auth", request,
+                CelcoinBiometricAuthResponse.class, context(null));
+    }
+
+    @Override
+    public CelcoinBiometricAuthResponse listBiometricAuthentications(Map<String, Object> filters) {
+        StringBuilder path = new StringBuilder("/onboarding/v1/biometric-auth?");
+        if (filters != null) filters.forEach((key, value) -> {
+            if (value != null) {
+                if (path.charAt(path.length() - 1) != '?') path.append('&');
+                path.append(encode(key)).append('=').append(encode(String.valueOf(value)));
+            }
+        });
+        return httpClient.get(path.toString(), CelcoinBiometricAuthResponse.class, context(null));
+    }
+
+    @Override
+    public CelcoinBiometricFilesResponse getBiometricFiles(String biometricAuthId, String clientCode) {
+        StringBuilder path = new StringBuilder("/onboarding/v1/biometric-auth/files?");
+        if (StringUtils.hasText(biometricAuthId)) path.append("biometricAuthId=").append(encode(biometricAuthId));
+        if (StringUtils.hasText(clientCode)) {
+            if (path.charAt(path.length() - 1) != '?') path.append('&');
+            path.append("clientCode=").append(encode(clientCode));
+        }
+        return httpClient.get(path.toString(), CelcoinBiometricFilesResponse.class, context(null));
     }
 
     private CelcoinRequestContext context(String idempotencyKey) {

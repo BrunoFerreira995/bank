@@ -162,6 +162,14 @@ public final class AccountDtos {
             String status,
             Map<String, Object> raw) {}
 
+    /** Filters supported by the BaaS transaction lookup endpoint. */
+    public record CelcoinStatementTransactionQuery(
+            String id,
+            String clientCode,
+            String endToEndId,
+            String returnIdentification,
+            String movementType) {}
+
     public record CelcoinIncomeReportRequest(
             @NotBlank String accountId, Integer calendarYear, Integer quarter) {
         public CelcoinIncomeReportRequest(String accountId, Integer calendarYear) {

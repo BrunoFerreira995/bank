@@ -45,4 +45,16 @@ public interface CelcoinEmbeddedOperations {
     Map<String, Object> tedStatus(Map<String, Object> filters);
 
     Map<String, Object> reconciliation(String resource, Map<String, Object> filters);
+
+    Map<String, Object> cashoutPartners();
+
+    Map<String, Object> cashoutServicePoints(Map<String, Object> request);
+
+    Map<String, Object> cashoutDeposit(Map<String, Object> request, String idempotencyKey);
+
+    Map<String, Object> cashoutWithdraw(Map<String, Object> request, String idempotencyKey);
+
+    Map<String, Object> cashoutToken(Map<String, Object> request, String idempotencyKey);
+
+    Map<String, Object> cancelCashoutToken(String tokenId, String idempotencyKey);
 }

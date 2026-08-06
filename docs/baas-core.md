@@ -5,6 +5,10 @@ interna, bloqueios, monitoramento, informe de rendimentos e fluxos de abertura
 Core Banking. Os produtos BaaS e Core usam a mesma infraestrutura de APIs; a
 principal diferença é a licença e o fluxo de onboarding.
 
+Além do extrato convencional, `accounts()` oferece `getDetailedStatement` para
+o extrato detalhado e `getStatementTransaction` para consultar uma transação por
+`id`, `clientCode`, `endToEndId`, `returnIdentification` ou `movementType`.
+
 ## Mapa de responsabilidades
 
 | Área | Acesso no SDK | Dependência |

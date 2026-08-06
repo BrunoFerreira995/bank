@@ -12,6 +12,23 @@ import java.util.Map;
 public final class OnboardingDtos {
     private OnboardingDtos() {}
 
+    public record CelcoinBiometricAuthRequest(
+            String flow,
+            String clientCode,
+            String fullName,
+            String documentNumber,
+            Map<String, Object> metadata,
+            String expiresIn,
+            Map<String, Object> notificationWebview) {}
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record CelcoinBiometricAuthResponse(
+            String version, String status, Map<String, Object> body) {}
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record CelcoinBiometricFilesResponse(
+            String version, String status, Map<String, Object> body) {}
+
     // ===================== Pessoa Física (PF) =====================
 
     /** Endereço. Campos mapeados para {@code AddressRequest} da Celcoin. */

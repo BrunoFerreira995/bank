@@ -80,6 +80,25 @@ public class CelcoinEmbeddedClient implements CelcoinEmbeddedOperations {
         return get("/reconciliation/v1/" + encode(resource) + "?" + query(filters), null);
     }
 
+    @Override public Map<String, Object> cashoutPartners() {
+        return get("/v5/transactions/electronictransactions/consult-partners", null);
+    }
+    @Override public Map<String, Object> cashoutServicePoints(Map<String, Object> request) {
+        return post("/v5/transactions/electronictransactions/consult-servicespoints", request, null);
+    }
+    @Override public Map<String, Object> cashoutDeposit(Map<String, Object> request, String key) {
+        return post("/v5/transactions/electronictransactions/deposit", request, key);
+    }
+    @Override public Map<String, Object> cashoutWithdraw(Map<String, Object> request, String key) {
+        return post("/v5/transactions/electronictransactions/withdraw", request, key);
+    }
+    @Override public Map<String, Object> cashoutToken(Map<String, Object> request, String key) {
+        return post("/v5/transactions/electronictransactions/withdraw-token", request, key);
+    }
+    @Override public Map<String, Object> cancelCashoutToken(String tokenId, String key) {
+        return delete("/v5/transactions/electronictransactions/withdraw-token/" + encode(tokenId), Map.of(), key);
+    }
+
     private Map<String, Object> get(String path, String key) {
         return httpClient.get(path, Map.class, context(key));
     }

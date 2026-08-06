@@ -25,9 +25,11 @@ import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinBalanceUnblockRequest
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinSandboxBalanceRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinStatementRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinStatementResponse;
+import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinStatementTransactionQuery;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinTedTransferRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinTedTransferResponse;
 import java.util.List;
+import java.util.Map;
 
 public interface CelcoinAccountOperations {
     CelcoinAccountStatusResponse getStatus(String accountId);
@@ -85,6 +87,10 @@ public interface CelcoinAccountOperations {
     CelcoinBalanceResponse getDayBalance(String accountId);
 
     CelcoinStatementResponse getStatement(CelcoinStatementRequest request);
+
+    CelcoinStatementResponse getDetailedStatement(CelcoinStatementRequest request);
+
+    Map<String, Object> getStatementTransaction(CelcoinStatementTransactionQuery query);
 
     CelcoinIncomeReportResponse getIncomeReport(CelcoinIncomeReportRequest request);
 

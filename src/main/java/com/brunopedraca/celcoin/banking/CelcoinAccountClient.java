@@ -26,6 +26,7 @@ import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinBalanceTag;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinSandboxBalanceRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinStatementRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinStatementResponse;
+import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinStatementTransactionQuery;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinTedTransferRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinTedTransferResponse;
 import com.brunopedraca.celcoin.common.exception.CelcoinIntegrationException;
@@ -192,6 +193,25 @@ public class CelcoinAccountClient implements CelcoinAccountOperations {
                 .param("DateFrom", request.startDate()).param("DateTo", request.endDate())
                 .param("Page", request.page()).param("Limit", request.size());
         return httpClient.get(path, CelcoinStatementResponse.class, context(null));
+    }
+
+    @Override
+    public CelcoinStatementResponse getDetailedStatement(CelcoinStatementRequest request) {
+        ensureConfigured();
+        String path = "/baas/v2/wallet/power-movement?" + query().param("Account", request.accountId())
+                .param("DateFrom", request.startDate()).param("DateTo", request.endDate())
+                .param("Page", request.page()).param("LimitPerPage", request.size());
+        return httpClient.get(path, CelcoinStatementResponse.class, context(null));
+    }
+
+    @Override
+    public Map<String, Object> getStatementTransaction(CelcoinStatementTransactionQuery request) {
+        ensureConfigured();
+        String path = "/baas/v2/status?" + query().param("id", request.id())
+                .param("clientCode", request.clientCode()).param("endToEndId", request.endToEndId())
+                .param("returnIdentification", request.returnIdentification())
+                .param("movementType", request.movementType());
+        return httpClient.get(path, Map.class, context(null));
     }
 
     @Override

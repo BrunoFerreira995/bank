@@ -55,8 +55,8 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 - [x] Implementar consulta de status de onboarding.
 - [x] Implementar atualização ou complementação cadastral.
 - [x] Implementar envio de documentos (via `files[]` com URL pública dentro da proposta).
-- [~] Implementar autenticação biométrica: `SELFIE` é suportado em `files[]`, mas a jornada biométrica é produto separado.
-- [~] Implementar validação de prova de vida: depende da jornada WebView/contrato Celcoin, sem endpoint REST dedicado.
+- [x] Implementar autenticação biométrica: criação, consulta, documentos e webhook do produto dedicado.
+- [x] Implementar validação de prova de vida: fluxo `BIOMETRIC_LIVENESS`/`BIOMETRIC_DOC_LIVENESS` via WebView biométrica.
 - [x] Criar DTOs de KYC PF.
 - [x] Criar DTOs de KYC PJ.
 - [x] Criar DTOs de documentos e anexos.
@@ -78,8 +78,8 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 
 ### Follow the Money
 
-- [~] Mapear Follow the Money: configuração e operação dependem de contrato/Painel; não há endpoints públicos no contrato consultado.
-- [~] Implementar DTOs e interfaces: aguardando contrato público de integração.
+- [x] Mapear Follow the Money: avaliação de risco Pix por CPF/CNPJ implementada; configuração de regras continua contratual.
+- [x] Implementar DTOs e interfaces neutros de decisão/FtM no receptor de webhooks; regras remotas dependem de contrato.
 - [x] Documentar o tratamento de decisões e webhooks relacionados.
 
 ### APP e Internet Banking Whitelabel
@@ -118,16 +118,16 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 - [x] Implementar atualização de status de conta.
 - [x] Adicionar saldo em sandbox.
 - [x] Implementar monitoramento cadastral.
-- [~] Implementar webhooks de monitoramento cadastral.
-- [~] Implementar simulação de monitoramento cadastral.
+- [x] Implementar webhooks de monitoramento cadastral pelo receptor comum de webhooks.
+- [x] Implementar simulação de monitoramento cadastral.
 
 ### Relatórios
 
 - [x] Consultar saldo.
 - [x] Consultar saldo do dia e movimentações diárias consolidadas.
 - [x] Consultar extrato.
-- [~] Consultar extrato detalhado.
-- [~] Consultar transações do extrato.
+- [x] Consultar extrato detalhado.
+- [x] Consultar transações do extrato.
 - [x] Implementar paginação oficial dos relatórios.
 - [x] Implementar testes WireMock dos relatórios.
 
@@ -289,7 +289,7 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 - [x] FIDO Sign Options.
 - [x] Autorização FIDO.
 - [x] PIX v4.
-- [~] Validação de biometria FIDO: o SDK valida o payload WebAuthn; a prova criptográfica e a biometria são executadas pelo dispositivo/navegador.
+- [x] Validação de biometria FIDO: o SDK valida o payload WebAuthn; a prova criptográfica e a biometria são executadas pelo dispositivo/navegador.
 
 ### Transferências Inteligentes - Sweeping Accounts
 
@@ -353,31 +353,31 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 - [x] Solicitar relatório de recebíveis.
 - [x] Verificar status do relatório de recebíveis.
 - [x] Visualizar relatório de recebíveis.
-- [~] Criar plano.
-- [~] Listar planos.
-- [~] Editar plano.
-- [~] Excluir plano.
-- [~] Criar assinatura com ou sem plano.
-- [~] Criar assinatura/contrato manual.
-- [~] Listar assinaturas/contratos.
-- [~] Adicionar transação.
-- [~] Editar informações da assinatura/contrato.
-- [~] Editar pagamento da assinatura/contrato.
-- [~] Editar transação.
-- [~] Retentar cobrança no cartão.
-- [~] Capturar cobrança no cartão.
-- [~] Estornar cobrança no cartão.
-- [~] Cancelar assinatura/contrato.
-- [~] Cancelar transação.
-- [~] Listar chargebacks.
-- [~] Enviar documentação de defesa de chargeback.
-- [~] Desistir da disputa de chargeback.
-- [~] Cadastrar webhooks de chargeback.
-- [~] Simular fluxo chargeback sandbox.
-- [~] Implementar tokenização de cartão via JS.
-- [~] Listar taxas.
-- [~] Listar transações.
-- [~] Implementar extrato de recebíveis.
+- [x] Criar plano.
+- [x] Listar planos.
+- [x] Editar plano.
+- [x] Excluir plano.
+- [x] Criar assinatura com ou sem plano.
+- [x] Criar assinatura/contrato manual.
+- [x] Listar assinaturas/contratos.
+- [x] Adicionar transação.
+- [x] Editar informações da assinatura/contrato.
+- [x] Editar pagamento da assinatura/contrato.
+- [x] Editar transação.
+- [x] Retentar cobrança no cartão.
+- [x] Capturar cobrança no cartão.
+- [x] Estornar cobrança no cartão.
+- [x] Cancelar assinatura/contrato.
+- [x] Cancelar transação.
+- [x] Listar chargebacks.
+- [x] Enviar documentação de defesa de chargeback.
+- [x] Desistir da disputa de chargeback.
+- [x] Cadastrar webhooks de chargeback.
+- [x] Simular fluxo chargeback sandbox.
+- [x] Implementar tokenização de cartão via JS.
+- [x] Listar taxas.
+- [x] Listar transações.
+- [x] Implementar extrato de recebíveis.
 
 ## Pagamento de Boletos
 
@@ -487,9 +487,9 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 - [x] Simulações.
 - [x] Status de solicitação.
 - [x] Tabela de erros de geração de boleto.
-- [ ] Assinatura CCB por modalidade.
+- [x] Assinatura CCB por modalidade.
 - [x] Assinatura via cláusula mandato timestamp.
-- [ ] Assinatura via envio de PDF.
+- [x] Assinatura via envio de PDF.
 - [x] Consulta de assinaturas da CCB.
 - [x] Webhooks de crédito.
 
@@ -531,7 +531,7 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 - [x] Autorização de consulta e consulta de vínculo empregatício.
 - [x] Cadastro do tomador e emissão da CCB de portabilidade.
 - [x] Solicitação do bundle/proposta de portabilidade.
-- [~] Averbação por portabilidade e envio de contrato: executados no fluxo Celcoin/Dataprev após a solicitação; sem endpoint público adicional no contrato consultado.
+- [x] Averbação por portabilidade e envio de contrato: disparados pelo fluxo Celcoin/Dataprev após a solicitação do bundle.
 
 ## cel_banking - embedded solutions
 
@@ -556,9 +556,9 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 - [x] Lista de convênios.
 - [x] Pix avulso embedded.
 - [x] Recargas nacionais.
-- [~] Saques e depósitos físicos: dependem de contratação e integração operacional com a rede Banco24Horas.
+- [x] Saques e depósitos físicos: parceiros, pontos de atendimento, depósito, saque, token e cancelamento implementados.
 - [x] TED embedded.
-- [~] Conciliação: endpoints dependem do contrato de conciliação contratado.
+- [x] Conciliação: operações e extrato consolidado implementados no módulo `reconciliation`.
 - [x] SLC Celcoin como banco liquidante.
 
 ## Pix Indireto - Produto Dedicado
@@ -626,11 +626,11 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 - [x] Autorização FIDO.
 - [x] PIX v4.
 - [x] Criar jornada de vínculo.
-- [~] Listar jornadas de vínculo: endpoint de listagem não publicado no contrato consultado.
-- [~] Buscar jornada de vínculo: endpoint de consulta não publicado no contrato consultado.
+- [x] Listar jornadas de vínculo via JSR/enrollments.
+- [x] Buscar jornada de vínculo via JSR/enrollments.
 - [x] Criar jornada de pagamento v4.
-- [~] Listar jornadas de pagamento v4: endpoint de listagem não publicado no contrato consultado.
-- [~] Buscar jornada de pagamento v4: endpoint de consulta não publicado no contrato consultado.
+- [x] Listar jornadas de pagamento v4 via JSR.
+- [x] Buscar jornada de pagamento v4 via JSR.
 
 ### Brick Bank e Brick Insurance
 
@@ -733,7 +733,7 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 
 ## Anti-fraudes
 
-- [~] Follow the Money: configuração e operação dependem de habilitação contratual/Painel.
+- [x] Follow the Money: consulta pontual de risco implementada; configuração de regras permanece dependente do Painel/contrato.
 - [x] Regras antifraude por transação: normalização local das decisões recebidas, preservando o payload original.
 - [x] Webhooks antifraude: receptor idempotente, parser e suporte ao ciclo de retry.
 - [x] Auditoria e retenção de eventos antifraude: persistência local e purge explícito por cutoff.

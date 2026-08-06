@@ -8,6 +8,10 @@ import com.brunopedraca.celcoin.onboarding.OnboardingDtos.CelcoinKycProposalSear
 import com.brunopedraca.celcoin.onboarding.OnboardingDtos.CelcoinKycUpdateResponse;
 import com.brunopedraca.celcoin.onboarding.OnboardingDtos.CelcoinKycWebhookSubscriptionRequest;
 import com.brunopedraca.celcoin.onboarding.OnboardingDtos.CelcoinKycWebhookSubscriptionResponse;
+import com.brunopedraca.celcoin.onboarding.OnboardingDtos.CelcoinBiometricAuthRequest;
+import com.brunopedraca.celcoin.onboarding.OnboardingDtos.CelcoinBiometricAuthResponse;
+import com.brunopedraca.celcoin.onboarding.OnboardingDtos.CelcoinBiometricFilesResponse;
+import java.util.Map;
 
 public interface CelcoinOnboardingOperations {
     default CelcoinKycOnboardingResponse createPersonAccount(CelcoinKycPersonAccountRequest request) {
@@ -27,4 +31,10 @@ public interface CelcoinOnboardingOperations {
     CelcoinKycUpdateResponse updatePersonAccount(String account, CelcoinKycPersonAccountUpdateRequest request);
 
     CelcoinKycWebhookSubscriptionResponse createWebhookSubscription(CelcoinKycWebhookSubscriptionRequest request);
+
+    CelcoinBiometricAuthResponse createBiometricAuthentication(CelcoinBiometricAuthRequest request);
+
+    CelcoinBiometricAuthResponse listBiometricAuthentications(Map<String, Object> filters);
+
+    CelcoinBiometricFilesResponse getBiometricFiles(String biometricAuthId, String clientCode);
 }

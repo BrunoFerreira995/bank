@@ -89,6 +89,8 @@ public interface CelcoinAcquiringOperations {
 
     CelcoinAcquiringCardTokenResponse tokenizeCard(CelcoinAcquiringCardTokenRequest request);
 
+    CelcoinAcquiringCardTokenResponse tokenizeCard(String accountId, CelcoinAcquiringCardTokenRequest request);
+
     CelcoinAcquiringFeeListResponse listFees(String accountId);
 
     CelcoinAcquiringTransactionListResponse listTransactions(CelcoinAcquiringListRequest request);

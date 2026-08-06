@@ -9,6 +9,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import org.springframework.http.MediaType;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.client.MultipartBodyBuilder;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -96,7 +99,29 @@ public class CelcoinCreditClient implements CelcoinCreditOperations {
         return get("/banking/originator/applications/" + encode(applicationId) + "/signatures");
     }
     @Override public Map<String, Object> sendTimestampSignature(String applicationId, Map<String, Object> request) {
-        return post("/banking/originator/applications/" + encode(applicationId) + "/signatures", request);
+        MultipartBodyBuilder multipart = new MultipartBodyBuilder();
+        if (request != null) request.forEach((key, value) -> { if (value != null) multipart.part(key, String.valueOf(value)); });
+        return authenticated().post()
+                .uri(properties.apiBaseUrl() + "/banking/originator/applications/" + encode(applicationId) + "/signatures")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromMultipartData(multipart.build()))
+                .retrieve().bodyToMono(Map.class).block();
+    }
+
+    @Override
+    public String sendPhysicalSignature(String applicationId, byte[] pdf, String filename) {
+        if (pdf == null || pdf.length == 0) throw new IllegalArgumentException("pdf is required");
+        String effectiveFilename = filename == null || filename.isBlank() ? "ccb-assinada.pdf" : filename;
+        ByteArrayResource resource = new ByteArrayResource(pdf) {
+            @Override public String getFilename() { return effectiveFilename; }
+        };
+        MultipartBodyBuilder multipart = new MultipartBodyBuilder();
+        multipart.part("file", resource).contentType(MediaType.APPLICATION_PDF);
+        return authenticated().post()
+                .uri(properties.apiBaseUrl() + "/banking/originator/applications/" + encode(applicationId) + "/physical-signature")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromMultipartData(multipart.build()))
+                .retrieve().bodyToMono(String.class).block();
     }
 
     @Override

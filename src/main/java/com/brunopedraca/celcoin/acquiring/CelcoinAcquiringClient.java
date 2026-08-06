@@ -151,133 +151,186 @@ public class CelcoinAcquiringClient implements CelcoinAcquiringOperations {
 
     @Override
     public CelcoinAcquiringPlanResponse createPlan(CelcoinAcquiringPlanRequest request, String key) {
-        return pending();
+        ensureConfigured();
+        return httpClient.post("/baas/v1/cash/plans?account=" + encode(account(request.metadata())), request,
+                CelcoinAcquiringPlanResponse.class, context(key));
     }
 
     @Override
     public CelcoinAcquiringPlanListResponse listPlans(CelcoinAcquiringListRequest request) {
-        return pending();
+        ensureConfigured();
+        return httpClient.get("/baas/v1/cash/plans?" + listQuery(request),
+                CelcoinAcquiringPlanListResponse.class, context(null));
     }
 
     @Override
     public CelcoinAcquiringPlanResponse updatePlan(CelcoinAcquiringPlanRequest request) {
-        return pending();
+        ensureConfigured();
+        return httpClient.put("/baas/v1/cash/plans/" + encode(request.planId()) + "/myId",
+                request, CelcoinAcquiringPlanResponse.class, context(null));
     }
 
     @Override
     public void deletePlan(String planId, String key) {
-        pendingVoid();
+        ensureConfigured();
+        httpClient.delete("/baas/v1/cash/plans/" + encode(planId) + "/myId", Map.of(), Map.class, context(key));
     }
 
     @Override
     public CelcoinAcquiringSubscriptionResponse createSubscription(
             CelcoinAcquiringSubscriptionRequest request, String key) {
-        return pending();
+        ensureConfigured();
+        return httpClient.post("/baas/v1/cash/subscriptions?account=" + encode(account(request.metadata())),
+                request, CelcoinAcquiringSubscriptionResponse.class, context(key));
     }
 
     @Override
     public CelcoinAcquiringSubscriptionResponse createManualSubscription(
             CelcoinAcquiringSubscriptionRequest request, String key) {
-        return pending();
+            ensureConfigured();
+        return httpClient.post("/baas/v1/cash/subscriptions/manual?account=" + encode(account(request.metadata())),
+                request, CelcoinAcquiringSubscriptionResponse.class, context(key));
     }
 
     @Override
     public CelcoinAcquiringSubscriptionListResponse listSubscriptions(CelcoinAcquiringListRequest request) {
-        return pending();
+        ensureConfigured();
+        return httpClient.get("/baas/v1/cash/subscriptions?" + listQuery(request),
+                CelcoinAcquiringSubscriptionListResponse.class, context(null));
     }
 
     @Override
     public CelcoinAcquiringChargeResponse addSubscriptionTransaction(
             CelcoinAcquiringSubscriptionTransactionRequest request, String key) {
-        return pending();
+        ensureConfigured();
+        return httpClient.post("/baas/v1/cash/transactions/" + encode(request.subscriptionId())
+                        + "/galaxPayId/add?account=" + encode(account(request.metadata())),
+                request, CelcoinAcquiringChargeResponse.class, context(key));
     }
 
     @Override
     public CelcoinAcquiringSubscriptionResponse updateSubscription(CelcoinAcquiringSubscriptionRequest request) {
-        return pending();
+        ensureConfigured();
+        return httpClient.put("/baas/v1/cash/subscriptions/" + encode(request.subscriptionId()) + "/galaxPayId",
+                request, CelcoinAcquiringSubscriptionResponse.class, context(null));
     }
 
     @Override
     public CelcoinAcquiringSubscriptionResponse updateSubscriptionPayment(
             CelcoinAcquiringSubscriptionPaymentUpdateRequest request) {
-        return pending();
+        ensureConfigured();
+        Map<String, Object> body = request.paymentMethod() == null ? Map.of() : request.paymentMethod();
+        return httpClient.put("/baas/v1/cash/subscriptions/" + encode(request.subscriptionId()) + "/galaxPayId?account="
+                        + encode(account(body)), body, CelcoinAcquiringSubscriptionResponse.class, context(null));
     }
 
     @Override
     public CelcoinAcquiringChargeResponse updateSubscriptionTransaction(
             CelcoinAcquiringSubscriptionTransactionRequest request) {
-        return pending();
+        ensureConfigured();
+        return httpClient.put("/baas/v1/cash/transactions/" + encode(request.transactionId()) + "/galaxPayId?account="
+                        + encode(account(request.metadata())), request, CelcoinAcquiringChargeResponse.class, context(null));
     }
 
     @Override
     public CelcoinAcquiringChargeResponse retrySubscriptionCharge(String transactionId, String key) {
-        return pending();
+        return transactionAction(transactionId, "retry", key);
     }
 
     @Override
     public CelcoinAcquiringChargeResponse captureSubscriptionCharge(String transactionId, String key) {
-        return pending();
+        return transactionAction(transactionId, "capture", key);
     }
 
     @Override
     public CelcoinAcquiringChargeResponse refundSubscriptionCharge(String transactionId, String key) {
-        return pending();
+        return transactionAction(transactionId, "reverse", key);
     }
 
     @Override
     public CelcoinAcquiringSubscriptionResponse cancelSubscription(String subscriptionId, String key) {
-        return pending();
+        ensureConfigured();
+        httpClient.delete("/baas/v1/cash/subscriptions/" + encode(subscriptionId) + "/galaxPayId", Map.of(), Map.class, context(key));
+        return new CelcoinAcquiringSubscriptionResponse(subscriptionId, null, null, "CANCELLED", Map.of());
     }
 
     @Override
     public CelcoinAcquiringChargeResponse cancelSubscriptionTransaction(String transactionId, String key) {
-        return pending();
+        ensureConfigured();
+        httpClient.delete("/baas/v1/cash/transactions/" + encode(transactionId) + "/galaxPayId?account=", Map.of(), Map.class, context(key));
+        return new CelcoinAcquiringChargeResponse(transactionId, null, transactionId, null, "CANCELLED", Map.of());
     }
 
     @Override
     public CelcoinAcquiringChargebackListResponse listChargebacks(CelcoinAcquiringListRequest request) {
-        return pending();
+        ensureConfigured();
+        return httpClient.get("/baas/v1/cash/chargebacks?" + listQuery(request),
+                CelcoinAcquiringChargebackListResponse.class, context(null));
     }
 
     @Override
     public CelcoinAcquiringChargebackResponse sendChargebackDefense(CelcoinAcquiringChargebackDefenseRequest request) {
-        return pending();
+        ensureConfigured();
+        Map<String, Object> body = Map.of("files", request.documents() == null ? java.util.List.of() : request.documents(),
+                "notes", request.notes() == null ? "" : request.notes());
+        return httpClient.put("/baas/v1/cash/chargebacks/" + encode(request.chargebackId()), body,
+                CelcoinAcquiringChargebackResponse.class, context(null));
     }
 
     @Override
     public CelcoinAcquiringChargebackResponse withdrawChargebackDispute(String chargebackId, String key) {
-        return pending();
+        ensureConfigured();
+        return httpClient.put("/baas/v1/cash/chargebacks/lose/", Map.of("chargebackId", chargebackId),
+                CelcoinAcquiringChargebackResponse.class, context(key));
     }
 
     @Override
     public CelcoinAcquiringWebhookResponse createChargebackWebhook(CelcoinAcquiringWebhookRequest request) {
-        return pending();
+        ensureConfigured();
+        Map<String, Object> body = Map.of("url", request.url(), "events", java.util.List.of(request.eventType()));
+        return httpClient.put("/baas/v1/cash/webhooks", body,
+                CelcoinAcquiringWebhookResponse.class, context(null));
     }
 
     @Override
     public CelcoinAcquiringChargebackResponse simulateChargeback(String transactionId, String status) {
-        return pending();
+        ensureConfigured();
+        return httpClient.post("/baas/v1/cash/chargeback/simulate?account=" + encode(""),
+                Map.of("tid", transactionId, "status", status), CelcoinAcquiringChargebackResponse.class, context(null));
     }
 
     @Override
     public CelcoinAcquiringCardTokenResponse tokenizeCard(CelcoinAcquiringCardTokenRequest request) {
-        return pending();
+        throw new CelcoinIntegrationException("accountId is required for card tokenization; use tokenizeCard(accountId, request)");
+    }
+
+    @Override
+    public CelcoinAcquiringCardTokenResponse tokenizeCard(String accountId, CelcoinAcquiringCardTokenRequest request) {
+        ensureConfigured();
+        return httpClient.post("/baas/v1/cash/cards/1/galaxPayId?account=" + encode(accountId), request,
+                CelcoinAcquiringCardTokenResponse.class, context(null));
     }
 
     @Override
     public CelcoinAcquiringFeeListResponse listFees(String accountId) {
-        return pending();
+        ensureConfigured();
+        return httpClient.get("/baas/v1/cash/company/fees?account=" + encode(accountId),
+                CelcoinAcquiringFeeListResponse.class, context(null));
     }
 
     @Override
     public CelcoinAcquiringTransactionListResponse listTransactions(CelcoinAcquiringListRequest request) {
-        return pending();
+        ensureConfigured();
+        return httpClient.get("/baas/v1/cash/transactions?" + listQuery(request),
+                CelcoinAcquiringTransactionListResponse.class, context(null));
     }
 
     @Override
     public CelcoinAcquiringReceivablesStatementResponse getReceivablesStatement(
             CelcoinAcquiringListRequest request) {
-        return pending();
+        ensureConfigured();
+        return httpClient.get("/baas/v1/cash/receivables/statement?" + listQuery(request),
+                CelcoinAcquiringReceivablesStatementResponse.class, context(null));
     }
 
     private String chargePath(String chargeId) {
@@ -297,6 +350,12 @@ public class CelcoinAcquiringClient implements CelcoinAcquiringOperations {
     private static String account(Map<String, Object> metadata) {
         Object account = metadata == null ? null : metadata.get("account");
         return account == null ? "" : String.valueOf(account);
+    }
+
+    private CelcoinAcquiringChargeResponse transactionAction(String transactionId, String action, String key) {
+        ensureConfigured();
+        return httpClient.put("/baas/v1/cash/transactions/" + encode(transactionId) + "/galaxPayId/" + action,
+                Map.of(), CelcoinAcquiringChargeResponse.class, context(key));
     }
 
     private static void param(StringBuilder q, String name, Object value) {

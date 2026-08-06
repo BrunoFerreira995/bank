@@ -239,10 +239,10 @@ Modelo do webhook `onboarding-proposal`:
 
 ## Observações
 
-- **Autenticação biométrica e prova de vida** não possuem endpoint dedicado no
-  contrato oficial de Onboarding KYC: o envio da `SELFIE` na proposta alimenta
-  o fluxo de biometria facial. A solução de Autenticação Biométrica da Celcoin
-  é um produto separado.
+- **Autenticação biométrica e prova de vida** são operações do produto separado
+  de Autenticação Biométrica. O SDK expõe criação, consulta, documentos e o
+  webhook `onboarding-biometric-auth`; a contratação do produto continua sendo
+  necessária.
 - **Idempotência**: `createPersonAccount` e `createBusinessAccount` aceitam
   `idempotencyKey`, aplicada via cabeçalho `Idempotency-Key`.
 
@@ -275,3 +275,19 @@ realizada pela Celcoin durante o onboarding. O contrato público não expõe um
 endpoint separado para iniciar, consultar ou simular essa verificação; por isso
 o SDK não cria uma operação artificial para ela. O resultado aplicável à jornada
 é refletido nos status e webhooks da proposta.
+
+## Autenticação biométrica
+
+```java
+var auth = client.onboarding().createBiometricAuthentication(
+    new CelcoinBiometricAuthRequest(
+        "BIOMETRIC_LIVENESS", clientCode, fullName, cpf,
+        Map.of("purpose", "PIX"), "3600", Map.of()));
+
+var status = client.onboarding().listBiometricAuthentications(
+    Map.of("biometricAuthId", auth.body().get("biometricAuthId")));
+var files = client.onboarding().getBiometricFiles(
+    String.valueOf(auth.body().get("biometricAuthId")), clientCode);
+```
+
+Use `BIOMETRIC_DOC_LIVENESS` quando a jornada exigir documento e selfie.
