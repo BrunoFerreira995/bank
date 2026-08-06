@@ -16,6 +16,7 @@ import com.brunopedraca.celcoin.indirectpix.CelcoinIndirectPixOperations;
 import com.brunopedraca.celcoin.cnab.CelcoinCnabOperations;
 import com.brunopedraca.celcoin.openfinance.CelcoinOpenFinanceOperations;
 import com.brunopedraca.celcoin.jsr.CelcoinJsrOperations;
+import com.brunopedraca.celcoin.itp.CelcoinItpOperations;
 
 /** Public SDK facade. Domain interfaces are exposed to make consumer-side mocks simple. */
 public interface CelcoinClient {
@@ -40,6 +41,8 @@ public interface CelcoinClient {
     CelcoinOpenFinanceOperations openFinance();
 
     CelcoinJsrOperations jsr();
+
+    CelcoinItpOperations itp();
 
     CelcoinBoletoOperations boletos();
 

@@ -148,7 +148,13 @@ public final class PixAutoDtos {
             Map<String, Object> metadata) {}
 
     public record CelcoinPixAutoRetryRequest(
-            @NotBlank String scheduleId, Integer attempt, String reason, Map<String, Object> metadata) {}
+            @NotBlank String scheduleId, Integer attempt, String reason, LocalDate date,
+            String endToEndId, String originalRecurringPaymentId, Map<String, Object> metadata) {
+        public CelcoinPixAutoRetryRequest(
+                String scheduleId, Integer attempt, String reason, Map<String, Object> metadata) {
+            this(scheduleId, attempt, reason, null, null, null, metadata);
+        }
+    }
 
     public record CelcoinPixAutoRejectionReason(String code, String description) {}
 

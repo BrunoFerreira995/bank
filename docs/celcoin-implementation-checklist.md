@@ -293,32 +293,32 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 
 ### Transferências Inteligentes - Sweeping Accounts
 
-- [ ] Criar payment initiation.
-- [ ] Executar pagamento Pix.
-- [ ] Consultas.
-- [ ] Cancelar consentimento.
-- [ ] Webhooks.
-- [ ] Máquina de estados.
+- [x] Criar payment initiation.
+- [x] Executar pagamento Pix.
+- [x] Consultas.
+- [x] Cancelar consentimento.
+- [x] Webhooks: recebimento, assinatura, deduplicação e persistência pelo endpoint comum de webhooks.
+- [x] Máquina de estados.
 
 ### Pix Instantâneo - ITP
 
-- [ ] Criar consentimento Payment Initiation.
-- [ ] Máquina de estados Pix ITP.
-- [ ] Callback do consentimento.
-- [ ] Consultas.
-- [ ] Webhooks.
-- [ ] Códigos de resposta HTTP.
-- [ ] Possíveis erros de pagamento.
+- [x] Criar consentimento Payment Initiation.
+- [x] Máquina de estados Pix ITP.
+- [x] Callback do consentimento.
+- [x] Consultas: acompanhamento por callback, webhook e consulta de status na API.
+- [x] Webhooks.
+- [x] Códigos de resposta HTTP.
+- [x] Possíveis erros de pagamento e classificação de retry.
 
 ### Pagamentos Automáticos Open Finance
 
-- [ ] Criar consentimento recorrente.
-- [ ] Jornada de autorização.
-- [ ] Callback e execução de pagamento Pix.
-- [ ] Retentativas intradia e extradia.
-- [ ] Consulta e cancelamento.
-- [ ] Webhooks Pix Automático.
-- [ ] Máquina de estados.
+- [x] Criar consentimento recorrente.
+- [x] Jornada de autorização.
+- [x] Callback e execução de pagamento Pix.
+- [x] Retentativas intradia e extradia.
+- [x] Consulta e cancelamento.
+- [x] Webhooks Pix Automático.
+- [x] Máquina de estados.
 
 ### Massa de Testes Open Finance
 

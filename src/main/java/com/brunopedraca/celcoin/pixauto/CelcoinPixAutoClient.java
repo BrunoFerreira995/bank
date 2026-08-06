@@ -22,6 +22,7 @@ public class CelcoinPixAutoClient implements CelcoinPixAutoOperations {
     public CelcoinPixAutoConsentResponse createConsent(CelcoinPixAutoConsentRequest request, String idempotencyKey) {
         ensureConfigured();
         Map<String, Object> metadata = metadata(request.metadata());
+        validateStartDates(metadata);
         Map<String, Object> automatic = new HashMap<>();
         automatic.put("contractId", required(metadata, "contractId"));
         automatic.put("interval", request.frequency());
@@ -134,12 +135,18 @@ public class CelcoinPixAutoClient implements CelcoinPixAutoOperations {
 
     public CelcoinPixAutoLiquidationResponse retryReceipt(CelcoinPixAutoRetryRequest request, String idempotencyKey) {
         ensureConfigured();
-        Map<String, Object> body = new HashMap<>();
-        body.put("attempt", request.attempt());
-        body.put("reason", request.reason());
-        if (request.metadata() != null) body.putAll(request.metadata());
+        Map<String, Object> data = new HashMap<>();
+        data.put("originalRecurringPaymentId", StringUtils.hasText(request.originalRecurringPaymentId())
+                ? request.originalRecurringPaymentId() : request.scheduleId());
+        if (request.date() != null) data.put("date", request.date().toString());
+        if (StringUtils.hasText(request.endToEndId())) data.put("endToEndId", request.endToEndId());
+        if (request.metadata() != null) data.putAll(request.metadata());
+        if (!data.containsKey("date") || !data.containsKey("endToEndId")) {
+            throw new IllegalArgumentException("Pix Automático retry requires date and a new endToEndId");
+        }
         return httpClient.post("/automatic-payments/v2/pix/recurring-payments/"
-                        + encode(request.scheduleId()) + "/retry", body,
+                        + encode(String.valueOf(data.get("originalRecurringPaymentId"))) + "/retry",
+                Map.of("data", data),
                 CelcoinPixAutoLiquidationResponse.class, context(idempotencyKey));
     }
 
@@ -200,6 +207,25 @@ public class CelcoinPixAutoClient implements CelcoinPixAutoOperations {
     private static void putAmount(Map<String, Object> body, String name, Object value) {
         if (value instanceof BigDecimal amount) body.put(name, amount.toPlainString());
         else if (value != null) body.put(name, value);
+    }
+
+    private static void validateStartDates(Map<String, Object> metadata) {
+        java.time.LocalDate minimum = java.time.LocalDate.now();
+        int added = 0;
+        while (added < 2) {
+            minimum = minimum.plusDays(1);
+            if (minimum.getDayOfWeek() != java.time.DayOfWeek.SATURDAY
+                    && minimum.getDayOfWeek() != java.time.DayOfWeek.SUNDAY) added++;
+        }
+        for (String field : new String[] {"startDateTime", "referenceStartDate"}) {
+            Object raw = metadata.get(field);
+            if (raw == null) continue;
+            String value = String.valueOf(raw);
+            java.time.LocalDate date = field.endsWith("Time")
+                    ? java.time.OffsetDateTime.parse(value).toLocalDate()
+                    : java.time.LocalDate.parse(value);
+            if (date.isBefore(minimum)) throw new IllegalArgumentException(field + " must be at least D+2 business days");
+        }
     }
 
     private static final class QueryBuilder {

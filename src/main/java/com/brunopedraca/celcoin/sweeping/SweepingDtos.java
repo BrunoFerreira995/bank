@@ -41,7 +41,13 @@ public final class SweepingDtos {
             String consentId, String status, String ofConsentId, Map<String, Object> raw) {}
 
     public record CelcoinSweepingConsentListRequest(
-            String status, LocalDate initialDate, LocalDate finalDate, Integer page, Integer pageSize) {}
+            String status, LocalDate initialDate, LocalDate finalDate, Integer page, Integer pageSize,
+            @NotBlank String cpf) {
+        public CelcoinSweepingConsentListRequest(
+                String status, LocalDate initialDate, LocalDate finalDate, Integer page, Integer pageSize) {
+            this(status, initialDate, finalDate, page, pageSize, null);
+        }
+    }
 
     public record CelcoinSweepingConsentListResponse(
             List<CelcoinSweepingConsentResponse> consents,

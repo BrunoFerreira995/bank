@@ -40,6 +40,14 @@ Após `AUTHORISED`, use `schedule` ou `createReceiveSchedule` para cada ciclo.
 recorrência futura. A liquidação é assíncrona: `RCVD`/`ACCP` podem evoluir para
 `ACSC`, `RJCT` ou `CANC`; consulte o status ou processe o webhook.
 
+`retryReceipt` exige a nova `date` e o novo `endToEndId` no payload. A API
+mantém `originalRecurringPaymentId` para rastreabilidade da tentativa.
+
+`PixAutoStateMachine` expõe as transições de consentimento
+(`AWAITING_AUTHORISATION`, `PARTIALLY_ACCEPTED`, `AUTHORISED`, `REVOKED`,
+`CONSUMED` e `REJECTED`) e de pagamento (`RCVD`, `ACCP`, `ACPD`, `SCHD`,
+`PDNG`, `ACSC`, `RJCT` e `CANC`).
+
 As datas `startDateTime` e `referenceStartDate` devem respeitar D+2. O
 `localInstrument` do produto é `AUTO` e não deve ser substituído por `MANU` ou
 `DICT`.
@@ -58,3 +66,7 @@ As datas `startDateTime` e `referenceStartDate` devem respeitar D+2. O
 Erros definitivos (`CONSENTIMENTO_INVALIDO`, divergência de consentimento,
 limite excedido) não devem ser retentados. Saldo insuficiente e falhas de
 infraestrutura podem seguir a janela de retry contratada.
+
+O receptor comum `/webhooks/celcoin` valida assinatura, usa
+`x-celcoin-event-id` para deduplicação e processa eventos de consentimento e
+liquidação de forma assíncrona.

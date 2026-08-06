@@ -41,8 +41,10 @@ public class CelcoinWebhookService implements CelcoinWebhookOperations {
         }
         verifier.verify(payload, headers);
         JsonNode json = parse(payload);
-        String externalId = firstText(json, "id", "eventId", "externalEventId");
-        String eventType = firstText(json, "type", "eventType");
+        String extractedExternalId = firstText(json, "id", "eventId", "externalEventId");
+        final String externalId = extractedExternalId == null
+                ? headers.getFirst("x-celcoin-event-id") : extractedExternalId;
+        String eventType = firstText(json, "type", "eventType", "event");
         if (externalId == null || eventType == null) {
             throw new CelcoinValidationException("Celcoin webhook payload must include an event id and event type");
         }

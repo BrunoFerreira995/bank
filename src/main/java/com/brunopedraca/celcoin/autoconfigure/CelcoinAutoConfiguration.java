@@ -42,6 +42,8 @@ import com.brunopedraca.celcoin.openfinance.CelcoinOpenFinanceClient;
 import com.brunopedraca.celcoin.openfinance.CelcoinOpenFinanceOperations;
 import com.brunopedraca.celcoin.jsr.CelcoinJsrClient;
 import com.brunopedraca.celcoin.jsr.CelcoinJsrOperations;
+import com.brunopedraca.celcoin.itp.CelcoinItpClient;
+import com.brunopedraca.celcoin.itp.CelcoinItpOperations;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -164,6 +166,12 @@ public class CelcoinAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    CelcoinItpOperations celcoinItpOperations(CelcoinHttpClient httpClient) {
+        return new CelcoinItpClient(httpClient);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
     CelcoinBoletoOperations celcoinBoletoOperations(CelcoinHttpClient httpClient) {
         return new CelcoinBoletoClient(httpClient);
     }
@@ -206,6 +214,7 @@ public class CelcoinAutoConfiguration {
             CelcoinCnabOperations cnab,
             CelcoinOpenFinanceOperations openFinance,
             CelcoinJsrOperations jsr,
+            CelcoinItpOperations itp,
             CelcoinBoletoOperations boletos,
             CelcoinCardOperations cards,
             CelcoinWebhookOperations webhooks,
@@ -213,6 +222,6 @@ public class CelcoinAutoConfiguration {
             CelcoinVehicleOperations vehicles) {
         return new DefaultCelcoinClient(
                 tokenService, acquiring, accounts, onboarding, pix, pixAuto, sweeping, indirectPix, cnab,
-                openFinance, jsr, boletos, cards, webhooks, credit, vehicles);
+                openFinance, jsr, itp, boletos, cards, webhooks, credit, vehicles);
     }
 }

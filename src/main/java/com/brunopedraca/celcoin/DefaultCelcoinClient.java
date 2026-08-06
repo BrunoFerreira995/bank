@@ -16,6 +16,7 @@ import com.brunopedraca.celcoin.indirectpix.CelcoinIndirectPixOperations;
 import com.brunopedraca.celcoin.cnab.CelcoinCnabOperations;
 import com.brunopedraca.celcoin.openfinance.CelcoinOpenFinanceOperations;
 import com.brunopedraca.celcoin.jsr.CelcoinJsrOperations;
+import com.brunopedraca.celcoin.itp.CelcoinItpOperations;
 
 public record DefaultCelcoinClient(
         CelcoinTokenService authentication,
@@ -29,6 +30,7 @@ public record DefaultCelcoinClient(
         CelcoinCnabOperations cnab,
         CelcoinOpenFinanceOperations openFinance,
         CelcoinJsrOperations jsr,
+        CelcoinItpOperations itp,
         CelcoinBoletoOperations boletos,
         CelcoinCardOperations cards,
         CelcoinWebhookOperations webhooks,

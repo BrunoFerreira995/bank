@@ -13,6 +13,7 @@ import org.springframework.util.StringUtils;
 
 public final class CelcoinSweepingClient implements CelcoinSweepingOperations {
     private static final String BASE = "/baas/v1/open/itp/sweeping-accounts";
+    private static final String QUERY_BASE = "/open-keys/itp/api/v2/sweeping-accounts/v2";
     private final CelcoinHttpClient httpClient;
 
     public CelcoinSweepingClient(CelcoinHttpClient httpClient) {
@@ -70,7 +71,11 @@ public final class CelcoinSweepingClient implements CelcoinSweepingOperations {
     @Override
     public CelcoinSweepingConsentListResponse listConsents(CelcoinSweepingConsentListRequest request) {
         ensureConfigured();
-        String path = BASE + "/payment-initiation?" + query()
+        if (!StringUtils.hasText(request.cpf())) {
+            throw new IllegalArgumentException("cpf is required when listing Sweeping Accounts consents");
+        }
+        String path = QUERY_BASE + "/payment-initiation?" + query()
+                .param("cpf", request.cpf())
                 .param("status", request.status())
                 .param("initialDate", request.initialDate())
                 .param("finalDate", request.finalDate())
@@ -82,7 +87,7 @@ public final class CelcoinSweepingClient implements CelcoinSweepingOperations {
     @Override
     public CelcoinSweepingConsentResponse getConsent(String paymentInitiationId) {
         ensureConfigured();
-        return httpClient.get(BASE + "/payment-initiation/" + encode(paymentInitiationId),
+        return httpClient.get(QUERY_BASE + "/payment-initiation/" + encode(paymentInitiationId),
                 CelcoinSweepingConsentResponse.class, context(null));
     }
 
@@ -98,7 +103,14 @@ public final class CelcoinSweepingClient implements CelcoinSweepingOperations {
             data.put("remittanceInformation", request.remittanceInformation());
         }
         if (StringUtils.hasText(request.ibgeTownCode())) data.put("ibgeTownCode", request.ibgeTownCode());
-        if (request.riskSignals() != null) data.put("riskSignals", request.riskSignals());
+        if (!StringUtils.hasText(request.ibgeTownCode()) || !request.ibgeTownCode().matches("\\d{7}")) {
+            throw new IllegalArgumentException("ibgeTownCode must contain exactly 7 digits");
+        }
+        if (request.amount().signum() <= 0) throw new IllegalArgumentException("amount must be positive");
+        if (request.riskSignals() == null || request.riskSignals().isEmpty()) {
+            throw new IllegalArgumentException("riskSignals must include manual or automatic signals");
+        }
+        data.put("riskSignals", request.riskSignals());
         return httpClient.post(BASE + "/payment-initiation/" + encode(request.paymentInitiationId()) + "/payments",
                 Map.of("data", data), CelcoinSweepingPaymentResponse.class, context(idempotencyKey));
     }
