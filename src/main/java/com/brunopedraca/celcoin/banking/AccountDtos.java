@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 public final class AccountDtos {
     private AccountDtos() {}
@@ -108,11 +109,99 @@ public final class AccountDtos {
             String status,
             Map<String, Object> raw) {}
 
+    public record CelcoinIncomeReportRequest(
+            @NotBlank String accountId, Integer calendarYear, Integer quarter) {
+        public CelcoinIncomeReportRequest(String accountId, Integer calendarYear) {
+            this(accountId, calendarYear, null);
+        }
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record CelcoinIncomeReportResponse(
+            String version, String status, CelcoinIncomeReportBody body) {}
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record CelcoinIncomeReportBody(
+            CelcoinIncomeReportPayerSource payerSource,
+            CelcoinIncomeReportOwner owner,
+            CelcoinIncomeReportAccount account,
+            List<CelcoinIncomeReportBalance> balances,
+            String incomeFile,
+            String fileType) {}
+
+    public record CelcoinIncomeReportPayerSource(String name, String documentNumber) {}
+
+    public record CelcoinIncomeReportOwner(String documentNumber, String name, String type, String createDate) {}
+
+    public record CelcoinIncomeReportAccount(String branch, String account) {}
+
+    public record CelcoinIncomeReportBalance(
+            String calendarYear, BigDecimal amount, String currency, String type) {}
+
+    public record CelcoinTedTransferRequest(
+            @NotBlank String debitAccountId,
+            BigDecimal amount,
+            @NotBlank String clientFinality,
+            CelcoinTedCreditParty creditParty,
+            String clientCode,
+            String description) {}
+
+    public record CelcoinTedCreditParty(
+            @NotBlank String bank,
+            @NotBlank String account,
+            @NotBlank String branch,
+            @NotBlank String taxId,
+            @NotBlank String name,
+            @NotBlank String accountType,
+            @NotBlank String personType) {}
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record CelcoinTedTransferResponse(
+            String version, String status, CelcoinTedTransferBody body, Map<String, Object> error) {}
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record CelcoinTedTransferBody(
+            String id,
+            BigDecimal amount,
+            String clientCode,
+            CelcoinTedParty debitParty,
+            CelcoinTedParty creditParty,
+            String clientFinality,
+            String description) {}
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record CelcoinTedParty(
+            String bank,
+            String account,
+            String branch,
+            String taxId,
+            String name,
+            String accountType,
+            String personType) {}
+
     public record CelcoinInternalTransferRequest(
             @NotBlank String sourceAccountId,
             @NotBlank String targetAccountId,
             BigDecimal amount,
-            String description) {}
+            String description,
+            String clientRequestId,
+            String targetTaxId) {
+        public CelcoinInternalTransferRequest(
+                String sourceAccountId, String targetAccountId, BigDecimal amount, String description) {
+            this(sourceAccountId, targetAccountId, amount, description, null, null);
+        }
+    }
 
-    public record CelcoinInternalTransferResponse(String transferId, String status, Map<String, Object> raw) {}
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record CelcoinInternalTransferResponse(
+            String transferId,
+            BigDecimal amount,
+            String clientRequestId,
+            String endToEndId,
+            String status,
+            Map<String, Object> raw) {
+        public CelcoinInternalTransferResponse(String transferId, String status, Map<String, Object> raw) {
+            this(transferId, null, null, null, status, raw);
+        }
+    }
 }

@@ -1,198 +1,186 @@
 package com.brunopedraca.celcoin.acquiring;
 
 import com.brunopedraca.celcoin.acquiring.AcquiringDtos.*;
-import com.brunopedraca.celcoin.common.exception.CelcoinIntegrationException;
 import com.brunopedraca.celcoin.common.http.CelcoinHttpClient;
+import com.brunopedraca.celcoin.common.http.CelcoinRequestContext;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.HashMap;
+import org.springframework.util.StringUtils;
 
 public class CelcoinAcquiringClient implements CelcoinAcquiringOperations {
-    @SuppressWarnings("unused")
     private final CelcoinHttpClient httpClient;
 
     public CelcoinAcquiringClient(CelcoinHttpClient httpClient) {
         this.httpClient = httpClient;
     }
 
+    @Override
     public CelcoinAcquiringAccreditationStatusResponse getAccreditationStatus(String accountId) {
-        throw unspecified();
+        ensureConfigured();
+        return httpClient.get("/baas/v1/cash/accreditation?account=" + encode(accountId),
+                CelcoinAcquiringAccreditationStatusResponse.class, context(null));
     }
 
-    public CelcoinAcquiringCustomerResponse createCustomer(
-            CelcoinAcquiringCustomerRequest request, String idempotencyKey) {
-        throw unspecified();
+    @Override
+    public CelcoinAcquiringCustomerResponse createCustomer(CelcoinAcquiringCustomerRequest request, String key) {
+        ensureConfigured();
+        return httpClient.post("/baas/v1/cash/customers", request,
+                CelcoinAcquiringCustomerResponse.class, context(key));
     }
 
+    @Override
     public CelcoinAcquiringCustomerListResponse listCustomers(CelcoinAcquiringListRequest request) {
-        throw unspecified();
+        ensureConfigured();
+        return httpClient.get("/baas/v1/cash/customers?" + listQuery(request),
+                CelcoinAcquiringCustomerListResponse.class, context(null));
     }
 
+    @Override
     public CelcoinAcquiringCustomerResponse updateCustomer(CelcoinAcquiringCustomerRequest request) {
-        throw unspecified();
+        ensureConfigured();
+        return httpClient.put("/baas/v1/cash/customers/" + encode(request.customerId()) + "/myId",
+                request, CelcoinAcquiringCustomerResponse.class, context(null));
     }
 
-    public void deleteCustomer(String customerId, String idempotencyKey) {
-        throw unspecified();
+    @Override
+    public void deleteCustomer(String customerId, String key) {
+        ensureConfigured();
+        httpClient.delete("/baas/v1/cash/customers/" + encode(customerId) + "/myId", Map.of(),
+                Map.class, context(key));
     }
 
-    public CelcoinAcquiringCardResponse createCard(CelcoinAcquiringCardRequest request, String idempotencyKey) {
-        throw unspecified();
+    @Override
+    public CelcoinAcquiringCardResponse createCard(CelcoinAcquiringCardRequest request, String key) {
+        ensureConfigured();
+        String path = "/baas/v1/cash/cards/" + encode(request.customerId()) + "/myId?account="
+                + encode(account(request.metadata()));
+        Map<String, Object> body = new HashMap<>();
+        body.put("number", request.number());
+        body.put("holder", request.holderName());
+        body.put("expiresAt", request.expirationYear() + "-" + request.expirationMonth());
+        if (request.securityCode() != null) body.put("cvv", request.securityCode());
+        return httpClient.post(path, body, CelcoinAcquiringCardResponse.class, context(key));
     }
 
+    @Override
     public CelcoinAcquiringCardListResponse listCards(CelcoinAcquiringListRequest request) {
-        throw unspecified();
+        ensureConfigured();
+        return httpClient.get("/baas/v1/cash/cards?" + listQuery(request),
+                CelcoinAcquiringCardListResponse.class, context(null));
     }
 
-    public CelcoinAcquiringCardResponse deactivateCard(String cardId, String idempotencyKey) {
-        throw unspecified();
+    @Override
+    public CelcoinAcquiringCardResponse deactivateCard(String cardId, String key) {
+        ensureConfigured();
+        return httpClient.delete("/baas/v1/cash/cards/" + encode(cardId) + "/myId", Map.of(),
+                CelcoinAcquiringCardResponse.class, context(key));
     }
 
-    public CelcoinAcquiringChargeResponse createCharge(CelcoinAcquiringChargeRequest request, String idempotencyKey) {
-        throw unspecified();
+    @Override
+    public CelcoinAcquiringChargeResponse createCharge(CelcoinAcquiringChargeRequest request, String key) {
+        ensureConfigured();
+        String path = "/baas/v1/cash/charges?account=" + encode(account(request.metadata()));
+        return httpClient.post(path, request, CelcoinAcquiringChargeResponse.class, context(key));
     }
 
+    @Override
     public CelcoinAcquiringChargeListResponse listCharges(CelcoinAcquiringListRequest request) {
-        throw unspecified();
+        ensureConfigured();
+        return httpClient.get("/baas/v1/cash/charges?" + listQuery(request),
+                CelcoinAcquiringChargeListResponse.class, context(null));
     }
 
+    @Override
     public CelcoinAcquiringChargeResponse updateCharge(CelcoinAcquiringChargeRequest request) {
-        throw unspecified();
+        ensureConfigured();
+        return httpClient.put(chargePath(request.chargeId()) + "/myId", request,
+                CelcoinAcquiringChargeResponse.class, context(null));
     }
 
-    public CelcoinAcquiringChargeResponse retryCharge(String chargeId, String idempotencyKey) {
-        throw unspecified();
+    @Override
+    public CelcoinAcquiringChargeResponse retryCharge(String chargeId, String key) {
+        ensureConfigured();
+        return httpClient.post(chargePath(chargeId) + "/myId/retry", null,
+                CelcoinAcquiringChargeResponse.class, context(key));
     }
 
-    public CelcoinAcquiringChargeResponse refundCharge(String chargeId, String idempotencyKey) {
-        throw unspecified();
+    @Override
+    public CelcoinAcquiringChargeResponse refundCharge(String chargeId, String key) {
+        ensureConfigured();
+        return httpClient.put(chargePath(chargeId) + "/myId/reverse", Map.of(),
+                CelcoinAcquiringChargeResponse.class, context(key));
     }
 
-    public CelcoinAcquiringChargeResponse cancelCharge(String chargeId, String idempotencyKey) {
-        throw unspecified();
+    @Override
+    public CelcoinAcquiringChargeResponse cancelCharge(String chargeId, String key) {
+        ensureConfigured();
+        return httpClient.delete(chargePath(chargeId) + "/myId", Map.of(),
+                CelcoinAcquiringChargeResponse.class, context(key));
     }
 
-    public CelcoinAcquiringChargeResponse captureCharge(String chargeId, String idempotencyKey) {
-        throw unspecified();
+    @Override
+    public CelcoinAcquiringChargeResponse captureCharge(String chargeId, String key) {
+        ensureConfigured();
+        return httpClient.put(chargePath(chargeId) + "/myId/capture", Map.of(),
+                CelcoinAcquiringChargeResponse.class, context(key));
     }
 
+    @Override
     public CelcoinAcquiringReceivablesReportResponse requestReceivablesReport(
             CelcoinAcquiringReceivablesReportRequest request) {
-        throw unspecified();
+        ensureConfigured();
+        return httpClient.put("/baas/v1/cash/receivables", request,
+                CelcoinAcquiringReceivablesReportResponse.class, context(null));
     }
 
+    @Override
     public CelcoinAcquiringReceivablesReportResponse getReceivablesReportStatus(String reportId) {
-        throw unspecified();
+        ensureConfigured();
+        return httpClient.get("/baas/v1/cash/receivables/" + encode(reportId),
+                CelcoinAcquiringReceivablesReportResponse.class, context(null));
     }
 
+    @Override
     public byte[] downloadReceivablesReport(String reportId) {
-        throw unspecified();
+        ensureConfigured();
+        return httpClient.download("/baas/v1/cash/receivables/" + encode(reportId) + "/download", context(null));
     }
 
-    public CelcoinAcquiringPlanResponse createPlan(CelcoinAcquiringPlanRequest request, String idempotencyKey) {
-        throw unspecified();
+    private String chargePath(String chargeId) {
+        return "/baas/v1/cash/charges/" + encode(chargeId);
     }
 
-    public CelcoinAcquiringPlanListResponse listPlans(CelcoinAcquiringListRequest request) {
-        throw unspecified();
+    private String listQuery(CelcoinAcquiringListRequest request) {
+        StringBuilder q = new StringBuilder();
+        param(q, "account", request.accountId());
+        param(q, "customerId", request.customerId());
+        param(q, "status", request.status());
+        param(q, "page", request.page());
+        param(q, "limit", request.size());
+        return q.toString();
     }
 
-    public CelcoinAcquiringPlanResponse updatePlan(CelcoinAcquiringPlanRequest request) {
-        throw unspecified();
+    private static String account(Map<String, Object> metadata) {
+        Object account = metadata == null ? null : metadata.get("account");
+        return account == null ? "" : String.valueOf(account);
     }
 
-    public void deletePlan(String planId, String idempotencyKey) {
-        throw unspecified();
+    private static void param(StringBuilder q, String name, Object value) {
+        if (value != null && StringUtils.hasText(String.valueOf(value))) {
+            if (!q.isEmpty()) q.append('&');
+            q.append(name).append('=').append(encode(String.valueOf(value)));
+        }
     }
 
-    public CelcoinAcquiringSubscriptionResponse createSubscription(
-            CelcoinAcquiringSubscriptionRequest request, String idempotencyKey) {
-        throw unspecified();
+    private static String encode(String value) {
+        return StringUtils.hasText(value) ? URLEncoder.encode(value, StandardCharsets.UTF_8) : "";
     }
 
-    public CelcoinAcquiringSubscriptionResponse createManualSubscription(
-            CelcoinAcquiringSubscriptionRequest request, String idempotencyKey) {
-        throw unspecified();
-    }
+    private CelcoinRequestContext context(String key) { return CelcoinRequestContext.create(key); }
 
-    public CelcoinAcquiringSubscriptionListResponse listSubscriptions(CelcoinAcquiringListRequest request) {
-        throw unspecified();
-    }
-
-    public CelcoinAcquiringChargeResponse addSubscriptionTransaction(
-            CelcoinAcquiringSubscriptionTransactionRequest request, String idempotencyKey) {
-        throw unspecified();
-    }
-
-    public CelcoinAcquiringSubscriptionResponse updateSubscription(CelcoinAcquiringSubscriptionRequest request) {
-        throw unspecified();
-    }
-
-    public CelcoinAcquiringSubscriptionResponse updateSubscriptionPayment(
-            CelcoinAcquiringSubscriptionPaymentUpdateRequest request) {
-        throw unspecified();
-    }
-
-    public CelcoinAcquiringChargeResponse updateSubscriptionTransaction(
-            CelcoinAcquiringSubscriptionTransactionRequest request) {
-        throw unspecified();
-    }
-
-    public CelcoinAcquiringChargeResponse retrySubscriptionCharge(String transactionId, String idempotencyKey) {
-        throw unspecified();
-    }
-
-    public CelcoinAcquiringChargeResponse captureSubscriptionCharge(String transactionId, String idempotencyKey) {
-        throw unspecified();
-    }
-
-    public CelcoinAcquiringChargeResponse refundSubscriptionCharge(String transactionId, String idempotencyKey) {
-        throw unspecified();
-    }
-
-    public CelcoinAcquiringSubscriptionResponse cancelSubscription(String subscriptionId, String idempotencyKey) {
-        throw unspecified();
-    }
-
-    public CelcoinAcquiringChargeResponse cancelSubscriptionTransaction(String transactionId, String idempotencyKey) {
-        throw unspecified();
-    }
-
-    public CelcoinAcquiringChargebackListResponse listChargebacks(CelcoinAcquiringListRequest request) {
-        throw unspecified();
-    }
-
-    public CelcoinAcquiringChargebackResponse sendChargebackDefense(CelcoinAcquiringChargebackDefenseRequest request) {
-        throw unspecified();
-    }
-
-    public CelcoinAcquiringChargebackResponse withdrawChargebackDispute(String chargebackId, String idempotencyKey) {
-        throw unspecified();
-    }
-
-    public CelcoinAcquiringWebhookResponse createChargebackWebhook(CelcoinAcquiringWebhookRequest request) {
-        throw unspecified();
-    }
-
-    public CelcoinAcquiringChargebackResponse simulateChargeback(String transactionId, String status) {
-        throw unspecified();
-    }
-
-    public CelcoinAcquiringCardTokenResponse tokenizeCard(CelcoinAcquiringCardTokenRequest request) {
-        throw unspecified();
-    }
-
-    public CelcoinAcquiringFeeListResponse listFees(String accountId) {
-        throw unspecified();
-    }
-
-    public CelcoinAcquiringTransactionListResponse listTransactions(CelcoinAcquiringListRequest request) {
-        throw unspecified();
-    }
-
-    public CelcoinAcquiringReceivablesStatementResponse getReceivablesStatement(CelcoinAcquiringListRequest request) {
-        throw unspecified();
-    }
-
-    private CelcoinIntegrationException unspecified() {
-        return new CelcoinIntegrationException(
-                "Celcoin acquiring endpoint path is not configured because the official contract was not provided in this first version");
+    private void ensureConfigured() {
+        if (httpClient == null) throw new IllegalStateException("Celcoin acquiring endpoint is not configured");
     }
 }

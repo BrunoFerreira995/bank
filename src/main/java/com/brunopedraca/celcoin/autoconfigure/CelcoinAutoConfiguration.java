@@ -12,6 +12,9 @@ import com.brunopedraca.celcoin.boleto.CelcoinBoletoClient;
 import com.brunopedraca.celcoin.boleto.CelcoinBoletoOperations;
 import com.brunopedraca.celcoin.cards.CelcoinCardClient;
 import com.brunopedraca.celcoin.cards.CelcoinCardOperations;
+import com.brunopedraca.celcoin.credit.CelcoinCreditClient;
+import com.brunopedraca.celcoin.credit.CelcoinCreditOperations;
+import com.brunopedraca.celcoin.credit.CelcoinCreditProperties;
 import com.brunopedraca.celcoin.common.http.CelcoinHttpClient;
 import com.brunopedraca.celcoin.common.http.CelcoinSslContextProvider;
 import com.brunopedraca.celcoin.common.http.CelcoinWebClientFactory;
@@ -27,6 +30,8 @@ import com.brunopedraca.celcoin.pixauto.CelcoinPixAutoClient;
 import com.brunopedraca.celcoin.pixauto.CelcoinPixAutoOperations;
 import com.brunopedraca.celcoin.webhook.CelcoinWebhookOperations;
 import com.brunopedraca.celcoin.webhook.CelcoinWebhookService;
+import com.brunopedraca.celcoin.vehicle.CelcoinVehicleClient;
+import com.brunopedraca.celcoin.vehicle.CelcoinVehicleOperations;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -37,7 +42,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @AutoConfiguration
-@EnableConfigurationProperties(CelcoinProperties.class)
+@EnableConfigurationProperties({CelcoinProperties.class, CelcoinCreditProperties.class})
 @ConditionalOnProperty(prefix = "celcoin", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class CelcoinAutoConfiguration {
 
@@ -131,6 +136,18 @@ public class CelcoinAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    CelcoinCreditOperations celcoinCreditOperations(CelcoinCreditProperties properties) {
+        return new CelcoinCreditClient(WebClient.builder().build(), WebClient.builder().build(), properties);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    CelcoinVehicleOperations celcoinVehicleOperations(CelcoinHttpClient httpClient) {
+        return new CelcoinVehicleClient(httpClient);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
     CelcoinWebhookOperations celcoinWebhookOperations(CelcoinWebhookService service) {
         return service;
     }
@@ -146,8 +163,10 @@ public class CelcoinAutoConfiguration {
             CelcoinPixAutoOperations pixAuto,
             CelcoinBoletoOperations boletos,
             CelcoinCardOperations cards,
-            CelcoinWebhookOperations webhooks) {
+            CelcoinWebhookOperations webhooks,
+            CelcoinCreditOperations credit,
+            CelcoinVehicleOperations vehicles) {
         return new DefaultCelcoinClient(
-                tokenService, acquiring, accounts, onboarding, pix, pixAuto, boletos, cards, webhooks);
+                tokenService, acquiring, accounts, onboarding, pix, pixAuto, boletos, cards, webhooks, credit, vehicles);
     }
 }

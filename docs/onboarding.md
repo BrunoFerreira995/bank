@@ -223,3 +223,33 @@ Modelo do webhook `onboarding-proposal`:
   é um produto separado.
 - **Idempotência**: `createPersonAccount` e `createBusinessAccount` aceitam
   `idempotencyKey`, aplicada via cabeçalho `Idempotency-Key`.
+
+## Cenários de sandbox
+
+No sandbox, o telefone determina o resultado da simulação da abertura da conta:
+
+| Final do telefone | Resultado esperado |
+|---|---|
+| `1` | aprovado nos dois webhooks e conta criada |
+| `2` | reprovado no primeiro webhook |
+| `3` | primeira etapa aprovada e segunda etapa reprovada |
+| outro dígito | comportamento próximo do fluxo real, sujeito à validação dos dados |
+
+Use `phoneNumber` para PF e `contactNumber` para PJ. Depois de uma conta
+aprovada no sandbox, adicione saldo antes de exercitar operações financeiras.
+
+## Fluxo sem WebView
+
+Quando a aplicação já coleta e valida os documentos, é possível enviar URLs
+públicas em `files[]` na proposta e acompanhar o resultado por webhook/status.
+As URLs devem ser acessíveis pela Celcoin, ter validade suficiente para o
+processamento e apontar para documentos de até 10 MB. Esse fluxo não elimina as
+validações de KYC, documentoscopia ou análise de risco.
+
+## BC Protege+
+
+A consulta ao BC Protege+ é obrigatória no processo de abertura de conta e é
+realizada pela Celcoin durante o onboarding. O contrato público não expõe um
+endpoint separado para iniciar, consultar ou simular essa verificação; por isso
+o SDK não cria uma operação artificial para ela. O resultado aplicável à jornada
+é refletido nos status e webhooks da proposta.

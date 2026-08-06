@@ -43,3 +43,9 @@ celcoin:
     truststore-path: ${CELCOIN_SSL_TRUSTSTORE_PATH:}
     truststore-type: PKCS12
     truststore-password: ${CELCOIN_SSL_TRUSTSTORE_PASSWORD:}
+  credit:
+    enabled: ${CELCOIN_CREDIT_ENABLED:false}
+    api-base-url: ${CELCOIN_CREDIT_API_BASE_URL:https://sandbox.platform.flowfinance.com.br}
+    auth-url: ${CELCOIN_CREDIT_AUTH_URL:https://sandbox.auth.flowfinance.com.br/oauth2/token}
+    client-id: ${CELCOIN_CREDIT_CLIENT_ID:}
+    client-secret: ${CELCOIN_CREDIT_CLIENT_SECRET:}

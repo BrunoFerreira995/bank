@@ -15,11 +15,15 @@ import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinBalanceResponse;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinCoreAccountRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinInternalTransferRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinInternalTransferResponse;
+import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinIncomeReportRequest;
+import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinIncomeReportResponse;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinJudicialBlockRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinJudicialBlockResponse;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinSandboxBalanceRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinStatementRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinStatementResponse;
+import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinTedTransferRequest;
+import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinTedTransferResponse;
 
 public interface CelcoinAccountOperations {
     CelcoinAccountStatusResponse getStatus(String accountId);
@@ -66,6 +70,33 @@ public interface CelcoinAccountOperations {
 
     CelcoinStatementResponse getStatement(CelcoinStatementRequest request);
 
+    CelcoinIncomeReportResponse getIncomeReport(CelcoinIncomeReportRequest request);
+
+    default CelcoinTedTransferResponse transferTed(CelcoinTedTransferRequest request) {
+        return transferTed(request, null);
+    }
+
+    CelcoinTedTransferResponse transferTed(CelcoinTedTransferRequest request, String idempotencyKey);
+
+    default CelcoinTedTransferResponse getTedTransferStatus(String id) {
+        return getTedTransferStatus(id, null);
+    }
+
+    CelcoinTedTransferResponse getTedTransferStatus(String id, String clientCode);
+
+    default CelcoinIncomeReportResponse getIncomeReport(String accountId, Integer calendarYear) {
+        return getIncomeReport(new CelcoinIncomeReportRequest(accountId, calendarYear));
+    }
+
+    default CelcoinIncomeReportResponse getIncomeReportPf(String accountId, Integer calendarYear) {
+        return getIncomeReport(accountId, calendarYear);
+    }
+
+    default CelcoinIncomeReportResponse getIncomeReportPj(
+            String accountId, Integer calendarYear, Integer quarter) {
+        return getIncomeReport(new CelcoinIncomeReportRequest(accountId, calendarYear, quarter));
+    }
+
     default CelcoinInternalTransferResponse transfer(CelcoinInternalTransferRequest request) {
         return transfer(request, null);
     }
@@ -73,4 +104,11 @@ public interface CelcoinAccountOperations {
     CelcoinInternalTransferResponse transfer(CelcoinInternalTransferRequest request, String idempotencyKey);
 
     CelcoinInternalTransferResponse getTransferStatus(String transferId);
+
+    default CelcoinInternalTransferResponse getTransferStatus(String transferId, String clientRequestId) {
+        return getTransferStatus(transferId, clientRequestId, null);
+    }
+
+    CelcoinInternalTransferResponse getTransferStatus(
+            String transferId, String clientRequestId, String endToEndId);
 }

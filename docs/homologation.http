@@ -1,0 +1,45 @@
+### Smoke tests técnicos — não substitui a homologação pela aplicação
+
+@baseUrl = https://sandbox.openfinance.celcoin.dev
+@token = {{CELCOIN_ACCESS_TOKEN}}
+@account = {{CELCOIN_TEST_ACCOUNT}}
+@clientRequestId = {{$random.uuid}}
+
+### Saldo
+GET {{baseUrl}}/baas/v2/wallet/balance?Account={{account}}
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### Consulta de débitos veiculares
+POST {{baseUrl}}/baas/v2/vehicledebts/consult
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "state": "{{VEHICLE_STATE}}",
+  "licensePlate": "{{VEHICLE_PLATE}}",
+  "renavam": "{{VEHICLE_RENAVAM}}",
+  "documentNumber": "{{VEHICLE_DOCUMENT}}",
+  "clientRequestId": "{{clientRequestId}}"
+}
+
+### TED — preencher somente com dados da massa autorizada
+POST {{baseUrl}}/baas/v2/spb/transfer
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "amount": 0.01,
+  "clientCode": "{{clientRequestId}}",
+  "debitParty": { "account": "{{account}}" },
+  "creditParty": {
+    "bank": "{{TED_DESTINATION_ISPB}}",
+    "account": "{{TED_DESTINATION_ACCOUNT}}",
+    "branch": "{{TED_DESTINATION_BRANCH}}",
+    "taxId": "{{TED_DESTINATION_DOCUMENT}}",
+    "name": "{{TED_DESTINATION_NAME}}",
+    "accountType": "CC",
+    "personType": "F"
+  },
+  "clientFinality": "110"
+}

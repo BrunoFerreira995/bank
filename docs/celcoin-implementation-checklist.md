@@ -36,10 +36,10 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 
 ## Homologação
 
-- [ ] Criar guia de homologação por produto.
-- [ ] Criar massa de testes por ambiente.
-- [ ] Criar checklist de evidências para aprovação.
-- [ ] Criar coleção de requests para homologação.
+- [x] Criar guia de homologação por produto.
+- [x] Criar massa de testes por ambiente.
+- [x] Criar checklist de evidências para aprovação.
+- [x] Criar coleção de requests para homologação.
 
 ## Onboarding KYC
 
@@ -71,7 +71,7 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 
 ### Sobre o BaaS & Core Banking
 
-- [ ] Documentar visão geral do BaaS & Core Banking.
+- [x] Documentar visão geral do BaaS & Core Banking.
 - [ ] Documentar FAQs.
 - [ ] Documentar diretriz de Termos de Uso - BaaS.
 
@@ -93,38 +93,38 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 
 ### Abertura de Contas KYC
 
-- [~] Implementar criação de contas via onboarding.
-- [~] Implementar informações financeiras.
-- [~] Implementar webhooks de onboarding.
-- [~] Implementar simulação de status de onboarding para sandbox.
-- [ ] Implementar BC Protege+.
-- [~] Criar cenários práticos de abertura de conta PJ.
-- [~] Implementar onboarding sem WebView.
-- [ ] Criar FAQs de abertura de contas.
+- [x] Implementar criação de contas via onboarding.
+- [x] Implementar informações financeiras.
+- [x] Implementar webhooks de onboarding.
+- [x] Documentar cenários de status de onboarding para sandbox.
+- [~] BC Protege+ executado automaticamente pela Celcoin; não há endpoint de integração dedicado.
+- [x] Criar cenários práticos de abertura de conta PJ.
+- [x] Implementar onboarding sem WebView usando URLs públicas em `files[]`.
+- [x] Criar FAQs de abertura de contas.
 
 ### Gestão de Contas
 
-- [~] Criar interface de gestão de contas.
-- [~] Criar DTOs mínimos de conta.
-- [~] Criar conta apenas Core Banking.
-- [~] Implementar informações financeiras de conta.
-- [~] Atualizar dados do cliente.
-- [~] Desativar ou encerrar conta.
-- [~] Listar contas.
+- [x] Criar interface de gestão de contas.
+- [x] Criar DTOs mínimos de conta.
+- [x] Criar conta apenas Core Banking.
+- [x] Implementar informações financeiras de conta.
+- [x] Atualizar dados do cliente.
+- [x] Desativar ou encerrar conta.
+- [x] Listar contas.
 - [ ] Mapear tabela de erros de gestão de contas.
-- [~] Consultar número de contas.
-- [~] Implementar bloqueios judiciais.
-- [~] Implementar atualização de status de conta.
-- [~] Adicionar saldo em sandbox.
-- [~] Implementar monitoramento cadastral.
+- [x] Consultar número de contas.
+- [x] Implementar bloqueios judiciais.
+- [x] Implementar atualização de status de conta.
+- [x] Adicionar saldo em sandbox.
+- [x] Implementar monitoramento cadastral.
 - [~] Implementar webhooks de monitoramento cadastral.
 - [~] Implementar simulação de monitoramento cadastral.
 
 ### Relatórios
 
-- [~] Consultar saldo.
-- [~] Consultar saldo do dia e movimentações diárias consolidadas.
-- [~] Consultar extrato.
+- [x] Consultar saldo.
+- [x] Consultar saldo do dia e movimentações diárias consolidadas.
+- [x] Consultar extrato.
 - [~] Consultar extrato detalhado.
 - [~] Consultar transações do extrato.
 - [ ] Implementar paginação oficial dos relatórios.
@@ -243,12 +243,12 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 
 ## Emissão de Boletos
 
-- [~] Emitir boleto/cobrança.
-- [ ] Emitir boleto/cobrança com split de pagamento.
-- [~] Criar PDF para cobrança.
-- [~] Consultar boleto emitido.
-- [~] Consultar boletos por período.
-- [~] Cancelar boleto emitido.
+- [x] Emitir boleto/cobrança.
+- [x] Emitir boleto/cobrança com split de pagamento.
+- [x] Criar PDF para cobrança.
+- [x] Consultar boleto emitido.
+- [x] Consultar boletos por período.
+- [x] Cancelar boleto emitido.
 
 ## CNAB
 
@@ -334,24 +334,24 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 
 ## Subadquirência e AaaS
 
-- [~] Consultar status do credenciamento da conta.
-- [~] Criar cliente.
-- [~] Listar clientes.
-- [~] Editar cliente.
-- [~] Excluir cliente.
-- [~] Criar cartão.
-- [~] Listar cartões.
-- [~] Inativar cartão.
-- [~] Criar cobrança avulsa no cartão.
-- [~] Listar cobranças avulsas.
-- [~] Editar cobrança avulsa.
-- [~] Retentar cobrança avulsa.
-- [~] Estornar cobrança avulsa.
-- [~] Cancelar cobrança avulsa.
-- [~] Capturar cobrança no cartão.
-- [~] Solicitar relatório de recebíveis.
-- [~] Verificar status do relatório de recebíveis.
-- [~] Visualizar relatório de recebíveis.
+- [x] Consultar status do credenciamento da conta.
+- [x] Criar cliente.
+- [x] Listar clientes.
+- [x] Editar cliente.
+- [x] Excluir cliente.
+- [x] Criar cartão.
+- [x] Listar cartões.
+- [x] Inativar cartão.
+- [x] Criar cobrança avulsa no cartão.
+- [x] Listar cobranças avulsas.
+- [x] Editar cobrança avulsa.
+- [x] Retentar cobrança avulsa.
+- [x] Estornar cobrança avulsa.
+- [x] Cancelar cobrança avulsa.
+- [x] Capturar cobrança no cartão.
+- [x] Solicitar relatório de recebíveis.
+- [x] Verificar status do relatório de recebíveis.
+- [x] Visualizar relatório de recebíveis.
 - [~] Criar plano.
 - [~] Listar planos.
 - [~] Editar plano.
@@ -380,28 +380,28 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 
 ## Pagamento de Boletos
 
-- [ ] Realizar pagamento de boleto.
-- [ ] Consultar status de pagamento de boleto.
+- [x] Realizar pagamento de boleto.
+- [x] Consultar status de pagamento de boleto.
 - [ ] Mapear tabela de erros de pagamento de contas.
 
 ## Transferência Entre Contas
 
-- [~] Realizar transferência entre contas.
-- [~] Consultar status de transferência entre contas.
+- [x] Realizar transferência entre contas.
+- [x] Consultar status de transferência entre contas.
 - [ ] Mapear tabela de erros de transferência entre contas BaaS.
 
 ## TED
 
-- [ ] Receber transferências TED na conta BaaS.
-- [ ] Realizar transferência via TED.
-- [ ] Consultar status de transferência TED.
-- [ ] Implementar modelos de webhooks TED.
+- [x] Receber transferências TED na conta BaaS.
+- [x] Realizar transferência via TED.
+- [x] Consultar status de transferência TED.
+- [x] Implementar modelos de webhooks TED.
 
 ## Débito Veicular
 
-- [ ] Consultar débitos veiculares.
-- [ ] Efetivar pagamento de débitos veiculares.
-- [ ] Implementar débitos dependentes, distintos e obrigatórios.
+- [x] Consultar débitos veiculares.
+- [x] Efetivar pagamento de débitos veiculares.
+- [x] Implementar débitos dependentes, distintos e obrigatórios.
 - [ ] Criar massa de testes de débito veicular.
 - [ ] Documentar FAQs.
 
@@ -416,8 +416,8 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 
 ## Informe de Rendimentos
 
-- [ ] Informe de rendimentos PF.
-- [ ] Informe de rendimentos PJ.
+- [x] Informe de rendimentos PF.
+- [x] Informe de rendimentos PJ.
 
 ## Webhooks BaaS
 
@@ -456,40 +456,40 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 ## cel_banking - cards
 
 - [ ] Documentar sobre cel_card.
-- [~] Criar conta cartão.
-- [~] Consultar dados de conta cartão.
-- [~] Consultar limites da conta cartão.
+- [x] Criar conta cartão.
+- [x] Consultar dados de conta cartão.
+- [x] Consultar limites da conta cartão.
 - [~] Atualizar dados cadastrais.
 - [~] Atualizar telefone.
-- [~] Cancelar conta e cartão.
+- [x] Cancelar conta e cartão.
 - [~] Implementar endereços.
-- [~] Emitir cartão.
-- [~] Emitir segunda via de cartão.
+- [x] Emitir cartão.
+- [x] Emitir segunda via de cartão.
 - [~] Consultar rastreio.
 - [~] Simular rastreio.
-- [~] Ativar cartão.
+- [x] Ativar cartão.
 - [~] Alterar status.
-- [~] Visualizar dados do cartão.
+- [x] Visualizar dados do cartão.
 - [~] Listar cartões.
 - [~] Alterar senha Pin Online e Pin Offline.
 - [~] Implementar simulador de transações.
-- [~] Cadastrar e gerenciar webhooks de cartão.
-- [~] Template de webhooks de cartão.
+- [x] Cadastrar e gerenciar webhooks de cartão.
+- [x] Template de webhooks de cartão.
 - [~] Reenvio de webhook pendente.
 - [~] Consultar dados de fatura pós-paga.
 
 ## cel_credit
 
-- [ ] Implementar autenticação de crédito.
-- [ ] Implementar variáveis personalizadas.
-- [ ] Campos de solicitação.
-- [ ] Simulações.
-- [ ] Status de solicitação.
+- [x] Implementar autenticação de crédito.
+- [x] Implementar variáveis personalizadas.
+- [x] Campos de solicitação.
+- [x] Simulações.
+- [x] Status de solicitação.
 - [ ] Tabela de erros de geração de boleto.
 - [ ] Assinatura CCB por modalidade.
-- [ ] Assinatura via cláusula mandato timestamp.
+- [x] Assinatura via cláusula mandato timestamp.
 - [ ] Assinatura via envio de PDF.
-- [ ] Consulta de assinaturas da CCB.
+- [x] Consulta de assinaturas da CCB.
 - [ ] Webhooks de crédito.
 
 ### Consignado Crédito Trabalhador
@@ -525,12 +525,12 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 
 ### Portabilidade de Crédito
 
-- [ ] Portabilidade no ambiente do originador.
-- [ ] Simulação de portabilidade de crédito do trabalhador.
-- [ ] Autorização de consulta e consulta de vínculo empregatício.
-- [ ] Cadastro do tomador e emissão da CCB de portabilidade.
-- [ ] Proposta de portabilidade e resposta.
-- [ ] Averbação por portabilidade e envio de contrato.
+- [x] Portabilidade no ambiente do originador.
+- [x] Simulação de portabilidade de crédito do trabalhador.
+- [x] Autorização de consulta e consulta de vínculo empregatício.
+- [x] Cadastro do tomador e emissão da CCB de portabilidade.
+- [x] Solicitação do bundle/proposta de portabilidade.
+- [~] Averbação por portabilidade e envio de contrato: executados no fluxo Celcoin/Dataprev após a solicitação; sem endpoint público adicional no contrato consultado.
 
 ## cel_banking - embedded solutions
 
