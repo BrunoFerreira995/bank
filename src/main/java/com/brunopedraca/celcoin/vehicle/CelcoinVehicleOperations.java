@@ -4,6 +4,7 @@ import com.brunopedraca.celcoin.vehicle.VehicleDtos.CelcoinVehicleDebtConsultReq
 import com.brunopedraca.celcoin.vehicle.VehicleDtos.CelcoinVehicleDebtConsultResponse;
 import com.brunopedraca.celcoin.vehicle.VehicleDtos.CelcoinVehicleDebtPaymentRequest;
 import com.brunopedraca.celcoin.vehicle.VehicleDtos.CelcoinVehicleDebtResponse;
+import java.util.List;
 
 public interface CelcoinVehicleOperations {
     CelcoinVehicleDebtConsultResponse consult(CelcoinVehicleDebtConsultRequest request);
@@ -17,4 +18,8 @@ public interface CelcoinVehicleOperations {
     CelcoinVehicleDebtResponse pay(CelcoinVehicleDebtPaymentRequest request, String idempotencyKey);
 
     CelcoinVehicleDebtResponse getPaymentStatus(String idConsult, String clientRequestId, String debtId);
+
+    default List<CelcoinVehicleErrors.Error> errors() {
+        return CelcoinVehicleErrors.all();
+    }
 }

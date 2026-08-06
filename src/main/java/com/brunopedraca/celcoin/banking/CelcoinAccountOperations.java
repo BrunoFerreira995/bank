@@ -24,6 +24,7 @@ import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinStatementRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinStatementResponse;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinTedTransferRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinTedTransferResponse;
+import java.util.List;
 
 public interface CelcoinAccountOperations {
     CelcoinAccountStatusResponse getStatus(String accountId);
@@ -111,4 +112,8 @@ public interface CelcoinAccountOperations {
 
     CelcoinInternalTransferResponse getTransferStatus(
             String transferId, String clientRequestId, String endToEndId);
+
+    default List<CelcoinInternalTransferErrors.Error> internalTransferErrors() {
+        return CelcoinInternalTransferErrors.all();
+    }
 }

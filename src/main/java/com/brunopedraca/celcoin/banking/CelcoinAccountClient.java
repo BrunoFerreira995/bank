@@ -199,6 +199,7 @@ public class CelcoinAccountClient implements CelcoinAccountOperations {
 
     public CelcoinInternalTransferResponse transfer(CelcoinInternalTransferRequest request, String idempotencyKey) {
         ensureConfigured();
+        validateInternalTransfer(request);
         String clientRequestId = StringUtils.hasText(request.clientRequestId())
                 ? request.clientRequestId()
                 : (StringUtils.hasText(idempotencyKey) ? idempotencyKey : java.util.UUID.randomUUID().toString());
@@ -223,6 +224,10 @@ public class CelcoinAccountClient implements CelcoinAccountOperations {
     public CelcoinInternalTransferResponse getTransferStatus(
             String transferId, String clientRequestId, String endToEndId) {
         ensureConfigured();
+        if (!StringUtils.hasText(transferId) && !StringUtils.hasText(clientRequestId)
+                && !StringUtils.hasText(endToEndId)) {
+            throw new IllegalArgumentException("transferId, clientRequestId or endToEndId is required");
+        }
         String path = "/baas/v2/wallet/internal/transfer/status?" + query().param("Id", transferId)
                 .param("ClientRequestId", clientRequestId).param("EndToEndId", endToEndId);
         return httpClient.get(path,
@@ -249,6 +254,27 @@ public class CelcoinAccountClient implements CelcoinAccountOperations {
 
     private static String encode(String value) {
         return StringUtils.hasText(value) ? java.net.URLEncoder.encode(value, java.nio.charset.StandardCharsets.UTF_8) : "";
+    }
+
+    private static void validateInternalTransfer(CelcoinInternalTransferRequest request) {
+        if (request == null) throw new IllegalArgumentException("transfer request is required");
+        if (!StringUtils.hasText(request.sourceAccountId())) throw new IllegalArgumentException("source account is required");
+        if (!StringUtils.hasText(request.targetAccountId())) throw new IllegalArgumentException("target account is required");
+        if (request.sourceAccountId().length() > 20 || request.targetAccountId().length() > 20) {
+            throw new IllegalArgumentException("account id must have at most 20 characters");
+        }
+        if (request.sourceAccountId().equals(request.targetAccountId())) {
+            throw new IllegalArgumentException("source and target accounts must be different");
+        }
+        if (request.amount() == null || request.amount().signum() <= 0) {
+            throw new IllegalArgumentException("amount must be greater than zero");
+        }
+        if (StringUtils.hasText(request.clientRequestId()) && request.clientRequestId().length() > 200) {
+            throw new IllegalArgumentException("clientRequestId must have at most 200 characters");
+        }
+        if (request.description() != null && request.description().length() > 200) {
+            throw new IllegalArgumentException("description must have at most 200 characters");
+        }
     }
 
     private static final class QueryBuilder {

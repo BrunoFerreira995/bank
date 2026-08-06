@@ -67,6 +67,7 @@ public class CelcoinBoletoClient implements CelcoinBoletoOperations {
     @Override
     public CelcoinBoletoPaymentResponse pay(CelcoinBoletoPaymentRequest request, String idempotencyKey) {
         ensureConfigured();
+        validatePayment(request);
         return httpClient.post(
                 "/baas/v2/billpayment", request, CelcoinBoletoPaymentResponse.class, context(idempotencyKey));
     }
@@ -164,5 +165,25 @@ public class CelcoinBoletoClient implements CelcoinBoletoOperations {
     private static String encode(String value) {
         return StringUtils.hasText(value)
                 ? java.net.URLEncoder.encode(value, java.nio.charset.StandardCharsets.UTF_8) : "";
+    }
+
+    private static void validatePayment(CelcoinBoletoPaymentRequest request) {
+        if (request == null) throw new IllegalArgumentException("payment request is required");
+        if (!StringUtils.hasText(request.clientRequestId()) || request.clientRequestId().length() > 20) {
+            throw new IllegalArgumentException("clientRequestId is required and must have at most 20 characters");
+        }
+        if (!StringUtils.hasText(request.accountId())) throw new IllegalArgumentException("account is required");
+        if (request.amount() == null || request.amount().signum() <= 0) {
+            throw new IllegalArgumentException("amount must be at least 0.01");
+        }
+        if (request.transactionIdAuthorize() == null) {
+            throw new IllegalArgumentException("transactionIdAuthorize is required");
+        }
+        if (request.barCodeInfo() == null) throw new IllegalArgumentException("barCodeInfo is required");
+        boolean hasDigitable = StringUtils.hasText(request.barCodeInfo().digitable());
+        boolean hasBarcode = StringUtils.hasText(request.barCodeInfo().barCode());
+        if (hasDigitable == hasBarcode) {
+            throw new IllegalArgumentException("send exactly one of barCodeInfo.digitable or barCodeInfo.barCode");
+        }
     }
 }

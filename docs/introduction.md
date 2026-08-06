@@ -23,6 +23,8 @@ por domínio.
 | Open Finance as a Service | `openFinance` | Implementado |
 | Jornada Sem Redirecionamento / FIDO | `jsr` | Implementado |
 | Pix Instantâneo ITP | `itp` | Implementado |
+| Recargas | `topups` | Implementado |
+| SLC (domicílio de arranjo de cartões) | `slc` e webhooks | Implementado |
 | Boletos e cobranças | `boleto` | Estrutura preparada |
 | Cartões | `cards` | Estrutura preparada |
 | Subadquirência e AaaS | `acquiring` | Estrutura preparada |

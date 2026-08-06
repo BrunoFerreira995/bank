@@ -322,16 +322,16 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 
 ### Massa de Testes Open Finance
 
-- [ ] Sucesso no valor máximo permitido no vínculo Pix.
-- [ ] Sucesso no valor máximo permitido no vínculo Pix e limite diário.
-- [ ] Falha por exceder limite.
-- [ ] Falha por saldo insuficiente.
-- [ ] Falha com múltiplas condições e precedência de erro.
-- [ ] Falha por exceder limite diário.
-- [ ] Falha por exceder limite noturno.
-- [ ] Falha com consentimento expirado.
-- [ ] Falha com consentimento revogado.
-- [ ] Falha com vínculo rejeitado por timeout.
+- [x] Sucesso no valor máximo permitido no vínculo Pix.
+- [x] Sucesso no valor máximo permitido no vínculo Pix e limite diário.
+- [x] Falha por exceder limite.
+- [x] Falha por saldo insuficiente.
+- [x] Falha com múltiplas condições e precedência de erro.
+- [x] Falha por exceder limite diário.
+- [x] Falha por exceder limite noturno.
+- [x] Falha com consentimento expirado.
+- [x] Falha com consentimento revogado.
+- [x] Falha com vínculo rejeitado por timeout.
 
 ## Subadquirência e AaaS
 
@@ -383,13 +383,13 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 
 - [x] Realizar pagamento de boleto.
 - [x] Consultar status de pagamento de boleto.
-- [ ] Mapear tabela de erros de pagamento de contas.
+- [x] Mapear tabela de erros de pagamento de contas.
 
 ## Transferência Entre Contas
 
 - [x] Realizar transferência entre contas.
 - [x] Consultar status de transferência entre contas.
-- [ ] Mapear tabela de erros de transferência entre contas BaaS.
+- [x] Mapear tabela de erros de transferência entre contas BaaS.
 
 ## TED
 
@@ -403,17 +403,17 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 - [x] Consultar débitos veiculares.
 - [x] Efetivar pagamento de débitos veiculares.
 - [x] Implementar débitos dependentes, distintos e obrigatórios.
-- [ ] Criar massa de testes de débito veicular.
-- [ ] Documentar FAQs.
+- [x] Criar massa de testes de débito veicular.
+- [x] Documentar FAQs.
 
 ## Recargas
 
-- [ ] Consultar operadoras e valores.
-- [ ] Realizar recarga.
+- [x] Consultar operadoras e valores.
+- [x] Realizar recarga.
 
 ## SLC
 
-- [ ] Implementar recebimento de liquidações do arranjo de cartões via SLC.
+- [x] Implementar recebimento de liquidações do arranjo de cartões via SLC.
 
 ## Informe de Rendimentos
 
@@ -426,10 +426,10 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 - [x] Persistir eventos de webhook.
 - [x] Deduplicar eventos de webhook.
 - [x] Reprocessar webhook por endpoint administrativo.
-- [ ] Cadastrar e gerenciar webhooks na Celcoin.
-- [ ] Reenvio de webhook na Celcoin.
-- [ ] Templates de webhooks BaaS.
-- [ ] Bloqueio/desbloqueio de saldo por infração.
+- [x] Cadastrar e gerenciar webhooks na Celcoin.
+- [x] Reenvio de webhook na Celcoin.
+- [x] Templates de webhooks BaaS.
+- [x] Bloqueio/desbloqueio de saldo por infração.
 
 ## Tabela de Erros BaaS
 

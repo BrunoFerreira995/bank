@@ -44,6 +44,10 @@ import com.brunopedraca.celcoin.jsr.CelcoinJsrClient;
 import com.brunopedraca.celcoin.jsr.CelcoinJsrOperations;
 import com.brunopedraca.celcoin.itp.CelcoinItpClient;
 import com.brunopedraca.celcoin.itp.CelcoinItpOperations;
+import com.brunopedraca.celcoin.topup.CelcoinTopupClient;
+import com.brunopedraca.celcoin.topup.CelcoinTopupOperations;
+import com.brunopedraca.celcoin.slc.CelcoinSlcClient;
+import com.brunopedraca.celcoin.slc.CelcoinSlcOperations;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -172,6 +176,18 @@ public class CelcoinAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    CelcoinTopupOperations celcoinTopupOperations(CelcoinHttpClient httpClient) {
+        return new CelcoinTopupClient(httpClient);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    CelcoinSlcOperations celcoinSlcOperations(ObjectMapper objectMapper) {
+        return new CelcoinSlcClient(objectMapper);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
     CelcoinBoletoOperations celcoinBoletoOperations(CelcoinHttpClient httpClient) {
         return new CelcoinBoletoClient(httpClient);
     }
@@ -215,6 +231,8 @@ public class CelcoinAutoConfiguration {
             CelcoinOpenFinanceOperations openFinance,
             CelcoinJsrOperations jsr,
             CelcoinItpOperations itp,
+            CelcoinTopupOperations topups,
+            CelcoinSlcOperations slc,
             CelcoinBoletoOperations boletos,
             CelcoinCardOperations cards,
             CelcoinWebhookOperations webhooks,
@@ -222,6 +240,6 @@ public class CelcoinAutoConfiguration {
             CelcoinVehicleOperations vehicles) {
         return new DefaultCelcoinClient(
                 tokenService, acquiring, accounts, onboarding, pix, pixAuto, sweeping, indirectPix, cnab,
-                openFinance, jsr, itp, boletos, cards, webhooks, credit, vehicles);
+                openFinance, jsr, itp, topups, slc, boletos, cards, webhooks, credit, vehicles);
     }
 }

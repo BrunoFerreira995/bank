@@ -9,6 +9,7 @@ import com.brunopedraca.celcoin.boleto.BoletoDtos.CelcoinBoletoAuthorizationResp
 import com.brunopedraca.celcoin.boleto.BoletoDtos.CelcoinBoletoPaymentRequest;
 import com.brunopedraca.celcoin.boleto.BoletoDtos.CelcoinBoletoPaymentResponse;
 import com.brunopedraca.celcoin.boleto.BoletoDtos.CelcoinBoletoIssueRequest;
+import java.util.List;
 
 public interface CelcoinBoletoOperations {
     default CelcoinBoletoResponse issue(CelcoinBoletoRequest request) {
@@ -34,6 +35,10 @@ public interface CelcoinBoletoOperations {
     CelcoinBoletoPaymentResponse pay(CelcoinBoletoPaymentRequest request, String idempotencyKey);
 
     CelcoinBoletoPaymentResponse getPaymentStatus(String paymentId, String clientRequestId);
+
+    default List<CelcoinBoletoPaymentErrors.Error> paymentErrors() {
+        return CelcoinBoletoPaymentErrors.all();
+    }
 
     CelcoinBoletoListResponse list(CelcoinBoletoPeriodRequest request);
 

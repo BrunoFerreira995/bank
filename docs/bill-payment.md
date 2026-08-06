@@ -27,3 +27,15 @@ var payment = celcoinClient.boletos().pay(new CelcoinBoletoPaymentRequest(
 
 No sandbox, utilize a massa de boletos oficial da Celcoin. Códigos arbitrários
 são rejeitados pelo ambiente de testes.
+
+O SDK valida previamente os campos obrigatórios da efetivação e expõe a tabela
+de erros por `client.boletos().paymentErrors()`. Os códigos `PCE025` e `PCE026`
+indicam possível duplicidade: consulte `getPaymentStatus` antes de reenviar.
+Em falhas transitórias como `PCE092`, consulte o status antes de tentar
+novamente.
+
+Principais erros: `PCE009` (protocolo de autorização ausente), `PCE010`
+(conta não encontrada), `PCE011` (identificador maior que 20 caracteres),
+`PCE012`/`PCE014` (valor inválido), `PCE040` (valor acima do máximo) e
+`PCE050` (boleto não permite alterar valor). A tabela completa está disponível
+no catálogo do SDK e na [documentação oficial da Celcoin](https://developers.celcoin.com.br/docs/tabela-de-erros-pagamento-de-contas).
