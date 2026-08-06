@@ -10,9 +10,31 @@ public interface CelcoinItpOperations {
         return createConsent(request, null);
     }
 
+    /** Semantic alias for a payment executed on the requested date (normally today). */
+    default Map<String, Object> createInstantPayment(ConsentRequest request, String idempotencyKey) {
+        return createConsent(request, idempotencyKey);
+    }
+
+    default Map<String, Object> createInstantPayment(ConsentRequest request) {
+        return createInstantPayment(request, null);
+    }
+
+    /** Semantic alias for a payment scheduled on {@link ConsentRequest#date()}. */
+    default Map<String, Object> createScheduledPayment(ConsentRequest request, String idempotencyKey) {
+        return createConsent(request, idempotencyKey);
+    }
+
+    default Map<String, Object> createScheduledPayment(ConsentRequest request) {
+        return createScheduledPayment(request, null);
+    }
+
     Map<String, Object> processCallback(CallbackRequest request);
 
     Map<String, Object> getPaymentInitiation(String paymentInitiationId);
+
+    default Map<String, Object> getPayment(String paymentInitiationId) {
+        return getPaymentInitiation(paymentInitiationId);
+    }
 
     Map<String, Object> createPix(String paymentInitiationId, PixRequest request,
             String idempotencyKey);

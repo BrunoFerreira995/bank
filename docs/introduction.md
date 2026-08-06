@@ -19,6 +19,7 @@ por domínio.
 | Pix Automático (recorrência) | `pixauto` | Implementado |
 | Pix Inteligente (Sweeping Accounts) | `sweeping` | Implementado |
 | Pix Indireto | `indirectPix` | Implementado |
+| MED 2.0 | `indirectPix` | Implementado |
 | CNAB | `cnab` | Implementado |
 | Open Finance as a Service | `openFinance` | Implementado |
 | Jornada Sem Redirecionamento / FIDO | `jsr` | Implementado |

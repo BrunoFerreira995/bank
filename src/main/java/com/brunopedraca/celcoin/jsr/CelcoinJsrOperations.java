@@ -25,6 +25,20 @@ public interface CelcoinJsrOperations {
     Map<String, Object> createPix(String paymentInitiationId, PixV4Request request,
             String idempotencyKey);
 
+    Map<String, Object> createPaymentJourney(JourneySessionRequest request, String idempotencyKey);
+
+    default Map<String, Object> createPaymentJourney(JourneySessionRequest request) {
+        return createPaymentJourney(request, null);
+    }
+
+    Map<String, Object> listPaymentJourneys(JourneyPageRequest request);
+
+    Map<String, Object> getPaymentJourney(String journeySessionId);
+
+    Map<String, Object> listPaymentInitiations(Map<String, Object> query);
+
+    Map<String, Object> getPaymentInitiation(String paymentInitiationId);
+
     /** Performs the non-cryptographic shape checks before passing a WebAuthn result to Celcoin. */
     FidoValidationResult validateFidoBiometry(Map<String, Object> assertion);
 }

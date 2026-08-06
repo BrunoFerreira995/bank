@@ -6,6 +6,8 @@ import com.brunopedraca.celcoin.banking.CelcoinAccountOperations;
 import com.brunopedraca.celcoin.boleto.CelcoinBoletoOperations;
 import com.brunopedraca.celcoin.cards.CelcoinCardOperations;
 import com.brunopedraca.celcoin.credit.CelcoinCreditOperations;
+import com.brunopedraca.celcoin.escrow.CelcoinEscrowOperations;
+import com.brunopedraca.celcoin.embedded.CelcoinEmbeddedOperations;
 import com.brunopedraca.celcoin.onboarding.CelcoinOnboardingOperations;
 import com.brunopedraca.celcoin.pix.CelcoinPixOperations;
 import com.brunopedraca.celcoin.pixauto.CelcoinPixAutoOperations;
@@ -19,6 +21,7 @@ import com.brunopedraca.celcoin.jsr.CelcoinJsrOperations;
 import com.brunopedraca.celcoin.itp.CelcoinItpOperations;
 import com.brunopedraca.celcoin.topup.CelcoinTopupOperations;
 import com.brunopedraca.celcoin.slc.CelcoinSlcOperations;
+import com.brunopedraca.celcoin.reconciliation.CelcoinReconciliationOperations;
 
 public record DefaultCelcoinClient(
         CelcoinTokenService authentication,
@@ -39,5 +42,8 @@ public record DefaultCelcoinClient(
         CelcoinCardOperations cards,
         CelcoinWebhookOperations webhooks,
         CelcoinCreditOperations credit,
-        CelcoinVehicleOperations vehicles)
+        CelcoinEscrowOperations escrow,
+        CelcoinEmbeddedOperations embedded,
+        CelcoinVehicleOperations vehicles,
+        CelcoinReconciliationOperations reconciliation)
         implements CelcoinClient {}

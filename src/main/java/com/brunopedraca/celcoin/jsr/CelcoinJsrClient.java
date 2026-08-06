@@ -101,6 +101,52 @@ public final class CelcoinJsrClient implements CelcoinJsrOperations {
     }
 
     @Override
+    public Map<String, Object> createPaymentJourney(JourneySessionRequest request, String idempotencyKey) {
+        ensureConfigured();
+        if (request == null || request.paymentInitiationData() == null
+                || request.paymentInitiationData().isEmpty()) {
+            throw new IllegalArgumentException("paymentInitiationData is required");
+        }
+        Map<String, Object> body = new HashMap<>();
+        if (StringUtils.hasText(request.journeyId())) body.put("journeyId", request.journeyId());
+        body.put("paymentInitiationData", request.paymentInitiationData());
+        if (StringUtils.hasText(request.redirectUrl())) body.put("redirectUrl", request.redirectUrl());
+        if (request.tags() != null) body.put("tags", request.tags());
+        if (request.settings() != null) body.put("settings", request.settings());
+        return httpClient.post(V4 + "/payments/v4/journeys-sessions", body, Map.class,
+                context(idempotencyKey));
+    }
+
+    @Override
+    public Map<String, Object> listPaymentJourneys(JourneyPageRequest request) {
+        ensureConfigured();
+        return httpClient.get(V4 + "/payments/v4/journeys-sessions?" + pageQuery(request),
+                Map.class, context(null));
+    }
+
+    @Override
+    public Map<String, Object> getPaymentJourney(String journeySessionId) {
+        ensureConfigured();
+        requireText(journeySessionId, "journeySessionId");
+        return httpClient.get(V4 + "/payments/v4/journeys-sessions/" + encode(journeySessionId),
+                Map.class, context(null));
+    }
+
+    @Override
+    public Map<String, Object> listPaymentInitiations(Map<String, Object> query) {
+        ensureConfigured();
+        return httpClient.get(V4 + "/payments/v4/payment-initiation" + suffix(query), Map.class, context(null));
+    }
+
+    @Override
+    public Map<String, Object> getPaymentInitiation(String paymentInitiationId) {
+        ensureConfigured();
+        requireText(paymentInitiationId, "paymentInitiationId");
+        return httpClient.get(V4 + "/payments/v4/payment-initiation/" + encode(paymentInitiationId),
+                Map.class, context(null));
+    }
+
+    @Override
     public FidoValidationResult validateFidoBiometry(Map<String, Object> assertion) {
         if (assertion == null) return new FidoValidationResult(false, "assertion is required");
         if (!StringUtils.hasText(text(assertion.get("id"))))
@@ -124,5 +170,31 @@ public final class CelcoinJsrClient implements CelcoinJsrOperations {
     private static String text(Object value) { return value == null ? null : String.valueOf(value); }
     private static String encode(String value) {
         return URLEncoder.encode(value == null ? "" : value, StandardCharsets.UTF_8);
+    }
+
+    private static void requireText(String value, String name) {
+        if (!StringUtils.hasText(value)) throw new IllegalArgumentException(name + " is required");
+    }
+
+    private static String suffix(Map<String, Object> values) {
+        if (values == null || values.isEmpty()) return "";
+        StringBuilder result = new StringBuilder();
+        values.forEach((name, value) -> {
+            if (value == null) return;
+            if (!result.isEmpty()) result.append('&');
+            result.append(encode(name)).append('=').append(encode(String.valueOf(value)));
+        });
+        return result.isEmpty() ? "" : "?" + result;
+    }
+
+    private static String pageQuery(JourneyPageRequest request) {
+        if (request == null) return "";
+        StringBuilder result = new StringBuilder();
+        if (request.page() != null) result.append("page=").append(request.page());
+        if (request.pageSize() != null) {
+            if (!result.isEmpty()) result.append('&');
+            result.append("pageSize=").append(request.pageSize());
+        }
+        return result.toString();
     }
 }

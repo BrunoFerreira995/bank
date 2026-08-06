@@ -71,6 +71,39 @@ public final class AccountDtos {
     public record CelcoinJudicialBlockResponse(
             String blockId, String accountId, BigDecimal amount, String status, Map<String, Object> raw) {}
 
+    public record CelcoinBalanceTag(String key, String value) {}
+
+    public record CelcoinBalanceBlockRequest(
+            @NotBlank String accountId,
+            BigDecimal amount,
+            @NotBlank String clientRequestId,
+            @NotBlank String correlationBlockedId,
+            @NotBlank String reason,
+            @NotBlank String description,
+            List<CelcoinBalanceTag> tags) {}
+
+    public record CelcoinBalanceUnblockRequest(
+            @NotBlank String accountId,
+            @NotBlank String clientRequestId,
+            @NotBlank String correlationBlockedId,
+            @NotBlank String reason,
+            @NotBlank String description,
+            Boolean unBlockAll,
+            BigDecimal amount) {}
+
+    public record CelcoinBalanceOperationResponse(
+            String status,
+            String version,
+            String id,
+            BigDecimal amount,
+            String clientRequestId,
+            String correlationBlockedId,
+            Map<String, Object> raw) {}
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record CelcoinBalanceAmountWebhookEvent(
+            String webhookId, String entity, String createTimestamp, String status, Map<String, Object> body) {}
+
     public record CelcoinAccountStatusUpdateRequest(
             @NotBlank String accountId, @NotBlank String status, String reason) {}
 

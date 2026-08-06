@@ -9,7 +9,6 @@ import java.nio.charset.StandardCharsets;
 import org.springframework.util.StringUtils;
 
 public class CelcoinCardClient implements CelcoinCardOperations {
-    @SuppressWarnings("unused")
     private final CelcoinHttpClient httpClient;
 
     public CelcoinCardClient(CelcoinHttpClient httpClient) {
@@ -180,6 +179,6 @@ public class CelcoinCardClient implements CelcoinCardOperations {
 
     private CelcoinIntegrationException unspecified() {
         return new CelcoinIntegrationException(
-                "Celcoin card endpoint path is not configured because the official contract was not provided in this first version");
+                "Celcoin card HTTP client is required to execute card operations");
     }
 }

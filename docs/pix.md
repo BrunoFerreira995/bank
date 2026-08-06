@@ -113,3 +113,38 @@ Os modelos dos eventos são:
   Celcoin e retorna 404 no sandbox até que seja restabelecido.
 - As operações de escrita usam idempotência via header `Idempotency-Key`
   (persistida pelo `CelcoinIdempotencyService`).
+
+## FAQs
+
+### Consultar uma chave Pix consome limite?
+
+Sim. A consulta DICT participa do mecanismo de balde de fichas. Uma consulta
+bem-sucedida consome uma ficha; pagamentos concluídos que reutilizam o
+`endToEndId` da consulta recompõem uma ficha. Respostas inválidas podem consumir
+mais fichas e o esgotamento do balde retorna HTTP 429. Evite consultar o DICT
+repetidamente e use `cashOutByKey` com o `endToEndId` retornado pela consulta.
+
+### Como receber um Pix?
+
+O recebimento é iniciado pelo pagador. A aplicação deve manter a chave ou a
+cobrança ativa e processar o webhook `pix-payment-in`; não existe uma chamada
+de “criar recebimento”.
+
+### Quando usar `cashOutByKey` ou `cashOutToAccount`?
+
+Use `cashOutByKey` quando o usuário informou uma chave Pix e a consulta DICT
+retornou os dados do recebedor. Use `cashOutToAccount` quando a transferência
+foi informada diretamente com banco, agência e conta.
+
+### Pix Automático faz parte da mesma operação?
+
+O Pix Automático possui o agregado `pixAuto()`, separado do Pix avulso. Ele
+expõe as jornadas pagadora e recebedora, consentimentos, agendamentos,
+liquidação, cancelamentos e retentativas. Consulte
+[`docs/pix-automatico.md`](pix-automatico.md).
+
+Referências oficiais: [Pix](https://developers.celcoin.com.br/docs/sobre-pix),
+[DICT](https://developers.celcoin.com.br/docs/dict-1),
+[balde de fichas](https://developers.celcoin.com.br/docs/balde-de-fichas),
+[cash-out por chave](https://developers.celcoin.com.br/docs/transferencia-para-uma-chave)
+e [Pix Automático BaaS](https://developers.celcoin.com.br/docs/pix-autom%C3%A1tico-baas).

@@ -2,6 +2,7 @@ package com.brunopedraca.celcoin.jsr;
 
 import jakarta.validation.constraints.NotBlank;
 import java.util.Map;
+import java.util.List;
 
 /** Payloads used by the Open Finance Jornada Sem Redirecionamento (JSR). */
 public final class CelcoinJsrDtos {
@@ -26,6 +27,11 @@ public final class CelcoinJsrDtos {
     public record FidoAuthorizationRequest(Map<String, Object> data, Boolean processPix) {}
 
     public record PixV4Request(Map<String, Object> data) {}
+
+    public record JourneySessionRequest(String journeyId, Map<String, Object> paymentInitiationData,
+            String redirectUrl, Map<String, Object> tags, List<Map<String, Object>> settings) {}
+
+    public record JourneyPageRequest(Integer page, Integer pageSize) {}
 
     public record FidoValidationResult(boolean valid, String reason) {}
 }

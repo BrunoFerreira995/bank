@@ -19,6 +19,10 @@ import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinIncomeReportRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinIncomeReportResponse;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinJudicialBlockRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinJudicialBlockResponse;
+import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinBalanceBlockRequest;
+import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinBalanceOperationResponse;
+import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinBalanceUnblockRequest;
+import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinBalanceTag;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinSandboxBalanceRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinStatementRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinStatementResponse;
@@ -107,6 +111,39 @@ public class CelcoinAccountClient implements CelcoinAccountOperations {
         ensureConfigured();
         return httpClient.post("/baas/v2/account/judicial-block?" + query().param("Account", request.accountId()),
                 request, CelcoinJudicialBlockResponse.class, context(idempotencyKey));
+    }
+
+    @Override
+    public CelcoinBalanceOperationResponse blockBalance(CelcoinBalanceBlockRequest request, String idempotencyKey) {
+        ensureConfigured();
+        validateBlock(request);
+        Map<String, Object> body = new java.util.HashMap<>();
+        body.put("amount", request.amount());
+        body.put("clientRequestId", request.clientRequestId());
+        body.put("correlationBlockedId", request.correlationBlockedId());
+        body.put("reason", request.reason());
+        body.put("description", request.description());
+        if (request.tags() != null) body.put("tags", request.tags());
+        Map<String, Object> raw = httpClient.post("/baas/v2/wallet/" + encode(request.accountId())
+                        + "/balance/block", body, Map.class, context(idempotencyKey));
+        return parseBalanceOperation(raw);
+    }
+
+    @Override
+    public CelcoinBalanceOperationResponse unblockBalance(
+            CelcoinBalanceUnblockRequest request, String idempotencyKey) {
+        ensureConfigured();
+        validateUnblock(request);
+        Map<String, Object> body = new java.util.HashMap<>();
+        body.put("clientRequestId", request.clientRequestId());
+        body.put("correlationBlockedId", request.correlationBlockedId());
+        body.put("reason", request.reason());
+        body.put("description", request.description());
+        body.put("unBlockAll", request.unBlockAll());
+        if (!Boolean.TRUE.equals(request.unBlockAll())) body.put("amount", request.amount());
+        Map<String, Object> raw = httpClient.post("/baas/v2/wallet/" + encode(request.accountId())
+                        + "/balance/unblock", body, Map.class, context(idempotencyKey));
+        return parseBalanceOperation(raw);
     }
 
     public CelcoinAccountStatusResponse updateStatus(CelcoinAccountStatusUpdateRequest request) {
@@ -245,6 +282,45 @@ public class CelcoinAccountClient implements CelcoinAccountOperations {
             throw unspecified();
         }
     }
+
+    private static void validateBlock(CelcoinBalanceBlockRequest request) {
+        if (request == null) throw new IllegalArgumentException("balance block request is required");
+        requireText(request.accountId(), "accountId"); requireText(request.clientRequestId(), "clientRequestId");
+        requireText(request.correlationBlockedId(), "correlationBlockedId"); requireText(request.reason(), "reason");
+        requireText(request.description(), "description");
+        if (request.amount() == null || request.amount().compareTo(new java.math.BigDecimal("0.01")) < 0)
+            throw new IllegalArgumentException("amount must be at least 0.01");
+        if (request.tags() != null) {
+            if (request.tags().size() > 10) throw new IllegalArgumentException("maximum of 10 tags");
+            for (CelcoinBalanceTag tag : request.tags()) {
+                if (tag == null || !StringUtils.hasText(tag.key()) || !StringUtils.hasText(tag.value()))
+                    throw new IllegalArgumentException("tag key and value are required");
+                if (tag.value().length() > 255) throw new IllegalArgumentException("tag value exceeds 255 characters");
+            }
+        }
+    }
+
+    private static void validateUnblock(CelcoinBalanceUnblockRequest request) {
+        if (request == null) throw new IllegalArgumentException("balance unblock request is required");
+        requireText(request.accountId(), "accountId"); requireText(request.clientRequestId(), "clientRequestId");
+        requireText(request.correlationBlockedId(), "correlationBlockedId"); requireText(request.reason(), "reason");
+        requireText(request.description(), "description");
+        if (request.unBlockAll() == null) throw new IllegalArgumentException("unBlockAll is required");
+        if (!request.unBlockAll() && (request.amount() == null || request.amount().compareTo(new java.math.BigDecimal("0.01")) < 0))
+            throw new IllegalArgumentException("partial unblock amount must be at least 0.01");
+    }
+
+    private static CelcoinBalanceOperationResponse parseBalanceOperation(Map<String, Object> raw) {
+        Map<String, Object> body = raw != null && raw.get("body") instanceof Map<?, ?> map ? cast(map) : raw;
+        String amountKey = body != null && body.containsKey("unlockedAmount") ? "unlockedAmount" : "blockedAmount";
+        return new CelcoinBalanceOperationResponse(text(raw, "status"), text(raw, "version"), text(body, "id"),
+                decimal(body, amountKey), text(body, "clientRequestId"), text(body, "correlationBlockedId"), raw);
+    }
+
+    private static void requireText(String value, String name) { if (!StringUtils.hasText(value)) throw new IllegalArgumentException(name + " is required"); }
+    private static String text(Map<String, Object> map, String key) { return map == null || map.get(key) == null ? null : String.valueOf(map.get(key)); }
+    private static java.math.BigDecimal decimal(Map<String, Object> map, String key) { try { return text(map, key) == null ? null : new java.math.BigDecimal(text(map, key)); } catch (Exception ignored) { return null; } }
+    @SuppressWarnings("unchecked") private static Map<String, Object> cast(Map<?, ?> map) { return (Map<String, Object>) map; }
 
     private CelcoinRequestContext context(String idempotencyKey) {
         return CelcoinRequestContext.create(idempotencyKey);

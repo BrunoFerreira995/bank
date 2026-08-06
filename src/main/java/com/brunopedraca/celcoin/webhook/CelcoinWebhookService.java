@@ -17,6 +17,9 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.math.BigDecimal;
+import java.util.Locale;
+import java.time.OffsetDateTime;
 import org.springframework.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -104,6 +107,28 @@ public class CelcoinWebhookService implements CelcoinWebhookOperations {
     }
 
     @Override
+    @Transactional
+    public int purgeEventsBefore(OffsetDateTime cutoff) {
+        require(cutoff != null, "retention cutoff is required");
+        return repository.deleteByReceivedAtBefore(cutoff);
+    }
+
+    @Override
+    public CelcoinAntifraudEvent parseAntifraud(Map<String, Object> payload) {
+        require(payload != null, "antifraud payload is required");
+        Map<String, Object> root = payload;
+        Map<String, Object> body = payload.get("body") instanceof Map<?, ?> map ? cast(map) : payload;
+        String entity = firstText(root, "entity", "type", "eventType", "event");
+        String status = firstText(root, "status", "decision", "result");
+        String transactionId = firstText(body, "transactionId", "transactionID", "id", "originalId");
+        String endToEndId = firstText(body, "endToEndId", "endToEnd", "endToEndIdentification", "originalEndToEnd");
+        String reason = firstText(body, "reason", "reasonDescription", "message", "description");
+        BigDecimal amount = decimal(body.get("amount"));
+        AntifraudDecision decision = antifraudDecision(entity, status, reason);
+        return new CelcoinAntifraudEvent(entity, status, transactionId, endToEndId, reason, amount, decision, payload);
+    }
+
+    @Override
     public WebhookSubscriptionResponse register(WebhookSubscriptionRequest request, String idempotencyKey) {
         ensureRemote();
         require(request != null && hasText(request.entity()), "entity is required");
@@ -184,6 +209,84 @@ public class CelcoinWebhookService implements CelcoinWebhookOperations {
         return replaySummary(raw);
     }
 
+    @Override
+    public WebhookSubscriptionResponse registerBricks(
+            CelBricksWebhookSubscriptionRequest request, String idempotencyKey) {
+        ensureRemote();
+        require(request != null && hasText(request.context()), "context is required");
+        require(request != null && hasText(request.entity()), "entity is required");
+        require(request != null && hasText(request.webhookUrl()), "webhookUrl is required");
+        Map<String, Object> raw = httpClient.post("/common/v1/webhook/subscription", request,
+                Map.class, context(idempotencyKey));
+        return subscriptionResponse(raw);
+    }
+
+    @Override
+    public WebhookSubscriptionsResponse listBricks(String webhookContext, String entity, Boolean active) {
+        ensureRemote();
+        require(hasText(webhookContext), "context is required");
+        Map<String, Object> raw = httpClient.get("/common/v1/webhook/subscription?"
+                        + query("context", webhookContext, "entity", entity, "active", active),
+                Map.class, this.context(null));
+        Map<String, Object> body = body(raw);
+        List<WebhookSubscription> subscriptions = new ArrayList<>();
+        Object values = body.get("subscriptions");
+        if (values instanceof List<?> list) {
+            for (Object value : list) {
+                if (value instanceof Map<?, ?> map) subscriptions.add(subscription(cast(map)));
+            }
+        }
+        return new WebhookSubscriptionsResponse(subscriptions, raw);
+    }
+
+    @Override
+    public WebhookSubscriptionResponse updateBricks(
+            String webhookContext, String entity, WebhookSubscriptionUpdateRequest request, String idempotencyKey) {
+        ensureRemote();
+        require(hasText(webhookContext), "context is required");
+        require(hasText(entity), "entity is required");
+        require(request != null, "webhook update is required");
+        Map<String, Object> raw = httpClient.put("/common/v1/webhook/subscription/" + encode(webhookContext)
+                        + "/" + encode(entity), request, Map.class, context(idempotencyKey));
+        return subscriptionResponse(raw);
+    }
+
+    @Override
+    public WebhookSubscriptionResponse deleteBricks(
+            String webhookContext, String entity, String subscriptionId, String idempotencyKey) {
+        ensureRemote();
+        require(hasText(webhookContext), "context is required");
+        require(hasText(entity), "entity is required");
+        Map<String, Object> raw = httpClient.delete("/common/v1/webhook/subscription/" + encode(webhookContext)
+                        + "/" + encode(entity) + "?" + query("SubscriptionId", subscriptionId),
+                Map.of(), Map.class, context(idempotencyKey));
+        return subscriptionResponse(raw);
+    }
+
+    @Override
+    public WebhookReplaySummary countBricksReplays(String webhookContext, WebhookReplayQuery query) {
+        ensureRemote();
+        return replaySummary(httpClient.get(bricksReplayPath(webhookContext, query, false), Map.class, this.context(null)));
+    }
+
+    @Override
+    public WebhookReplayDetailsResponse bricksReplayDetails(String webhookContext, WebhookReplayQuery query) {
+        ensureRemote();
+        Map<String, Object> raw = httpClient.get(bricksReplayPath(webhookContext, query, true), Map.class, this.context(null));
+        Map<String, Object> body = body(raw);
+        return new WebhookReplayDetailsResponse(listMaps(body.get("webhookDetails")), integer(body, "totalItems"),
+                integer(body, "currentPage"), integer(body, "limitPerPage"), integer(body, "totalPages"), raw);
+    }
+
+    @Override
+    public WebhookReplaySummary resendBricks(
+            String webhookContext, WebhookReplayQuery query, WebhookReplayFilter filter, String idempotencyKey) {
+        ensureRemote();
+        Map<String, Object> raw = httpClient.put(bricksReplayPath(webhookContext, query, false),
+                filter == null ? Map.of() : filter, Map.class, context(idempotencyKey));
+        return replaySummary(raw);
+    }
+
     @Async
     @Transactional
     public void processAsync(UUID id) {
@@ -237,6 +340,17 @@ public class CelcoinWebhookService implements CelcoinWebhookOperations {
                 "documentNumber", q.documentNumber(), "account", q.account(), "id", q.id(), "clientRequestId", q.clientRequestId(),
                 "Page", q.page(), "Limit", q.limit(), "LimitPerPage", q.limitPerPage());
     }
+
+    private static String bricksReplayPath(String context, WebhookReplayQuery q, boolean details) {
+        require(hasText(context), "context is required");
+        require(q != null && hasText(q.entity()), "entity is required");
+        String suffix = details ? "/details" : "";
+        return "/common/v1/webhook/replay/" + encode(context) + "/" + encode(q.entity()) + suffix + "?" + query(
+                "DateFrom", q.dateFrom(), "DateTo", q.dateTo(), "OnlyPending", q.onlyPending(),
+                "webhookId", q.webhookId(), "documentNumber", q.documentNumber(), "account", q.account(),
+                "id", q.id(), "clientRequestId", q.clientRequestId(), "Page", q.page(), "Limit", q.limit(),
+                "LimitPerPage", q.limitPerPage());
+    }
     private static WebhookReplaySummary replaySummary(Map<String, Object> raw) { Map<String, Object> body = body(raw); return new WebhookReplaySummary(text(body, "entity"), text(body, "dateFrom"), text(body, "dateTo"), bool(body, "onlyPending"), integer(body, "totalItems"), raw); }
     private static WebhookSubscriptionResponse subscriptionResponse(Map<String, Object> raw) { Map<String, Object> body = body(raw); return new WebhookSubscriptionResponse(text(body, "subscriptionId"), text(raw, "status"), text(raw, "version"), raw); }
     private static WebhookSubscription subscription(Map<String, Object> raw) { return new WebhookSubscription(text(raw, "subscriptionId"), text(raw, "entity"), text(raw, "webhookUrl"), bool(raw, "active"), text(raw, "createDate"), text(raw, "lastUpdateDate"), null, raw); }
@@ -245,6 +359,17 @@ public class CelcoinWebhookService implements CelcoinWebhookOperations {
     private static String query(Object... values) { StringBuilder result = new StringBuilder(); for (int i = 0; i < values.length; i += 2) if (values[i + 1] != null && (!values[i + 1].getClass().equals(String.class) || hasText(String.valueOf(values[i + 1])))) { if (!result.isEmpty()) result.append('&'); result.append(values[i]).append('=').append(encode(String.valueOf(values[i + 1]))); } return result.toString(); }
     private static String encode(String value) { return URLEncoder.encode(value == null ? "" : value, StandardCharsets.UTF_8); }
     private static String text(Map<String, Object> map, String key) { return map == null || map.get(key) == null ? null : String.valueOf(map.get(key)); }
+    private static String firstText(Map<String, Object> map, String... keys) { for (String key : keys) { String value = text(map, key); if (hasText(value)) return value; } return null; }
+    private static BigDecimal decimal(Object value) { try { return value == null ? null : new BigDecimal(String.valueOf(value)); } catch (Exception ignored) { return null; } }
+    private static AntifraudDecision antifraudDecision(String entity, String status, String reason) {
+        String value = ((status == null ? "" : status) + " " + (reason == null ? "" : reason) + " " + (entity == null ? "" : entity)).toUpperCase(Locale.ROOT);
+        if (value.contains("REJECT") || value.contains("DENIED") || value.contains("FRAUD")) return AntifraudDecision.REJECTED;
+        if (value.contains("BLOCK") || value.contains("CAUTELAR")) return AntifraudDecision.BLOCKED;
+        if (value.contains("PENDING") || value.contains("ANALYSIS") || value.contains("ANALISE")) return AntifraudDecision.PENDING;
+        if (value.contains("RELEASE") || value.contains("UNBLOCK") || value.contains("CONFIRMED")) return AntifraudDecision.RELEASED;
+        if (value.contains("ALLOW") || value.contains("APPROV")) return AntifraudDecision.ALLOWED;
+        return AntifraudDecision.UNKNOWN;
+    }
     private static Integer integer(Map<String, Object> map, String key) { try { return text(map, key) == null ? null : Integer.valueOf(text(map, key)); } catch (Exception ignored) { return null; } }
     private static Boolean bool(Map<String, Object> map, String key) { String value = text(map, key); return value == null ? null : Boolean.valueOf(value); }
     @SuppressWarnings("unchecked") private static Map<String, Object> cast(Map<?, ?> map) { return (Map<String, Object>) map; }

@@ -16,6 +16,9 @@ public final class IndirectPixDtos {
 
     public record CelcoinIndirectDictKeyCheckRequest(List<String> keys) {}
 
+    public record CelcoinIndirectDictKeyListRequest(
+            String branch, String accountType, String account, String taxId) {}
+
     public record CelcoinIndirectDictKeyRequest(Map<String, Object> payload) {}
 
     public record CelcoinIndirectDictDeleteRequest(@NotBlank String key, Map<String, Object> payload) {}
@@ -44,4 +47,36 @@ public final class IndirectPixDtos {
             String refundAnalysisResult,
             String refundAnalysisDetails,
             String refundRejectionReason) {}
+
+    public record CelcoinFundsRecoveryRequest(
+            String flowType,
+            String rootEndToEnd,
+            String situationType,
+            String reportDetails,
+            CelcoinFundsRecoveryContact contactInformation,
+            CelcoinTrackingGraphParameters trackingGraphParameters) {}
+
+    public record CelcoinFundsRecoveryUpdateRequest(
+            String situationType, String reportDetails, CelcoinFundsRecoveryContact contactInformation) {}
+
+    public record CelcoinFundsRecoveryContact(String email, String phone) {}
+
+    public record CelcoinTrackingGraphParameters(
+            BigDecimal minTransactionAmount, Integer maxTransactions, String hopWindow, Integer maxHops) {}
+
+    public record CelcoinMedInfractionWebhookEvent(
+            String entity, String status, Map<String, Object> body, Map<String, Object> raw) {}
+
+    public record CelcoinMedRefundWebhookEvent(
+            String entity, String status, Map<String, Object> body, Map<String, Object> raw) {}
+
+    public record CelcoinMedBalanceWebhookEvent(
+            String entity, String status, Map<String, Object> body, Map<String, Object> raw) {}
+
+    public record CelcoinIndirectCashInAuthorizationResponse(
+            String status, String approvalId, String reasonPhrase, String reasonCode, String reason) {}
+
+    public record CelcoinIndirectWebhookEvent(
+            String entity, String status, Map<String, Object> body, Map<String, Object> error,
+            Map<String, Object> raw) {}
 }

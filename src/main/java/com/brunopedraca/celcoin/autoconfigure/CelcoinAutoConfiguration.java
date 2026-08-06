@@ -15,6 +15,11 @@ import com.brunopedraca.celcoin.cards.CelcoinCardOperations;
 import com.brunopedraca.celcoin.credit.CelcoinCreditClient;
 import com.brunopedraca.celcoin.credit.CelcoinCreditOperations;
 import com.brunopedraca.celcoin.credit.CelcoinCreditProperties;
+import com.brunopedraca.celcoin.escrow.CelcoinEscrowClient;
+import com.brunopedraca.celcoin.escrow.CelcoinEscrowOperations;
+import com.brunopedraca.celcoin.escrow.CelcoinEscrowProperties;
+import com.brunopedraca.celcoin.embedded.CelcoinEmbeddedClient;
+import com.brunopedraca.celcoin.embedded.CelcoinEmbeddedOperations;
 import com.brunopedraca.celcoin.common.http.CelcoinHttpClient;
 import com.brunopedraca.celcoin.common.http.CelcoinSslContextProvider;
 import com.brunopedraca.celcoin.common.http.CelcoinWebClientFactory;
@@ -48,6 +53,8 @@ import com.brunopedraca.celcoin.topup.CelcoinTopupClient;
 import com.brunopedraca.celcoin.topup.CelcoinTopupOperations;
 import com.brunopedraca.celcoin.slc.CelcoinSlcClient;
 import com.brunopedraca.celcoin.slc.CelcoinSlcOperations;
+import com.brunopedraca.celcoin.reconciliation.CelcoinReconciliationClient;
+import com.brunopedraca.celcoin.reconciliation.CelcoinReconciliationOperations;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -58,7 +65,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @AutoConfiguration
-@EnableConfigurationProperties({CelcoinProperties.class, CelcoinCreditProperties.class})
+@EnableConfigurationProperties({CelcoinProperties.class, CelcoinCreditProperties.class, CelcoinEscrowProperties.class})
 @ConditionalOnProperty(prefix = "celcoin", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class CelcoinAutoConfiguration {
 
@@ -206,6 +213,24 @@ public class CelcoinAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    CelcoinEscrowOperations celcoinEscrowOperations(CelcoinEscrowProperties properties) {
+        return new CelcoinEscrowClient(WebClient.builder().build(), WebClient.builder().build(), properties);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    CelcoinEmbeddedOperations celcoinEmbeddedOperations(CelcoinHttpClient httpClient) {
+        return new CelcoinEmbeddedClient(httpClient);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    CelcoinReconciliationOperations celcoinReconciliationOperations(CelcoinHttpClient httpClient) {
+        return new CelcoinReconciliationClient(httpClient);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
     CelcoinVehicleOperations celcoinVehicleOperations(CelcoinHttpClient httpClient) {
         return new CelcoinVehicleClient(httpClient);
     }
@@ -237,9 +262,13 @@ public class CelcoinAutoConfiguration {
             CelcoinCardOperations cards,
             CelcoinWebhookOperations webhooks,
             CelcoinCreditOperations credit,
-            CelcoinVehicleOperations vehicles) {
+            CelcoinEscrowOperations escrow,
+            CelcoinEmbeddedOperations embedded,
+            CelcoinVehicleOperations vehicles,
+            CelcoinReconciliationOperations reconciliation) {
         return new DefaultCelcoinClient(
                 tokenService, acquiring, accounts, onboarding, pix, pixAuto, sweeping, indirectPix, cnab,
-                openFinance, jsr, itp, topups, slc, boletos, cards, webhooks, credit, vehicles);
+                openFinance, jsr, itp, topups, slc, boletos, cards, webhooks, credit, escrow, embedded, vehicles,
+                reconciliation);
     }
 }

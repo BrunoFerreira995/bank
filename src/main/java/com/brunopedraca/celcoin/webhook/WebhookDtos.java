@@ -15,6 +15,10 @@ public final class WebhookDtos {
     public record WebhookSubscriptionRequest(
             String entity, String webhookUrl, WebhookAuth auth) {}
 
+    /** Request used by the CEL_BRICKS common webhook manager. */
+    public record CelBricksWebhookSubscriptionRequest(
+            String context, String entity, String webhookUrl, WebhookAuth auth) {}
+
     public record WebhookSubscriptionUpdateRequest(
             String webhookUrl, WebhookAuth auth, Boolean active, String subscriptionId) {}
 
@@ -95,6 +99,21 @@ public final class WebhookDtos {
 
     public record CelcoinWebhookReceipt(
             UUID id, String externalEventId, WebhookProcessingStatus status, boolean duplicate) {}
+
+    /** Normalized view of an antifraud/FtM notification received by the local webhook endpoint. */
+    public record CelcoinAntifraudEvent(
+            String entity,
+            String status,
+            String transactionId,
+            String endToEndId,
+            String reason,
+            BigDecimal amount,
+            AntifraudDecision decision,
+            Map<String, Object> raw) {}
+
+    public enum AntifraudDecision {
+        ALLOWED, BLOCKED, PENDING, RELEASED, REJECTED, UNKNOWN
+    }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record CelcoinTedWebhookEvent(

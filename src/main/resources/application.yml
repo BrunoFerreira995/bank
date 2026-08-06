@@ -49,3 +49,9 @@ celcoin:
     auth-url: ${CELCOIN_CREDIT_AUTH_URL:https://sandbox.auth.flowfinance.com.br/oauth2/token}
     client-id: ${CELCOIN_CREDIT_CLIENT_ID:}
     client-secret: ${CELCOIN_CREDIT_CLIENT_SECRET:}
+  escrow:
+    enabled: ${CELCOIN_ESCROW_ENABLED:false}
+    api-base-url: ${CELCOIN_ESCROW_API_BASE_URL:https://sandbox.platform.credit.celcoin.com.br/escrow/api}
+    auth-url: ${CELCOIN_ESCROW_AUTH_URL:https://sandbox.auth.flowfinance.com.br/oauth2/token}
+    client-id: ${CELCOIN_ESCROW_CLIENT_ID:}
+    client-secret: ${CELCOIN_ESCROW_CLIENT_SECRET:}

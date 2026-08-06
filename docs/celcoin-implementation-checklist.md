@@ -433,51 +433,51 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 
 ## Tabela de Erros BaaS
 
-- [ ] Mapear erros por módulo.
-- [ ] Criar exceções específicas por código remoto.
-- [ ] Criar testes de mapeamento de erro.
+- [x] Mapear erros por módulo.
+- [x] Criar exceções específicas por código remoto.
+- [x] Criar testes de mapeamento de erro.
 
 ## MED 2.0
 
-- [ ] Criar recuperação de valores.
-- [ ] Consultar recuperação de valores.
-- [ ] Cancelar recuperação de valores.
-- [ ] Receber recuperação de valores.
-- [ ] Bloquear valores.
-- [ ] Desbloquear valores.
-- [ ] Devolver valores.
-- [ ] Implementar webhooks MED 2.0.
+- [x] Criar recuperação de valores.
+- [x] Consultar recuperação de valores.
+- [x] Cancelar recuperação de valores.
+- [x] Receber recuperação de valores.
+- [x] Bloquear valores.
+- [x] Desbloquear valores.
+- [x] Devolver valores.
+- [x] Implementar webhooks MED 2.0.
 
 ## Core Banking - Bloqueio e Desbloqueio de Saldo
 
-- [ ] Bloquear saldo.
-- [ ] Desbloquear saldo.
-- [ ] Criar cenários práticos.
+- [x] Bloquear saldo.
+- [x] Desbloquear saldo.
+- [x] Criar cenários práticos.
 
 ## cel_banking - cards
 
-- [ ] Documentar sobre cel_card.
+- [x] Documentar sobre cel_card.
 - [x] Criar conta cartão.
 - [x] Consultar dados de conta cartão.
 - [x] Consultar limites da conta cartão.
-- [~] Atualizar dados cadastrais.
-- [~] Atualizar telefone.
+- [x] Atualizar dados cadastrais.
+- [x] Atualizar telefone.
 - [x] Cancelar conta e cartão.
-- [~] Implementar endereços.
+- [x] Implementar endereços.
 - [x] Emitir cartão.
 - [x] Emitir segunda via de cartão.
-- [~] Consultar rastreio.
-- [~] Simular rastreio.
+- [x] Consultar rastreio.
+- [x] Simular rastreio.
 - [x] Ativar cartão.
-- [~] Alterar status.
+- [x] Alterar status.
 - [x] Visualizar dados do cartão.
-- [~] Listar cartões.
-- [~] Alterar senha Pin Online e Pin Offline.
-- [~] Implementar simulador de transações.
+- [x] Listar cartões.
+- [x] Alterar senha Pin Online e Pin Offline.
+- [x] Implementar simulador de transações.
 - [x] Cadastrar e gerenciar webhooks de cartão.
 - [x] Template de webhooks de cartão.
-- [~] Reenvio de webhook pendente.
-- [~] Consultar dados de fatura pós-paga.
+- [x] Reenvio de webhook pendente.
+- [x] Consultar dados de fatura pós-paga.
 
 ## cel_credit
 
@@ -486,43 +486,43 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 - [x] Campos de solicitação.
 - [x] Simulações.
 - [x] Status de solicitação.
-- [ ] Tabela de erros de geração de boleto.
+- [x] Tabela de erros de geração de boleto.
 - [ ] Assinatura CCB por modalidade.
 - [x] Assinatura via cláusula mandato timestamp.
 - [ ] Assinatura via envio de PDF.
 - [x] Consulta de assinaturas da CCB.
-- [ ] Webhooks de crédito.
+- [x] Webhooks de crédito.
 
 ### Consignado Crédito Trabalhador
 
-- [ ] Solicitação de proposta e distribuição aos originadores.
-- [ ] Oferta, leilão, devolutiva e emissão.
-- [ ] Solicitação e consentimento do tomador.
-- [ ] Consulta de margem e simulação de crédito.
-- [ ] Consulta de saldo FGTS e multa rescisória FGTS.
-- [ ] Cadastro do tomador, emissão e cancelamento.
-- [ ] Guia rápido consignado.
-- [ ] Falhas de averbação Dataprev.
-- [ ] Status da operação.
-- [ ] Consultas, escriturações e repasses.
-- [ ] Consulta status da garantia.
+- [x] Solicitação de proposta e distribuição aos originadores.
+- [x] Oferta, leilão, devolutiva e emissão.
+- [x] Solicitação e consentimento do tomador.
+- [x] Consulta de margem e simulação de crédito.
+- [x] Consulta de saldo FGTS e multa rescisória FGTS.
+- [x] Cadastro do tomador, emissão e cancelamento.
+- [x] Guia rápido consignado.
+- [x] Falhas de averbação Dataprev.
+- [x] Status da operação.
+- [x] Consultas, escriturações e repasses.
+- [x] Consulta status da garantia.
 
 ### Empréstimo Consignado Servidores do Exército
 
-- [ ] Autenticação.
-- [ ] Consulta de margem.
-- [ ] Simulação da CCB.
-- [ ] Criação do tomador.
-- [ ] Compra com troco.
-- [ ] Status da operação.
+- [x] Autenticação.
+- [x] Consulta de margem.
+- [x] Simulação da CCB.
+- [x] Criação do tomador.
+- [x] Compra com troco.
+- [x] Status da operação.
 
 ### Conta Escrow
 
-- [ ] Onboarding conta escrow.
-- [ ] Fluxo essencial.
-- [ ] Depósitos.
-- [ ] Destinatários e cobranças.
-- [ ] Permissões.
+- [x] Onboarding conta escrow.
+- [x] Fluxo essencial.
+- [x] Depósitos.
+- [x] Destinatários e cobranças.
+- [x] Permissões.
 
 ### Portabilidade de Crédito
 
@@ -535,84 +535,84 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 
 ## cel_banking - embedded solutions
 
-- [ ] Conta Celcoin.
-- [ ] DDA.
-- [ ] Tabela de erros DDA.
-- [ ] FAQs DDA.
-- [ ] Débitos veiculares embedded.
-- [ ] Enriquecimento de placas.
-- [ ] Webhook com autenticação JWT.
-- [ ] Idempotência de débito veicular.
-- [ ] NFS-e.
-- [ ] Tabela de erros NFS-e.
-- [ ] Boletos conta única direto.
-- [ ] Gestão de beneficiários.
-- [ ] Gestão de carteiras.
-- [ ] Gestão de emissão de boletos.
-- [ ] Gestão de baixa de boletos.
-- [ ] Pagamento de contas embedded.
-- [ ] Devolução de pagamento de conta.
-- [ ] Massa de dados para testes.
-- [ ] Lista de convênios.
-- [ ] Pix avulso embedded.
-- [ ] Recargas nacionais.
-- [ ] Saques e depósitos físicos.
-- [ ] TED embedded.
-- [ ] Conciliação.
-- [ ] SLC Celcoin como banco liquidante.
+- [x] Conta Celcoin.
+- [x] DDA.
+- [x] Tabela de erros DDA.
+- [x] FAQs DDA.
+- [x] Débitos veiculares embedded.
+- [x] Enriquecimento de placas.
+- [x] Webhook com autenticação JWT.
+- [x] Idempotência de débito veicular.
+- [x] NFS-e.
+- [x] Tabela de erros NFS-e.
+- [x] Boletos conta única direto.
+- [x] Gestão de beneficiários.
+- [x] Gestão de carteiras.
+- [x] Gestão de emissão de boletos.
+- [x] Gestão de baixa de boletos.
+- [x] Pagamento de contas embedded.
+- [x] Devolução de pagamento de conta.
+- [x] Massa de dados para testes.
+- [x] Lista de convênios.
+- [x] Pix avulso embedded.
+- [x] Recargas nacionais.
+- [~] Saques e depósitos físicos: dependem de contratação e integração operacional com a rede Banco24Horas.
+- [x] TED embedded.
+- [~] Conciliação: endpoints dependem do contrato de conciliação contratado.
+- [x] SLC Celcoin como banco liquidante.
 
 ## Pix Indireto - Produto Dedicado
 
-- [ ] Listar todas as chaves Pix de cliente.
-- [ ] Portabilidade e reivindicação.
-- [ ] Infrações.
-- [ ] MED.
-- [ ] Marcação de fraude.
-- [ ] Criação de recuperação de valores.
-- [ ] Consulta de recuperação de valores.
-- [ ] Cancelamento de recuperação de valores.
-- [ ] Solicitação de devolução em recuperação de valores.
-- [ ] Consulta de grafo de recuperação de valores.
-- [ ] Atualização de recuperação de valores.
-- [ ] Status da recuperação de valores.
-- [ ] Fechar recuperação de valores.
-- [ ] Fechar devolução em recuperação de valores.
-- [ ] Autorização do Cash-in.
-- [ ] QR Code Pix Indireto.
-- [ ] Pagamentos Pix cash-out para indiretos.
-- [ ] Recebimentos Pix cash-in.
-- [ ] Devolução de recebimentos Pix.
-- [ ] Reporte Bacen de transações fora do SPI.
-- [ ] Pix Saque/Troco.
-- [ ] Tabela de erros para participantes indiretos.
-- [ ] Webhooks do participante indireto.
+- [x] Listar todas as chaves Pix de cliente.
+- [x] Portabilidade e reivindicação.
+- [x] Infrações.
+- [x] MED.
+- [x] Marcação de fraude.
+- [x] Criação de recuperação de valores.
+- [x] Consulta de recuperação de valores.
+- [x] Cancelamento de recuperação de valores.
+- [x] Solicitação de devolução em recuperação de valores.
+- [x] Consulta de grafo de recuperação de valores.
+- [x] Atualização de recuperação de valores.
+- [x] Status da recuperação de valores.
+- [x] Fechar recuperação de valores.
+- [x] Fechar devolução em recuperação de valores.
+- [x] Autorização do Cash-in (modelo de payload e parser de resposta).
+- [x] QR Code Pix Indireto.
+- [x] Pagamentos Pix cash-out para indiretos.
+- [x] Recebimentos Pix cash-in.
+- [x] Devolução de recebimentos Pix.
+- [x] Reporte Bacen de transações fora do SPI.
+- [x] Pix Saque/Troco (via `transactionType` no pagamento).
+- [x] Tabela de erros para participantes indiretos.
+- [x] Webhooks do participante indireto (modelo e parser).
 
 ## CEL_BRICKS WEBHOOKS
 
-- [ ] Webhook Manager.
-- [ ] Cadastrar e gerenciar webhooks.
-- [ ] Reenvio de webhook.
+- [x] Webhook Manager.
+- [x] Cadastrar e gerenciar webhooks.
+- [x] Reenvio de webhook.
 
 ## cel_open
 
 ### Compartilhamento de Dados
 
-- [ ] Consentimento.
-- [ ] Direcionamento.
-- [ ] Autenticação.
-- [ ] Confirmação.
-- [ ] Redirecionamento.
-- [ ] Documentação técnica transmissora.
-- [ ] Documentação técnica receptora.
+- [x] Consentimento.
+- [x] Direcionamento.
+- [x] Autenticação.
+- [x] Confirmação.
+- [x] Redirecionamento.
+- [x] Documentação técnica transmissora.
+- [x] Documentação técnica receptora.
 
 ### Jornada Com Redirecionamento
 
-- [ ] Criar iniciação de pagamento v4.
-- [ ] Callback da iniciação de pagamento.
-- [ ] PIX v4.
-- [ ] Criar jornada de pagamento v4.
-- [ ] Listar jornadas de pagamento v4.
-- [ ] Buscar jornada de pagamento v4.
+- [x] Criar iniciação de pagamento v4.
+- [x] Callback da iniciação de pagamento.
+- [x] PIX v4.
+- [x] Criar jornada de pagamento v4.
+- [x] Listar jornadas de pagamento v4.
+- [x] Buscar jornada de pagamento v4.
 
 ### Jornada Sem Redirecionamento
 
@@ -634,109 +634,109 @@ Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.c
 
 ### Brick Bank e Brick Insurance
 
-- [ ] Brick Bank receptora de dados.
-- [ ] Brick Bank transmissora de dados.
-- [ ] Brick Bank detentora de contas.
-- [ ] Brick Insurance receptora de dados.
-- [ ] Brick Insurance transmissora de dados.
+- [x] Brick Bank receptora de dados via `openFinance()`.
+- [~] Brick Bank transmissora de dados: APIs de exposição como transmissora dependem do contrato e da infraestrutura da instituição.
+- [~] Brick Bank detentora de contas: endpoints de autenticação/confirmação da detentora não estão publicados no contrato SDK.
+- [~] Brick Insurance receptora de dados: produto e contrato específico não publicados para o SDK.
+- [~] Brick Insurance transmissora de dados: produto e contrato específico não publicados para o SDK.
 
 ### Open Plus
 
-- [ ] Portal: cadastro e acesso.
-- [ ] Hall Open Plus.
-- [ ] Gestão de aplicações.
-- [ ] Catálogo de produtos.
-- [ ] Gestão de membros da equipe.
-- [ ] Menu de usuário.
-- [ ] Painel de gestão da aplicação.
-- [ ] Painel de gestão do produto.
-- [ ] Documentação de produto.
-- [ ] Credenciais e usuário de teste.
-- [ ] Subir em produção.
-- [ ] Portal configurações.
+- [~] Portal: cadastro e acesso: jornada realizada no portal web Open Plus.
+- [~] Hall Open Plus: interface administrativa do portal.
+- [~] Gestão de aplicações: recurso do portal, sem API pública para o SDK.
+- [~] Catálogo de produtos: recurso do portal, sem API pública para o SDK.
+- [~] Gestão de membros da equipe: recurso do portal, sem API pública para o SDK.
+- [~] Menu de usuário: recurso do portal, sem API pública para o SDK.
+- [~] Painel de gestão da aplicação: recurso do portal.
+- [~] Painel de gestão do produto: recurso do portal.
+- [x] Documentação de produto.
+- [~] Credenciais e usuário de teste: provisionados pelo portal/contrato.
+- [~] Subir em produção: processo de publicação e homologação do portal.
+- [~] Portal configurações: painel administrativo do produto.
 
 ### Plataforma de Iniciação ITP
 
-- [ ] Dashboard Open Keys.
-- [ ] Lista de transações.
-- [ ] Lista de vínculos de conta.
-- [ ] Relatórios.
-- [ ] Configurações da jornada de pagamentos.
-- [ ] Demo das jornadas de pagamento.
-- [ ] Demo da área de gestão.
-- [ ] Iniciação de pagamento instantâneo.
-- [ ] Gestão de pagamentos instantâneos.
-- [ ] Iniciação de pagamento agendado.
-- [ ] Gestão de pagamentos agendados.
-- [ ] Iniciação de pagamento sem redirecionamento.
-- [ ] Gestão de contas salvas.
-- [ ] Iniciação de pagamento automático.
-- [ ] Gestão de pagamentos automáticos.
-- [ ] FAQ Open Keys.
-- [ ] Jornada Pay by Link.
-- [ ] Pix por aproximação.
-- [ ] Máquina de estados.
-- [ ] Códigos de resposta HTTP.
-- [ ] Possíveis erros de pagamentos.
-- [ ] Diagrama de sequência com redirecionamento.
-- [ ] Diagrama de sequência sem redirecionamento.
-- [ ] Webhook.
-- [ ] APIs.
-- [ ] Criar consentimento Sweeping Accounts.
-- [ ] Callback de consentimento Sweeping Accounts.
-- [ ] Cancelamento de consentimento Sweeping Accounts.
-- [ ] Listar consentimentos.
-- [ ] Buscar consentimento.
-- [ ] Criação de sessão de jornada.
-- [ ] Listar sessões de jornada.
-- [ ] Buscar sessão de jornada.
-- [ ] Pix inteligente.
+- [~] Dashboard Open Keys: recurso do portal Open Plus, sem endpoint público no contrato SDK.
+- [~] Lista de transações: consulta disponível no painel; APIs dependem do produto contratado.
+- [x] Lista de vínculos de conta via JSR/enrollments.
+- [~] Relatórios: recurso do portal Open Keys.
+- [~] Configurações da jornada de pagamentos: recurso do portal Open Keys.
+- [~] Demo das jornadas de pagamento: recurso do portal Open Keys.
+- [~] Demo da área de gestão: recurso do portal Open Keys.
+- [x] Iniciação de pagamento instantâneo.
+- [x] Gestão de pagamentos instantâneos.
+- [x] Iniciação de pagamento agendado.
+- [x] Gestão de pagamentos agendados.
+- [x] Iniciação de pagamento sem redirecionamento.
+- [x] Gestão de contas salvas.
+- [x] Iniciação de pagamento automático.
+- [x] Gestão de pagamentos automáticos.
+- [x] FAQ Open Keys.
+- [~] Jornada Pay by Link: depende de contratação/jornada white-label específica.
+- [x] Pix por aproximação via JSR, FIDO2 e NFC no aplicativo cliente.
+- [x] Máquina de estados.
+- [x] Códigos de resposta HTTP e tratamento comum do SDK.
+- [x] Possíveis erros de pagamentos.
+- [x] Diagrama de sequência com redirecionamento.
+- [x] Diagrama de sequência sem redirecionamento.
+- [x] Webhook.
+- [x] APIs públicas do SDK para ITP, JSR e Pix Automático.
+- [x] Criar consentimento Sweeping Accounts.
+- [x] Callback de consentimento Sweeping Accounts.
+- [x] Cancelamento de consentimento Sweeping Accounts.
+- [x] Listar consentimentos.
+- [x] Buscar consentimento.
+- [x] Criação de sessão de jornada.
+- [x] Listar sessões de jornada.
+- [x] Buscar sessão de jornada.
+- [x] Pix inteligente.
 
 ## Pix - Avulso
 
-- [ ] Documentar sobre Pix avulso.
-- [ ] Cobrança imediata com QR Code dinâmico immediate.
-- [ ] Cobrança com vencimento com QR Code dinâmico duedate.
-- [ ] Cobrança estática.
-- [ ] Consulta de recebimentos Pix.
-- [ ] Devolução de recebimentos Pix.
-- [ ] DICT e balde de fichas.
-- [ ] Transferência Pix por dados bancários.
-- [ ] Transferência Pix por chave.
-- [ ] Pagamento de QR Code estático.
-- [ ] Pagamento de QR Code dinâmico.
-- [ ] Pix entre contas.
-- [ ] Consultar transferências, pagamentos e devoluções Pix-out.
-- [ ] Pagamento de QR Code estático ou dinâmico.
-- [ ] Pix Automático pagador.
-- [ ] Pix Automático recebedor.
-- [ ] Tabela de erros Pix.
-- [ ] FAQs Pix.
-- [ ] Modelos de webhooks Pix.
+- [x] Documentar sobre Pix avulso.
+- [x] Cobrança imediata com QR Code dinâmico immediate.
+- [x] Cobrança com vencimento com QR Code dinâmico duedate.
+- [x] Cobrança estática.
+- [x] Consulta de recebimentos Pix.
+- [x] Devolução de recebimentos Pix.
+- [x] DICT e balde de fichas.
+- [x] Transferência Pix por dados bancários.
+- [x] Transferência Pix por chave.
+- [x] Pagamento de QR Code estático.
+- [x] Pagamento de QR Code dinâmico.
+- [x] Pix entre contas.
+- [x] Consultar transferências, pagamentos e devoluções Pix-out.
+- [x] Pagamento de QR Code estático ou dinâmico.
+- [x] Pix Automático pagador.
+- [x] Pix Automático recebedor.
+- [x] Tabela de erros Pix.
+- [x] FAQs Pix.
+- [x] Modelos de webhooks Pix.
 
 ## Conciliação
 
-- [ ] API para conciliação.
-- [ ] Documentar API de conciliação.
-- [ ] API para extrato consolidado.
-- [ ] Documentar API de extrato consolidado.
-- [ ] Tabela de erros.
+- [x] API para conciliação.
+- [x] Documentar API de conciliação.
+- [x] API para extrato consolidado.
+- [x] Documentar API de extrato consolidado.
+- [x] Tabela de erros.
 
 ## Suporte
 
-- [ ] Central de ajuda.
-- [ ] SLA de atendimento.
+- [~] Central de ajuda: canal e conteúdo dependem do suporte contratado/Celcoin.
+- [~] SLA de atendimento: definido contratualmente; não há endpoint público no contrato REST.
 
 ## Painel do Cliente
 
-- [ ] Listagem de tickets.
+- [~] Listagem de tickets: disponível no Painel do Cliente, sem API pública mapeada.
 
 ## Anti-fraudes
 
-- [ ] Follow the Money.
-- [ ] Regras antifraude por transação.
-- [ ] Webhooks antifraude.
-- [ ] Auditoria e retenção de eventos antifraude.
+- [~] Follow the Money: configuração e operação dependem de habilitação contratual/Painel.
+- [x] Regras antifraude por transação: normalização local das decisões recebidas, preservando o payload original.
+- [x] Webhooks antifraude: receptor idempotente, parser e suporte ao ciclo de retry.
+- [x] Auditoria e retenção de eventos antifraude: persistência local e purge explícito por cutoff.
 
 ## Qualidade Transversal
 

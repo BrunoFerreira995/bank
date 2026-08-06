@@ -19,6 +19,9 @@ import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinIncomeReportRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinIncomeReportResponse;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinJudicialBlockRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinJudicialBlockResponse;
+import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinBalanceBlockRequest;
+import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinBalanceOperationResponse;
+import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinBalanceUnblockRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinSandboxBalanceRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinStatementRequest;
 import com.brunopedraca.celcoin.banking.AccountDtos.CelcoinStatementResponse;
@@ -56,6 +59,18 @@ public interface CelcoinAccountOperations {
     }
 
     CelcoinJudicialBlockResponse createJudicialBlock(CelcoinJudicialBlockRequest request, String idempotencyKey);
+
+    default CelcoinBalanceOperationResponse blockBalance(CelcoinBalanceBlockRequest request) {
+        return blockBalance(request, null);
+    }
+
+    CelcoinBalanceOperationResponse blockBalance(CelcoinBalanceBlockRequest request, String idempotencyKey);
+
+    default CelcoinBalanceOperationResponse unblockBalance(CelcoinBalanceUnblockRequest request) {
+        return unblockBalance(request, null);
+    }
+
+    CelcoinBalanceOperationResponse unblockBalance(CelcoinBalanceUnblockRequest request, String idempotencyKey);
 
     CelcoinAccountStatusResponse updateStatus(CelcoinAccountStatusUpdateRequest request);
 

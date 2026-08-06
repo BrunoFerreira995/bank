@@ -1,6 +1,7 @@
 package com.brunopedraca.celcoin.common.http;
 
 import com.brunopedraca.celcoin.common.exception.CelcoinIntegrationException;
+import com.brunopedraca.celcoin.common.exception.CelcoinBaasException;
 import com.brunopedraca.celcoin.common.exception.CelcoinRateLimitException;
 import com.brunopedraca.celcoin.common.idempotency.CelcoinIdempotencyService;
 import com.brunopedraca.celcoin.common.validation.SensitiveDataMasker;
@@ -154,11 +155,10 @@ public class CelcoinHttpClient {
                             status -> status.is4xxClientError() || status.is5xxServerError(),
                             response -> response.bodyToMono(String.class)
                                     .defaultIfEmpty("")
-                                    .map(payload -> new CelcoinApiException(
-                                            SensitiveDataMasker.mask(payload.isBlank() ? "Celcoin API error" : payload),
-                                            response.statusCode(),
-                                            correlation(context),
-                                            response.headers().asHttpHeaders().getFirst("X-Request-Id"))))
+                                            .map(payload -> CelcoinBaasException.from(
+                                                    SensitiveDataMasker.mask(payload.isBlank() ? "Celcoin API error" : payload),
+                                                    response.statusCode(), correlation(context),
+                                                    response.headers().asHttpHeaders().getFirst("X-Request-Id"))))
                     .bodyToMono(responseType);
             if (retryAllowed) {
                 Duration backoff = properties.retry().initialBackoff();

@@ -140,6 +140,143 @@ public class CelcoinCreditClient implements CelcoinCreditOperations {
                 .block();
     }
 
+    @Override
+    public Map<String, Object> createPerson(Map<String, Object> request) {
+        return post("/banking/originator/persons", request);
+    }
+
+    @Override
+    public Map<String, Object> getPerson(String personId) {
+        return get("/banking/originator/persons/" + encode(personId));
+    }
+
+    @Override
+    public Map<String, Object> updatePerson(String personId, Map<String, Object> request) {
+        return put("/banking/originator/persons/" + encode(personId), request);
+    }
+
+    @Override
+    public Map<String, Object> createBusiness(Map<String, Object> request) {
+        return post("/banking/originator/business", request);
+    }
+
+    @Override
+    public Map<String, Object> getBusiness(String businessId) {
+        return get("/banking/originator/business/" + encode(businessId));
+    }
+
+    @Override
+    public Map<String, Object> updateBusiness(String businessId, Map<String, Object> request) {
+        return put("/banking/originator/business/" + encode(businessId), request);
+    }
+
+    @Override
+    public Map<String, Object> createBusinessRelation(String businessId, Map<String, Object> request) {
+        return post("/banking/originator/business/" + encode(businessId) + "/relations", request);
+    }
+
+    @Override
+    public Map<String, Object> getQualification(String productId, String applicationId) {
+        return get("/banking/originator/products/" + encode(productId) + "/qualification-requests?application_id="
+                + encode(applicationId));
+    }
+
+    @Override
+    public Map<String, Object> qualifyApplication(
+            String productId, String applicationId, Map<String, Object> request) {
+        return post("/banking/originator/products/" + encode(productId) + "/qualification-requests/"
+                + encode(applicationId), request);
+    }
+
+    @Override
+    public Map<String, Object> removeGuarantee(String applicationId, String reason) {
+        return post("/banking/originator/applications/" + encode(applicationId)
+                + "/remove/guarantee?reason=" + encode(reason), Map.of());
+    }
+
+    @Override
+    public Map<String, Object> createWebhook(Map<String, Object> request) {
+        return post("/banking/originator/webhooks", request);
+    }
+
+    @Override
+    public Map<String, Object> listWebhooks() {
+        return get("/banking/originator/webhooks");
+    }
+
+    @Override
+    public Map<String, Object> updateWebhook(String webhookId, Map<String, Object> request) {
+        return put("/banking/originator/webhooks/" + encode(webhookId), request);
+    }
+
+    @Override
+    public void deleteWebhook(String webhookId) {
+        authenticated().delete()
+                .uri(properties.apiBaseUrl() + "/banking/originator/webhooks/" + encode(webhookId))
+                .retrieve().toBodilessEntity().block();
+    }
+
+    @Override
+    public Map<String, Object> submitWorkersCreditOffer(String proposalId, Map<String, Object> offer) {
+        return post("/banking/originator/workers-credit/proposal/" + encode(proposalId), offer);
+    }
+
+    @Override
+    public Map<String, Object> getFgtsBalance(String productId, String taxpayerId) {
+        return get("/banking/originator/guarantee/" + encode(productId) + "/get-balance?taxpayer_id="
+                + encode(taxpayerId));
+    }
+
+    @Override
+    public Map<String, Object> listGuaranteeEvents(Map<String, Object> filters) {
+        StringBuilder path = new StringBuilder("/banking/originator/guarantee-events?");
+        if (filters != null) {
+            filters.forEach((key, value) -> param(path, key, value));
+        }
+        return get(path.toString());
+    }
+
+    @Override
+    public Map<String, Object> getGuaranteeStatus(String applicationId) {
+        return get("/banking/originator/applications/" + encode(applicationId) + "/guarantee");
+    }
+
+    @Override
+    public CelcoinCreditTokenResponse authenticateArmyConsigned() {
+        return authenticate();
+    }
+
+    @Override
+    public Map<String, Object> getArmyConsignedMargin(String productId, String taxpayerId) {
+        return get("/banking/originator/guarantee/" + encode(productId) + "/get-balance?taxpayer_id="
+                + encode(taxpayerId));
+    }
+
+    @Override
+    public Map<String, Object> simulateArmyConsignedCcb(String productId, Map<String, Object> request) {
+        return simulate(productId, request);
+    }
+
+    @Override
+    public Map<String, Object> createArmyConsignedBorrower(Map<String, Object> request) {
+        return createPerson(request);
+    }
+
+    @Override
+    public Map<String, Object> createArmyConsignedPurchaseBundle(Map<String, Object> request) {
+        return post("/banking/originator/application-bundles", request);
+    }
+
+    @Override
+    public Map<String, Object> getArmyConsignedPurchaseBundle(String bundleId) {
+        return get("/banking/originator/application-bundles/" + encode(bundleId));
+    }
+
+    @Override
+    public Map<String, Object> getArmyConsignedOperationStatus(String applicationId) {
+        return getApplication(applicationId);
+    }
+
     private Map<String, Object> get(String path) { return authenticated().get().uri(properties.apiBaseUrl() + path)
             .retrieve().bodyToMono(Map.class).block(); }
     private Map<String, Object> post(String path, Object body) { return authenticated().post().uri(properties.apiBaseUrl() + path)
