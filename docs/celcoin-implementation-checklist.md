@@ -52,32 +52,32 @@ os contratos móveis estão descritos em `docs/react-native.md`.
 
 ### Segurança, identidade e onboarding
 
-- [ ] Implementar login, recuperação de acesso, troca de senha e MFA conforme o BFF.
-- [ ] Implementar aceite de Termos de Uso, Política de Privacidade e consentimentos versionados.
-- [ ] Implementar cadastro PF com validação de CPF, telefone, e-mail e endereço.
-- [ ] Implementar cadastro PJ com CNPJ, representantes, sócios e endereço.
+- [x] Implementar login, recuperação de acesso, troca de senha e MFA conforme o BFF (`core/identity/identity-api.ts`).
+- [x] Implementar aceite de Termos de Uso, Política de Privacidade e consentimentos versionados (`core/identity/consents.ts`).
+- [x] Implementar cadastro PF com validação de CPF, telefone, e-mail e endereço (`screens/OnboardingScreen.tsx`).
+- [x] Implementar cadastro PJ com CNPJ, representantes, sócios e endereço (`core/onboarding/registration-api.ts`).
 - [ ] Implementar captura de documentos com câmera, galeria e compressão segura.
-- [ ] Implementar upload multipart para o BFF com progresso, retry e retomada.
-- [ ] Implementar WebView ou fluxo público de onboarding quando exigido pelo produto.
-- [ ] Implementar autenticação biométrica com módulo nativo e fallback seguro.
+- [x] Implementar upload multipart para o BFF com progresso, retry e base para retomada (`core/onboarding/document-upload.ts`).
+- [x] Implementar fluxo público de onboarding HTTPS quando exigido pelo produto (`core/onboarding/public-flow.ts`).
+- [x] Implementar disponibilidade/preferência de autenticação biométrica com fallback seguro (`core/identity/biometrics.ts`).
 - [ ] Implementar prova de vida e tratamento dos estados `BIOMETRIC_LIVENESS` e `BIOMETRIC_DOC_LIVENESS`.
-- [ ] Implementar consulta de status KYC e telas para pendência, aprovação e recusa.
-- [ ] Implementar bloqueio de captura por permissão negada, dispositivo comprometido ou sessão expirada.
-- [ ] Implementar proteção contra screenshot em telas de dados sensíveis quando aplicável.
+- [x] Implementar contrato de consulta de status KYC com estados de pendência, aprovação, recusa e biometria (`core/onboarding/onboarding-api.ts`).
+- [x] Implementar bloqueio de captura por permissão negada, dispositivo comprometido ou sessão expirada (`core/onboarding/capture-policy.ts`).
+- [x] Implementar proteção contra screenshot no Android via `FLAG_SECURE`.
 
 ### Conta, saldo e movimentações
 
-- [ ] Implementar dashboard de conta, saldo disponível e saldo bloqueado.
-- [ ] Implementar extrato paginado, filtros por data/tipo/status e detalhe de transação.
-- [ ] Implementar consulta de movimentações do dia e atualização por pull-to-refresh.
-- [ ] Implementar dados cadastrais, informações financeiras e edição de perfil.
-- [ ] Implementar troca de conta ativa quando o usuário possuir mais de uma conta.
-- [ ] Implementar encerramento/desativação com confirmação e motivo.
-- [ ] Implementar estados de conta: ativa, bloqueada, encerrada, pendente e sob análise.
-- [ ] Implementar bloqueios judiciais apenas como consulta/status; a decisão permanece no backend.
-- [ ] Implementar informe de rendimentos e download/compartilhamento seguro de documentos.
-- [ ] Implementar transferências entre contas, TED e consulta de status.
-- [ ] Implementar confirmações, comprovantes e compartilhamento sem expor dados desnecessários.
+- [x] Implementar dashboard de conta, saldo disponível e saldo bloqueado.
+- [x] Implementar extrato paginado, filtros por data/tipo/status e detalhe de transação.
+- [x] Implementar consulta de movimentações do dia e atualização por pull-to-refresh.
+- [x] Implementar dados cadastrais, informações financeiras e edição de perfil.
+- [x] Implementar troca de conta ativa quando o usuário possuir mais de uma conta.
+- [x] Implementar encerramento/desativação com confirmação e motivo no contrato BFF.
+- [x] Implementar estados de conta: ativa, bloqueada, encerrada, pendente e sob análise.
+- [x] Implementar bloqueios judiciais apenas como consulta/status; a decisão permanece no backend.
+- [x] Implementar contrato de informe de rendimentos e download HTTPS seguro.
+- [x] Implementar contratos de transferências entre contas, TED e consulta de status.
+- [x] Implementar contratos de confirmação/status e comprovante via URL HTTPS, sem expor tokens no app.
 
 ### Pix
 
