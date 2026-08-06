@@ -81,18 +81,18 @@ os contratos móveis estão descritos em `docs/react-native.md`.
 
 ### Pix
 
-- [ ] Implementar leitura de QR Code Pix com câmera e validação local do payload.
-- [ ] Implementar pagamento Pix por chave, dados bancários, QR estático e QR dinâmico.
-- [ ] Implementar criação e exibição de cobranças Pix immediate, duedate e estática.
-- [ ] Implementar Pix entre contas e confirmação de favorecido.
-- [ ] Implementar consulta de pagamentos, recebimentos, devoluções e bloqueios cautelares.
-- [ ] Implementar cadastro, consulta, alteração e exclusão de chaves Pix.
-- [ ] Implementar portabilidade e reivindicação de chaves com timeline de status.
+- [ ] Implementar leitura de QR Code Pix com câmera; [x] validação local do payload EMV (`core/pix/pix-emv.ts`).
+- [x] Implementar pagamento Pix por chave, dados bancários, QR estático e QR dinâmico (`core/pix/pix-api.ts`).
+- [x] Implementar criação e exibição de cobranças Pix immediate, duedate e estática (`core/pix/pix-api.ts`).
+- [x] Implementar Pix entre contas e confirmação de favorecido no contrato BFF.
+- [x] Implementar consulta de pagamentos, recebimentos, devoluções e bloqueios cautelares.
+- [x] Implementar cadastro, consulta, alteração e exclusão de chaves Pix.
+- [x] Implementar portabilidade e reivindicação de chaves com timeline de status.
 - [ ] Implementar Pix Automático pagador e recebedor.
 - [ ] Implementar Pix Indireto, Pix Avulso e Pix Inteligente conforme feature flag/contrato.
 - [ ] Implementar Pix Saque/Troco quando habilitado para o parceiro.
-- [ ] Implementar tela de comprovante Pix e compartilhamento nativo.
-- [ ] Implementar prevenção de duplicidade no app e idempotência definitiva no BFF.
+- [x] Implementar tela/contrato de comprovante Pix por URL HTTPS segura.
+- [x] Implementar prevenção de duplicidade no app e idempotência nas mutações encaminhadas ao BFF.
 
 ### Boletos, recargas e débitos
 

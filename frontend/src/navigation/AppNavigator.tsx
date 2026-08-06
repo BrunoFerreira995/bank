@@ -7,6 +7,7 @@ import { LoginScreen } from "@/screens/LoginScreen";
 import { AccountDashboardScreen } from "@/screens/AccountDashboardScreen";
 import { ProfileScreen } from "@/screens/ProfileScreen";
 import { StatementScreen } from "@/screens/StatementScreen";
+import { PixScreen } from "@/screens/PixScreen";
 import { OnboardingScreen } from "@/screens/OnboardingScreen";
 
 type RootStackParamList = {
@@ -15,6 +16,7 @@ type RootStackParamList = {
   Home: undefined;
   Statement: undefined;
   Profile: undefined;
+  Pix: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -53,6 +55,7 @@ export function AppNavigator() {
               options={{ title: "Extrato" }}
             />
             <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: "Perfil" }} />
+            <Stack.Screen name="Pix" component={PixScreen} options={{ title: "Pix" }} />
           </>
         ) : (
           <>

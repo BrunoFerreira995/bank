@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import {
   ActivityIndicator,
   Button,
@@ -14,7 +14,7 @@ import { useActiveAccount } from "@/core/account/account-store";
 export function AccountDashboardScreen({
   navigation,
 }: {
-  navigation: { navigate: (route: "Statement" | "Profile") => void };
+  navigation: { navigate: (route: "Statement" | "Profile" | "Pix") => void };
 }) {
   const { accountId, setAccount } = useActiveAccount();
   const accounts = useQuery({ queryKey: ["accounts"], queryFn: listAccounts });
@@ -33,7 +33,10 @@ export function AccountDashboardScreen({
     () => accounts.data?.find((item) => item.id === selectedId),
     [accounts.data, selectedId],
   );
-  const accountList = accounts.data ?? [];
+  const accountList = useMemo(() => accounts.data ?? [], [accounts.data]);
+  useEffect(() => {
+    if (!accountId && accountList[0]) setAccount(accountList[0].id);
+  }, [accountId, accountList, setAccount]);
   if (accounts.isLoading) return <ActivityIndicator accessibilityLabel="Carregando contas" />;
   if (accounts.isError || !selected)
     return <Text accessibilityRole="alert">Não foi possível carregar suas contas.</Text>;
@@ -62,6 +65,7 @@ export function AccountDashboardScreen({
       <Text>Saldo bloqueado: R$ {(balance.data?.blocked ?? 0).toFixed(2)}</Text>
       <Button title="Ver extrato" onPress={() => navigation.navigate("Statement")} />
       <Button title="Dados cadastrais" onPress={() => navigation.navigate("Profile")} />
+      <Button title="Pix" onPress={() => navigation.navigate("Pix")} />
       <Text style={styles.subtitle}>Movimentações de hoje</Text>
       {daily.data?.slice(0, 5).map((item) => (
         <Text key={item.id}>
