@@ -21,6 +21,148 @@ Legenda:
 - [x] Implementar arquivo de movimentação via SFTP (`docs/movement-files.md`).
 - [x] Avaliar e implementar servidor MCP: adaptador JSON-RPC MCP opt-in em `/mcp`, com `initialize`, `tools/list` e `tools/call` para participantes Pix, decodificação EMV e saldo; não é um servidor oficial Celcoin.
 
+## Frontend React Native — cobertura de produto
+
+Esta seção representa o trabalho necessário para entregar um aplicativo
+React Native de produção consumindo o SDK por uma API BFF. O aplicativo não
+deve conter `clientSecret`, certificado mTLS, credenciais SFTP ou regras
+antifraude; essas responsabilidades permanecem no backend. A arquitetura e
+os contratos móveis estão descritos em `docs/react-native.md`.
+
+### Fundação do aplicativo
+
+- [x] Criar workspace React Native CLI com TypeScript e configuração Android/iOS.
+- [x] Definir baseline React Native 0.86, Node 22.13+, Java/Android SDK/Xcode no README do frontend.
+- [x] Configurar lint, formatter, typecheck e testes.
+- [x] Configurar hooks de commit e validação local obrigatória (`frontend/.husky/pre-commit` com `lint-staged`).
+- [x] Configurar ambientes `development`, `staging`, `sandbox` e `production` via `react-native-config`.
+- [x] Implementar configuração por ambiente sem segredos no bundle.
+- [ ] Criar API BFF versionada para o app, com correlation ID e idempotência.
+- [x] Criar cliente-base TypeScript para a API BFF versionada.
+- [ ] Gerar cliente TypeScript a partir do contrato OpenAPI do BFF.
+- [x] Implementar cliente HTTP com timeout, retry inicial, cancelamento e tratamento de erros.
+- [x] Implementar cache base e invalidação via TanStack Query.
+- [x] Implementar estado global, estado de sessão e base para estado de formulários via Zustand.
+- [x] Implementar navegação autenticada, pública e fluxo de sessão expirada.
+- [x] Implementar armazenamento seguro de tokens com Keychain/Keystore via `react-native-keychain`.
+- [x] Implementar logout local, revogação de sessão e limpeza de dados sensíveis.
+- [x] Implementar deep links, universal links e app links na configuração de navegação.
+- [x] Implementar feature flags por ambiente e produto contratado.
+- [x] Implementar telemetria sem CPF, CNPJ, token, cartão ou certificado em logs.
+
+### Segurança, identidade e onboarding
+
+- [ ] Implementar login, recuperação de acesso, troca de senha e MFA conforme o BFF.
+- [ ] Implementar aceite de Termos de Uso, Política de Privacidade e consentimentos versionados.
+- [ ] Implementar cadastro PF com validação de CPF, telefone, e-mail e endereço.
+- [ ] Implementar cadastro PJ com CNPJ, representantes, sócios e endereço.
+- [ ] Implementar captura de documentos com câmera, galeria e compressão segura.
+- [ ] Implementar upload multipart para o BFF com progresso, retry e retomada.
+- [ ] Implementar WebView ou fluxo público de onboarding quando exigido pelo produto.
+- [ ] Implementar autenticação biométrica com módulo nativo e fallback seguro.
+- [ ] Implementar prova de vida e tratamento dos estados `BIOMETRIC_LIVENESS` e `BIOMETRIC_DOC_LIVENESS`.
+- [ ] Implementar consulta de status KYC e telas para pendência, aprovação e recusa.
+- [ ] Implementar bloqueio de captura por permissão negada, dispositivo comprometido ou sessão expirada.
+- [ ] Implementar proteção contra screenshot em telas de dados sensíveis quando aplicável.
+
+### Conta, saldo e movimentações
+
+- [ ] Implementar dashboard de conta, saldo disponível e saldo bloqueado.
+- [ ] Implementar extrato paginado, filtros por data/tipo/status e detalhe de transação.
+- [ ] Implementar consulta de movimentações do dia e atualização por pull-to-refresh.
+- [ ] Implementar dados cadastrais, informações financeiras e edição de perfil.
+- [ ] Implementar troca de conta ativa quando o usuário possuir mais de uma conta.
+- [ ] Implementar encerramento/desativação com confirmação e motivo.
+- [ ] Implementar estados de conta: ativa, bloqueada, encerrada, pendente e sob análise.
+- [ ] Implementar bloqueios judiciais apenas como consulta/status; a decisão permanece no backend.
+- [ ] Implementar informe de rendimentos e download/compartilhamento seguro de documentos.
+- [ ] Implementar transferências entre contas, TED e consulta de status.
+- [ ] Implementar confirmações, comprovantes e compartilhamento sem expor dados desnecessários.
+
+### Pix
+
+- [ ] Implementar leitura de QR Code Pix com câmera e validação local do payload.
+- [ ] Implementar pagamento Pix por chave, dados bancários, QR estático e QR dinâmico.
+- [ ] Implementar criação e exibição de cobranças Pix immediate, duedate e estática.
+- [ ] Implementar Pix entre contas e confirmação de favorecido.
+- [ ] Implementar consulta de pagamentos, recebimentos, devoluções e bloqueios cautelares.
+- [ ] Implementar cadastro, consulta, alteração e exclusão de chaves Pix.
+- [ ] Implementar portabilidade e reivindicação de chaves com timeline de status.
+- [ ] Implementar Pix Automático pagador e recebedor.
+- [ ] Implementar Pix Indireto, Pix Avulso e Pix Inteligente conforme feature flag/contrato.
+- [ ] Implementar Pix Saque/Troco quando habilitado para o parceiro.
+- [ ] Implementar tela de comprovante Pix e compartilhamento nativo.
+- [ ] Implementar prevenção de duplicidade no app e idempotência definitiva no BFF.
+
+### Boletos, recargas e débitos
+
+- [ ] Implementar pagamento de boleto por linha digitável e código de barras.
+- [ ] Implementar autorização, pagamento, consulta, cancelamento e comprovante de boleto.
+- [ ] Implementar emissão e listagem de boletos quando o produto estiver habilitado.
+- [ ] Implementar recarga de celular com seleção de operadora, produto e valor.
+- [ ] Implementar consulta de status e reprocessamento seguro de recarga.
+- [ ] Implementar consulta e pagamento de débitos veiculares.
+- [ ] Implementar seleção de débitos, validação de valor e comprovante veicular.
+- [ ] Implementar tratamento de vencimento, indisponibilidade e pagamento em análise.
+
+### Cartões, crédito e escrow
+
+- [ ] Implementar onboarding de cartão, cartões virtuais e cartões físicos conforme contrato.
+- [ ] Implementar ativação, bloqueio/desbloqueio, limite, fatura e transações do cartão.
+- [ ] Implementar mascaramento de PAN/CVV e proibir armazenamento de dados de cartão no app.
+- [ ] Implementar proposta de crédito, simulação, documentos e acompanhamento de análise.
+- [ ] Implementar consignado Crédito Trabalhador e consignado de servidores quando habilitados.
+- [ ] Implementar portabilidade de crédito e acompanhamento da solicitação.
+- [ ] Implementar conta Escrow com saldo, eventos, partes e estados autorizados.
+- [ ] Implementar mensagens de elegibilidade e indisponibilidade por contrato/produto.
+
+### Open Finance, ITP e jornadas
+
+- [ ] Implementar seleção de instituição e consentimento Open Finance.
+- [ ] Implementar jornada com redirecionamento via deep link/Universal Link.
+- [ ] Implementar jornada sem redirecionamento com FIDO2/WebAuthn por módulo nativo.
+- [ ] Implementar registro de passkey, autenticação, cancelamento e fallback.
+- [ ] Implementar iniciação de pagamentos imediatos, agendados e automáticos.
+- [ ] Implementar Sweeping Accounts e Transferências Inteligentes.
+- [ ] Implementar Brick Bank/Insurance somente atrás dos contratos habilitados.
+- [ ] Implementar tela de consentimentos, instituições, vínculos, pagamentos e revogações.
+- [ ] Implementar estados de callback, timeout, recusa, expiração e consentimento duplicado.
+
+### Notificações, suporte e operação
+
+- [ ] Implementar push notifications Android/iOS com registro e rotação de device token.
+- [ ] Processar eventos push somente após validação no backend; não confiar no payload para alterar saldo.
+- [ ] Implementar central de notificações e marcação de leitura.
+- [ ] Implementar suporte, FAQ, abertura e acompanhamento de tickets via BFF quando contratado.
+- [ ] Implementar tela de indisponibilidade, manutenção e status de serviços.
+- [ ] Implementar atendimento de erro com código Celcoin e mensagem segura para o usuário.
+
+### Qualidade, segurança e publicação
+
+- [ ] Criar testes unitários de reducers, hooks, validadores e formatadores.
+- [ ] Criar testes de componentes e fluxos críticos com React Native Testing Library.
+- [ ] Criar testes E2E Android/iOS para login, KYC, Pix, boleto e logout.
+- [ ] Criar testes de contrato do BFF e mocks versionados por ambiente.
+- [ ] Testar acessibilidade, VoiceOver, TalkBack, fonte ampliada e contraste.
+- [ ] Testar offline, rede lenta, timeout, retry, duplicidade e retomada de upload.
+- [ ] Testar jailbreak/root, debugger, certificado inválido e armazenamento comprometido.
+- [ ] Configurar Sentry/observabilidade com mascaramento de dados pessoais.
+- [ ] Configurar CI/CD para Android e iOS com assinatura fora do repositório.
+- [ ] Configurar distribuição interna, TestFlight, Play Internal Testing e homologação.
+- [ ] Executar pentest mobile, revisão de permissões e análise de dependências.
+- [ ] Publicar política de privacidade, fichas de segurança e evidências de homologação.
+- [ ] Criar checklist de release, rollback, migração de storage e compatibilidade de versões.
+- [ ] Obter aprovação final de App Store e Google Play e validar produção com feature flags.
+
+### Definição de 100% do frontend
+
+- [ ] Todos os fluxos habilitados no contrato possuem tela, estado de carregamento, vazio, erro, sucesso e retry.
+- [ ] Toda operação financeira usa BFF, idempotência, confirmação e comprovante.
+- [ ] Nenhum segredo Celcoin ou dado completo de cartão é empacotado no aplicativo.
+- [ ] Todos os callbacks e webhooks são processados no backend e refletidos no app por consulta/push seguro.
+- [ ] Testes unitários, de contrato e E2E passam nos ambientes de staging e sandbox.
+- [ ] Evidências de segurança, acessibilidade, homologação e publicação estão arquivadas.
+
 ## Validação no Sandbox
 
 Status da integração com o ambiente de sandbox (`https://sandbox.openfinance.celcoin.dev`):

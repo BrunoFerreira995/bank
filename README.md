@@ -18,7 +18,15 @@ flowchart LR
     SDK --> CELCOIN
 ```
 
-Esta primeira versão implementa integralmente autenticação via `POST /v5/token`, cache de token em memória e recebimento persistente de webhooks. Contas, Pix e boletos já possuem interfaces públicas, DTOs mínimos e clientes preparados, mas os métodos que dependem de URLs e payloads não fornecidos falham explicitamente até que a documentação oficial seja anexada ao projeto.
+O SDK implementa autenticação, operações BaaS/Core, Pix, onboarding, boletos,
+cartões, crédito, Open Finance, webhooks e os demais módulos descritos no
+checklist. Produtos dependentes de contrato continuam sinalizados
+explicitamente no checklist, sem endpoints inventados.
+
+Para o aplicativo mobile, consulte [docs/react-native.md](docs/react-native.md)
+e a seção **Frontend React Native** do
+[checklist](docs/celcoin-implementation-checklist.md). O app deve consumir uma
+API BFF; segredos Celcoin, mTLS, SFTP e webhooks permanecem no backend.
 
 ## Requisitos
 
