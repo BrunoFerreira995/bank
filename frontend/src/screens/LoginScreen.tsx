@@ -29,7 +29,10 @@ export function LoginScreen() {
         await setSession({
           accessToken: response.accessToken,
           refreshToken: response.refreshToken,
+          expiresAt: response.expiresAt,
         });
+      } else {
+        setError("Não foi possível autenticar. Tente novamente.");
       }
     } catch {
       setError(
@@ -64,7 +67,7 @@ export function LoginScreen() {
           ? "Confirme sua identidade"
           : "Acesse sua conta"}
       </Text>
-      {!challengeId && !recovery ? (
+      {!challengeId ? (
         <TextInput
           accessibilityLabel="CPF ou CNPJ"
           autoCapitalize="none"

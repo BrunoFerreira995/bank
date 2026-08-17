@@ -47,6 +47,9 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
       const text = await response.text();
       const body = text ? parseBody(text) : undefined;
       if (response.ok) return body as T;
+      if (response.status === 401 && session) {
+        await useSessionStore.getState().expire();
+      }
       if (response.status >= 500 && attempt < attempts) {
         await wait(150 * attempt);
         continue;

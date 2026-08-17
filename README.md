@@ -156,6 +156,11 @@ Os E2E web atuais cobrem login aceito, dashboard, navegação para Pix e login
 recusado sem exposição de token. A matriz completa está em
 [`docs/frontend-e2e-coverage.md`](docs/frontend-e2e-coverage.md).
 
+A suíte E2E iOS com Detox cobre atualmente sessão, identidade/KYC, conta e
+movimentações, Pix, boletos, recargas e débitos. A execução operacional ainda
+depende de simulador/dispositivo, BFF de staging ou sandbox, massa isolada e
+evidências arquivadas.
+
 ## Documentação essencial
 
 | Documento | Conteúdo |

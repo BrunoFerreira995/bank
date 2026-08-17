@@ -13,6 +13,8 @@ import { FinancialProductsScreen } from "@/screens/FinancialProductsScreen";
 import { OpenFinanceScreen } from "@/screens/OpenFinanceScreen";
 import { OperationsScreen } from "@/screens/OperationsScreen";
 import { OnboardingScreen } from "@/screens/OnboardingScreen";
+import { AccountServicesScreen } from "@/screens/AccountServicesScreen";
+import { PixManagementScreen } from "@/screens/PixManagementScreen";
 
 type RootStackParamList = {
   Login: undefined;
@@ -25,6 +27,8 @@ type RootStackParamList = {
   FinancialProducts: undefined;
   OpenFinance: undefined;
   Operations: undefined;
+  AccountServices: undefined;
+  PixManagement: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -65,6 +69,11 @@ export function AppNavigator() {
             <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: "Perfil" }} />
             <Stack.Screen name="Pix" component={PixScreen} options={{ title: "Pix" }} />
             <Stack.Screen
+              name="PixManagement"
+              component={PixManagementScreen}
+              options={{ title: "Gestão Pix" }}
+            />
+            <Stack.Screen
               name="Payments"
               component={PaymentsScreen}
               options={{ title: "Boletos e pagamentos" }}
@@ -83,6 +92,11 @@ export function AppNavigator() {
               name="Operations"
               component={OperationsScreen}
               options={{ title: "Suporte e operação" }}
+            />
+            <Stack.Screen
+              name="AccountServices"
+              component={AccountServicesScreen}
+              options={{ title: "Serviços da conta" }}
             />
           </>
         ) : (

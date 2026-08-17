@@ -9,12 +9,37 @@ export type StoredSession = {
   expiresAt?: number;
 };
 
+export function isSessionExpired(session: StoredSession, now = Date.now()): boolean {
+  if (!session.expiresAt) return false;
+  // BFFs commonly return epoch seconds while browsers/native APIs use ms.
+  const expiresAt =
+    session.expiresAt < 10_000_000_000 ? session.expiresAt * 1000 : session.expiresAt;
+  return expiresAt <= now;
+}
+
 export async function readSession(): Promise<StoredSession | null> {
   const credentials = await Keychain.getGenericPassword({ service: ACCESS_TOKEN_KEY });
   if (!credentials) return null;
-  const refresh = await Keychain.getGenericPassword({ service: REFRESH_TOKEN_KEY });
-  const parsed = JSON.parse(credentials.password) as StoredSession;
-  return { ...parsed, refreshToken: refresh ? refresh.password : parsed.refreshToken };
+  try {
+    const refresh = await Keychain.getGenericPassword({ service: REFRESH_TOKEN_KEY });
+    const parsed = JSON.parse(credentials.password) as Partial<StoredSession>;
+    if (typeof parsed.accessToken !== "string" || !parsed.accessToken) {
+      await clearSession();
+      return null;
+    }
+    const session = {
+      ...parsed,
+      refreshToken: refresh ? refresh.password : parsed.refreshToken,
+    } as StoredSession;
+    if (isSessionExpired(session)) {
+      await clearSession();
+      return null;
+    }
+    return session;
+  } catch {
+    await clearSession();
+    return null;
+  }
 }
 
 export async function saveSession(session: StoredSession): Promise<void> {

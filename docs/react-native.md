@@ -34,6 +34,19 @@ callbacks, consumir webhooks e esconder os contratos internos da Celcoin.
 6. Validar no BFF toda transição recebida do app e toda URL de retorno.
 7. Aplicar proteção de tela e limpeza de clipboard para dados sensíveis.
 
+Para Open Finance, o app também mantém a regra de que callbacks e URLs de
+redirecionamento devem ser HTTPS; pagamentos automático, agendado, sweeping e
+sessões Brick são iniciados pelo BFF e não alteram saldo localmente.
+
+### Ciclo de vida da sessão
+
+O frontend restaura a sessão durante a inicialização, descarta credenciais
+corrompidas ou expiradas e mantém o estado em memória sincronizado com o
+armazenamento seguro. O logout tenta revogar a sessão em `DELETE
+/mobile/v1/session`, mas sempre conclui a limpeza local mesmo quando o BFF está
+indisponível. Uma resposta `401` em uma chamada autenticada também encerra a
+sessão local e devolve o usuário à navegação pública.
+
 ## Contrato mínimo do BFF
 
 O BFF deve expor recursos versionados, por exemplo:

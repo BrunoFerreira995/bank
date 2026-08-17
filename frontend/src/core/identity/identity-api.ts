@@ -6,6 +6,7 @@ export type LoginResponse = {
   refreshToken?: string;
   mfaRequired?: boolean;
   challengeId?: string;
+  expiresAt?: number;
 };
 
 export type RecoveryResponse = { accepted: boolean };
@@ -37,4 +38,8 @@ export function changePassword(currentPassword: string, newPassword: string): Pr
     method: "PUT",
     body: JSON.stringify({ currentPassword, newPassword }),
   });
+}
+
+export function revokeSession(): Promise<void> {
+  return apiRequest<void>("/mobile/v1/session", { method: "DELETE" });
 }
