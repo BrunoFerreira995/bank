@@ -11,23 +11,22 @@ describe("iOS — sessão e entrada no app", () => {
       );
     }
     await device.launchApp({ newInstance: true, delete: true });
+    await expect(element(by.text("Acesse sua conta"))).toBeVisible();
   });
 
   afterEach(async () => {
-    await device.takeScreenshot('ios-session');
+    await device.takeScreenshot("ios-session");
   });
 
   it("inicia sem sessão e permite login válido", async () => {
     await expect(element(by.text("Acesse sua conta"))).toBeVisible();
-    await element(by.label("CPF ou CNPJ")).typeText(process.env.E2E_USER_IDENTIFIER!);
-    await element(by.label("Senha")).typeText(process.env.E2E_USER_PASSWORD!);
-    await element(by.text("Entrar")).tap();
+    await element(by.id("login-identifier")).typeText(process.env.E2E_USER_IDENTIFIER!);
+    await element(by.id("login-password")).typeText(process.env.E2E_USER_PASSWORD!);
+    await element(by.id("login-submit")).tap();
 
     if (process.env.E2E_MFA_CODE) {
       await expect(element(by.text("Confirme sua identidade"))).toBeVisible();
-      await element(by.label("Código de autenticação multifator")).typeText(
-        process.env.E2E_MFA_CODE,
-      );
+      await element(by.id("login-mfa-code")).typeText(process.env.E2E_MFA_CODE);
       await element(by.text("Confirmar código")).tap();
     }
 

@@ -75,7 +75,7 @@ export function PixManagementScreen() {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView testID="pix-management-screen" contentContainerStyle={styles.container}>
       <Text accessibilityRole="header" style={styles.title}>
         Gestão Pix
       </Text>

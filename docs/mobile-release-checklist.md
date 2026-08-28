@@ -12,8 +12,8 @@
 
 - Validar login, KYC, Pix, boleto, notificações e logout em staging/sandbox.
 - Executar testes E2E Android/iOS com massa isolada.
-- Para iOS, executar `npm run build:e2e:ios` e `npm run test:e2e:ios` após
-  `npx pod-install ios`, usando somente as variáveis `E2E_*` do secret store.
+- Para iOS, executar `npm run ios:pods`, depois `npm run build:e2e:ios` e
+  `npm run test:e2e:ios`, usando somente as variáveis `E2E_*` do secret store.
 - Arquivar screenshots, logs, dispositivo, versão do app, versão do BFF e
   `correlationId` por cenário; implementação da suíte não substitui evidência.
 - Verificar permissões, acessibilidade, rede offline/lenta, retry e duplicidade.

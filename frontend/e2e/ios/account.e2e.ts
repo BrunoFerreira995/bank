@@ -11,14 +11,15 @@ function requireAccountUser() {
 
 async function signIn() {
   requireAccountUser();
-  await element(by.label("CPF ou CNPJ")).typeText(identifier!);
-  await element(by.label("Senha")).typeText(password!);
-  await element(by.text("Entrar")).tap();
+  await expect(element(by.text("Acesse sua conta"))).toBeVisible();
+  await element(by.id("login-identifier")).typeText(identifier!);
+  await element(by.id("login-password")).typeText(password!);
+  await element(by.id("login-submit")).tap();
 
   if (process.env.E2E_MFA_CODE) {
     await expect(element(by.text("Confirme sua identidade"))).toBeVisible();
-    await element(by.label("Código de autenticação multifator")).typeText(process.env.E2E_MFA_CODE);
-    await element(by.text("Confirmar código")).tap();
+    await element(by.id("login-mfa-code")).typeText(process.env.E2E_MFA_CODE);
+    await element(by.id("login-submit")).tap();
   }
 
   await expect(element(by.text("Minha conta"))).toBeVisible();

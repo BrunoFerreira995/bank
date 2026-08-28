@@ -1,14 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo } from "react";
-import {
-  ActivityIndicator,
-  Button,
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Button, Card, Divider, Text } from "react-native-paper";
 import { getBalance, getDailyMovements, listAccounts } from "@/core/account/account-api";
 import { useActiveAccount } from "@/core/account/account-store";
 import { useSessionStore } from "@/core/auth/session-store";
@@ -56,8 +49,12 @@ export function AccountDashboardScreen({
   if (accounts.isError || !selected)
     return (
       <View style={styles.error}>
-        <Text accessibilityRole="alert">Não foi possível carregar suas contas.</Text>
-        <Button title="Tentar novamente" onPress={() => accounts.refetch()} />
+        <Text accessibilityRole="alert" style={styles.errorText}>
+          Não foi possível carregar suas contas.
+        </Text>
+        <Button mode="contained" onPress={() => accounts.refetch()}>
+          Tentar novamente
+        </Button>
       </View>
     );
   return (
@@ -74,46 +71,80 @@ export function AccountDashboardScreen({
       }
       contentContainerStyle={styles.container}
     >
-      <Text accessibilityRole="header" style={styles.title}>
+      <Text accessibilityRole="header" variant="headlineMedium">
         Minha conta
       </Text>
-      <Text>
+      <Text style={styles.accountDetails}>
         {selected.name} · agência {selected.branch} · conta {selected.number}
       </Text>
       <Text style={styles.status}>Status: {selected.status}</Text>
-      <Button title="Sair" onPress={() => logout()} />
-      {balance.isLoading ? (
-        <ActivityIndicator accessibilityLabel="Carregando saldo" />
-      ) : balance.isError ? (
-        <Text accessibilityRole="alert">Não foi possível carregar o saldo.</Text>
-      ) : (
-        <Text style={styles.balance}>R$ {(balance.data?.available ?? 0).toFixed(2)}</Text>
-      )}
-      <Text>Saldo disponível</Text>
-      <Text>Saldo bloqueado: R$ {(balance.data?.blocked ?? 0).toFixed(2)}</Text>
-      <Button title="Ver extrato" onPress={() => navigation.navigate("Statement")} />
-      <Button title="Dados cadastrais" onPress={() => navigation.navigate("Profile")} />
-      <Button
-        title="Mais serviços da conta"
-        onPress={() => navigation.navigate("AccountServices")}
-      />
-      <Button title="Pix" onPress={() => navigation.navigate("Pix")} />
-      <Button title="Boletos e recargas" onPress={() => navigation.navigate("Payments")} />
-      <Button
-        title="Cartões, crédito e Escrow"
-        onPress={() => navigation.navigate("FinancialProducts")}
-      />
-      <Button title="Open Finance" onPress={() => navigation.navigate("OpenFinance")} />
-      <Button title="Suporte e notificações" onPress={() => navigation.navigate("Operations")} />
-      <Text style={styles.subtitle}>Movimentações de hoje</Text>
+      <Button mode="text" style={styles.logout} onPress={() => logout()}>
+        Sair
+      </Button>
+      <Card mode="elevated">
+        <Card.Content>
+          <Text variant="labelLarge" style={styles.balanceLabel}>
+            Saldo disponível
+          </Text>
+          {balance.isLoading ? (
+            <ActivityIndicator accessibilityLabel="Carregando saldo" />
+          ) : balance.isError ? (
+            <Text accessibilityRole="alert" style={styles.errorText}>
+              Não foi possível carregar o saldo.
+            </Text>
+          ) : (
+            <Text variant="displaySmall" style={styles.balance}>
+              R$ {(balance.data?.available ?? 0).toFixed(2)}
+            </Text>
+          )}
+          <Text variant="bodyMedium" style={styles.secondaryText}>
+            Saldo bloqueado: R$ {(balance.data?.blocked ?? 0).toFixed(2)}
+          </Text>
+        </Card.Content>
+      </Card>
+      <Text variant="titleMedium" style={styles.subtitle}>
+        Acessos rápidos
+      </Text>
+      <View style={styles.actions}>
+        <Button mode="contained" onPress={() => navigation.navigate("Pix")}>
+          Pix
+        </Button>
+        <Button mode="outlined" onPress={() => navigation.navigate("Statement")}>
+          Ver extrato
+        </Button>
+        <Button mode="outlined" onPress={() => navigation.navigate("Payments")}>
+          Boletos e recargas
+        </Button>
+        <Button mode="outlined" onPress={() => navigation.navigate("Profile")}>
+          Dados cadastrais
+        </Button>
+        <Button mode="outlined" onPress={() => navigation.navigate("AccountServices")}>
+          Mais serviços da conta
+        </Button>
+        <Button mode="outlined" onPress={() => navigation.navigate("FinancialProducts")}>
+          Cartões, crédito e Escrow
+        </Button>
+        <Button mode="outlined" onPress={() => navigation.navigate("OpenFinance")}>
+          Open Finance
+        </Button>
+        <Button mode="outlined" onPress={() => navigation.navigate("Operations")}>
+          Suporte e notificações
+        </Button>
+      </View>
+      <Divider />
+      <Text variant="titleMedium" style={styles.subtitle}>
+        Movimentações de hoje
+      </Text>
       {daily.data?.slice(0, 5).map((item) => (
-        <Text key={item.id}>
+        <Text key={item.id} style={styles.movement}>
           {item.description}: R$ {item.amount.toFixed(2)}
         </Text>
       ))}
       {accountList.length > 1
         ? accountList.map((item) => (
-            <Button key={item.id} title={`Usar ${item.name}`} onPress={() => setAccount(item.id)} />
+            <Button key={item.id} mode="text" onPress={() => setAccount(item.id)}>
+              Usar {item.name}
+            </Button>
           ))
         : null}
     </ScrollView>
@@ -121,10 +152,16 @@ export function AccountDashboardScreen({
 }
 
 const styles = StyleSheet.create({
-  container: { gap: 12, padding: 24 },
-  title: { fontSize: 28, fontWeight: "700" },
-  subtitle: { fontSize: 20, fontWeight: "600", marginTop: 12 },
-  balance: { fontSize: 32, fontWeight: "700", marginTop: 20 },
-  status: { textTransform: "capitalize" },
+  container: { gap: 16, padding: 24 },
+  subtitle: { marginTop: 8 },
+  accountDetails: { color: "#374151" },
+  status: { color: "#4b5563", textTransform: "capitalize" },
+  balance: { color: "#006C5B", fontWeight: "700", marginVertical: 8 },
+  balanceLabel: { color: "#374151", fontWeight: "600" },
+  secondaryText: { color: "#6b7280" },
+  movement: { color: "#374151" },
+  actions: { gap: 8 },
+  logout: { alignSelf: "flex-start" },
   error: { alignItems: "center", flex: 1, gap: 16, justifyContent: "center", padding: 24 },
+  errorText: { color: "#b91c1c" },
 });

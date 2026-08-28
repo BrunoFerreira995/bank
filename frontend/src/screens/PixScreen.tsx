@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Button, ScrollView, StyleSheet, Text, TextInput } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { Button, Card, Text, TextInput } from "react-native-paper";
 import {
   createImmediateCharge,
   payByBankDetails,
@@ -87,79 +88,119 @@ export function PixScreen({
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text accessibilityRole="header" style={styles.title}>
+    <ScrollView testID="pix-screen" contentContainerStyle={styles.container}>
+      <Text accessibilityRole="header" variant="headlineMedium">
         Pix
       </Text>
-      <TextInput
-        accessibilityLabel="Chave Pix"
-        placeholder="Chave Pix"
-        value={key}
-        onChangeText={setKey}
-      />
-      <TextInput
-        accessibilityLabel="Valor"
-        keyboardType="decimal-pad"
-        placeholder="Valor"
-        value={amount}
-        onChangeText={setAmount}
-      />
-      <Button disabled={loading} title="Pagar por chave" onPress={() => pay("key")} />
-      <Text style={styles.subtitle}>Dados bancários</Text>
-      <TextInput
-        accessibilityLabel="Código do banco"
-        placeholder="Código do banco"
-        value={bankCode}
-        onChangeText={setBankCode}
-      />
-      <TextInput
-        accessibilityLabel="Agência"
-        placeholder="Agência"
-        value={branch}
-        onChangeText={setBranch}
-      />
-      <TextInput
-        accessibilityLabel="Conta"
-        placeholder="Conta"
-        value={account}
-        onChangeText={setAccount}
-      />
-      <TextInput
-        accessibilityLabel="Documento do favorecido Pix"
-        placeholder="CPF ou CNPJ"
-        value={document}
-        onChangeText={setDocument}
-      />
-      <Button
-        disabled={loading}
-        title="Pagar por dados bancários"
-        onPress={() => payBankDetails()}
-      />
-      <TextInput
-        accessibilityLabel="Código Pix"
-        multiline
-        placeholder="Cole o código Pix"
-        value={qrCode}
-        onChangeText={setQrCode}
-      />
-      <Button
-        disabled={loading || !qrCode}
-        title="Validar e pagar QR Code"
-        onPress={() => pay("qr")}
-      />
-      <Text style={styles.subtitle}>Cobrança Pix</Text>
-      <Button disabled={loading} title="Criar cobrança imediata" onPress={() => createCharge()} />
-      <Button
-        title="Gerenciar chaves e operações Pix"
-        onPress={() => navigation?.navigate("PixManagement")}
-      />
-      {message ? <Text accessibilityRole="alert">{message}</Text> : null}
+      <Text variant="bodyMedium" style={styles.description}>
+        Pague com chave, dados bancários ou QR Code.
+      </Text>
+      <Card mode="elevated">
+        <Card.Title title="Pix por chave" />
+        <Card.Content style={styles.section}>
+          <TextInput
+            accessibilityLabel="Chave Pix"
+            label="Chave Pix"
+            mode="outlined"
+            placeholder="Chave Pix"
+            value={key}
+            onChangeText={setKey}
+          />
+          <TextInput
+            accessibilityLabel="Valor"
+            keyboardType="decimal-pad"
+            label="Valor"
+            mode="outlined"
+            placeholder="Valor"
+            value={amount}
+            onChangeText={setAmount}
+          />
+          <Button loading={loading} disabled={loading} mode="contained" onPress={() => pay("key")}>
+            Pagar por chave
+          </Button>
+        </Card.Content>
+      </Card>
+      <Card mode="outlined">
+        <Card.Title title="Dados bancários" />
+        <Card.Content style={styles.section}>
+          <View style={styles.row}>
+            <TextInput
+              accessibilityLabel="Código do banco"
+              label="Banco"
+              mode="outlined"
+              placeholder="Código do banco"
+              style={styles.flexInput}
+              value={bankCode}
+              onChangeText={setBankCode}
+            />
+            <TextInput
+              accessibilityLabel="Agência"
+              label="Agência"
+              mode="outlined"
+              placeholder="Agência"
+              style={styles.flexInput}
+              value={branch}
+              onChangeText={setBranch}
+            />
+          </View>
+          <TextInput
+            accessibilityLabel="Conta"
+            label="Conta"
+            mode="outlined"
+            placeholder="Conta"
+            value={account}
+            onChangeText={setAccount}
+          />
+          <TextInput
+            accessibilityLabel="Documento do favorecido Pix"
+            label="CPF ou CNPJ do favorecido"
+            mode="outlined"
+            placeholder="CPF ou CNPJ"
+            value={document}
+            onChangeText={setDocument}
+          />
+          <Button disabled={loading} mode="contained-tonal" onPress={() => payBankDetails()}>
+            Pagar por dados bancários
+          </Button>
+        </Card.Content>
+      </Card>
+      <Card mode="outlined">
+        <Card.Title title="QR Code e cobrança" />
+        <Card.Content style={styles.section}>
+          <TextInput
+            accessibilityLabel="Código Pix"
+            label="Código Pix"
+            mode="outlined"
+            multiline
+            placeholder="Cole o código Pix"
+            value={qrCode}
+            onChangeText={setQrCode}
+          />
+          <Button disabled={loading || !qrCode} mode="contained-tonal" onPress={() => pay("qr")}>
+            Validar e pagar QR Code
+          </Button>
+          <Button disabled={loading} mode="outlined" onPress={() => createCharge()}>
+            Criar cobrança imediata
+          </Button>
+          <Button mode="text" onPress={() => navigation?.navigate("PixManagement")}>
+            Gerenciar chaves e operações Pix
+          </Button>
+        </Card.Content>
+      </Card>
+      {message ? (
+        <Text accessibilityRole="alert" style={styles.message}>
+          {message}
+        </Text>
+      ) : null}
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, gap: 16, justifyContent: "center", padding: 24 },
-  title: { fontSize: 28, fontWeight: "700" },
-  subtitle: { fontSize: 20, fontWeight: "600", marginTop: 12 },
+  container: { gap: 16, padding: 24 },
+  description: { color: "#3F4946", marginBottom: 4 },
+  section: { gap: 12 },
+  row: { flexDirection: "row", gap: 12 },
+  flexInput: { flex: 1 },
+  message: { color: "#006C5B", paddingVertical: 8 },
 });

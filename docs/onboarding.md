@@ -246,6 +246,30 @@ Modelo do webhook `onboarding-proposal`:
 - **Idempotência**: `createPersonAccount` e `createBusinessAccount` aceitam
   `idempotencyKey`, aplicada via cabeçalho `Idempotency-Key`.
 
+## Contrato de início do cadastro no BFF mobile
+
+A jornada mobile inicia o cadastro pelo BFF em
+`POST /mobile/v1/onboardings`. O retorno mínimo obrigatório para a aplicação é
+JSON com o identificador do onboarding e o estado inicial:
+
+```json
+{
+  "onboardingId": "onb-e2e-123",
+  "status": "PENDING"
+}
+```
+
+`onboardingId` é necessário para acompanhar a jornada e correlacionar os
+consentimentos, webhooks e evidências de teste. Se o BFF responder com corpo
+vazio, `204`, ou sem esse campo, o app não deve exibir um identificador
+indefinido: deve informar que o cadastro foi recebido sem identificador e a
+integração deve ser corrigida antes de considerar o fluxo concluído.
+
+Para o E2E iOS, a massa precisa existir no ambiente apontado por `BFF_BASE_URL`
+e o endpoint deve devolver esse contrato. O SDK de onboarding Celcoin e o
+PostgreSQL local, isoladamente, não substituem o BFF mobile nem criam uma conta
+de autenticação para os testes.
+
 ## Cenários de sandbox
 
 No sandbox, o telefone determina o resultado da simulação da abertura da conta:

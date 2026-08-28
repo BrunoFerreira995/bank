@@ -18,21 +18,59 @@ staging e sandbox.
 
 ## E2E iOS com Detox
 
+### Pré-requisito: BFF em execução
+
+Os testes iOS não chamam a API Celcoin diretamente: login, contas e operações
+financeiras passam pelo BFF definido em `BFF_BASE_URL`. Para staging ou sandbox,
+aponte essa variável para o ambiente correspondente e use a massa isolada
+disponibilizada pelo ambiente. Para execução local, o BFF deve estar disponível
+em `http://localhost:8080` antes de iniciar o Detox; o simulador iOS consegue
+acessar esse serviço no Mac host.
+
+O backend local precisa expor os contratos `/mobile/v1` usados pelo app. Subir
+somente o SDK ou o banco de dados não substitui o BFF.
+
+Checklist mínimo de autenticação:
+
+- conta E2E provisionada pelo BFF;
+- `POST /mobile/v1/session` retornando token ou desafio MFA;
+- credenciais `E2E_USER_IDENTIFIER` e `E2E_USER_PASSWORD` exportadas;
+- `E2E_MFA_CODE` exportado quando necessário;
+- massa resetada por cenário e evidências arquivadas.
+
+O host macOS também precisa ter Xcode, um runtime de simulador disponível e
+`applesimutils` instalado:
+
+```bash
+brew tap wix/brew
+brew install wix/brew/applesimutils
+xcrun simctl list devices available
+```
+
+Se o `CoreSimulatorService` estiver indisponível, abra o Simulator/Xcode ou
+reinicie o serviço antes de executar o Detox.
+
 Instale as dependências nativas e crie a configuração local do BFF:
 
 ```bash
 cp .env.e2e-ios.example .env.e2e-ios
-npx pod-install ios
+npm run ios:pods
 export E2E_USER_IDENTIFIER='massa-e2e-cpf-ou-cnpj'
 export E2E_USER_PASSWORD='senha-da-massa-e2e'
+npm run preflight:e2e:ios
 npm run build:e2e:ios
 npm run test:e2e:ios
 ```
 
+`BFF_BASE_URL=https://bff-staging.example.invalid` é somente um placeholder
+do exemplo e não pode ser usado para executar os testes. Substitua-o pelo
+endpoint real do BFF de staging ou sandbox antes de iniciar a suíte; valide
+também que o host resolve e responde aos contratos `/mobile/v1`.
+
 Para uma massa que exige MFA, defina também `E2E_MFA_CODE`. O identificador e a
 senha vêm exclusivamente do secret store da CI ou do ambiente local; não são
 gravados em `.env.e2e-ios` versionado. O dispositivo pode ser alterado com
-`DETOX_IOS_DEVICE='iPhone 15'`. Detox coleta screenshots por teste; a CI deve
+`DETOX_IOS_DEVICE='iPhone 17 Pro'`. Detox coleta screenshots por teste; a CI deve
 publicar `frontend/artifacts` como evidência.
 
 Os cenários de identidade e KYC também exigem a massa isolada definida por
@@ -62,3 +100,23 @@ npm run test:e2e:web
 
 Os cenários web mockam o BFF dentro do Playwright e cobrem login aceito,
 dashboard, navegação para Pix e login recusado sem exposição de token.
+
+Para executar todos os cenários web e salvar uma captura PNG do estado final de
+cada fluxo em `frontend/artifacts/web-flows`, use:
+
+```bash
+npm run capture:e2e:web
+```
+
+Em macOS, se o Chromium headless gerar imagens brancas apesar de os testes
+passarem, execute em modo visual:
+
+```bash
+WEB_SCREENSHOT_HEADED=1 npm run capture:e2e:web
+```
+
+Esse modo exige uma sessão gráfica ativa (Simulator/Xcode não é necessário).
+
+O script retorna o mesmo código de saída do Playwright. Os nomes dos arquivos
+incluem o identificador do teste e o título sanitizado, permitindo publicar o
+diretório como evidência sem sobrescrever cenários com títulos diferentes.

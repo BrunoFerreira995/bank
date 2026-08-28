@@ -15,6 +15,7 @@ import { OperationsScreen } from "@/screens/OperationsScreen";
 import { OnboardingScreen } from "@/screens/OnboardingScreen";
 import { AccountServicesScreen } from "@/screens/AccountServicesScreen";
 import { PixManagementScreen } from "@/screens/PixManagementScreen";
+import { navigationTheme } from "@/ui/theme";
 
 type RootStackParamList = {
   Login: undefined;
@@ -52,7 +53,7 @@ export function AppNavigator() {
   }
 
   return (
-    <NavigationContainer linking={linking}>
+    <NavigationContainer linking={linking} theme={navigationTheme}>
       <Stack.Navigator>
         {session ? (
           <>

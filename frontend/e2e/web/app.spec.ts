@@ -1,4 +1,20 @@
+import fs from "node:fs";
 import { expect, test, type Page } from "@playwright/test";
+
+test.afterEach(async ({ page }, testInfo) => {
+  if (process.env.CAPTURE_WEB_FLOW_SCREENSHOTS !== "1") return;
+
+  const directory = process.env.WEB_FLOW_SCREENSHOT_DIR ?? "artifacts/web-flows";
+  fs.mkdirSync(directory, { recursive: true });
+  await page.waitForTimeout(100);
+  const title = testInfo.title.replace(/[^a-zA-Z0-9._-]+/g, "-").replace(/^-|-$/g, "");
+  await page.bringToFront();
+  await page.emulateMedia({ media: "screen" });
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.locator("#root").screenshot({
+    path: `${directory}/${testInfo.testId}-${title}.png`,
+  });
+});
 
 async function mockBff(
   page: Page,
@@ -47,6 +63,13 @@ async function mockBff(
         status: 200,
         contentType: "application/json",
         body: JSON.stringify({ accessToken: "e2e-token", refreshToken: "e2e-refresh" }),
+      });
+    }
+    if (url.pathname.endsWith("/onboardings")) {
+      return route.fulfill({
+        status: 201,
+        contentType: "application/json",
+        body: JSON.stringify({ onboardingId: "onboarding-1", status: "PENDING" }),
       });
     }
     if (url.pathname.endsWith("/password")) {
@@ -895,4 +918,59 @@ test("consulta notificações, FAQ, status e abre ticket", async ({ page }) => {
     .fill("Preciso de ajuda com a conta.", { force: true });
   await page.getByRole("button", { name: "Abrir chamado" }).dispatchEvent("click");
   await expect(page.getByRole("alert")).toHaveText("Solicitação aberta.");
+});
+
+test("paga Pix por chave", async ({ page }) => {
+  await openDashboard(page);
+  await page.getByRole("button", { name: "Pix" }).dispatchEvent("click");
+  await page.getByLabel("Chave Pix").fill("favorecido@example.com");
+  await page.getByLabel("Valor", { exact: true }).fill("10");
+  await page.getByRole("button", { name: "Pagar por chave" }).dispatchEvent("click");
+  await expect(page.getByRole("alert")).toContainText("Pix completed");
+});
+
+test("exclui chave Pix e solicita devolução", async ({ page }) => {
+  await openDashboard(page);
+  await page.getByRole("button", { name: "Pix" }).dispatchEvent("click");
+  await page
+    .getByRole("button", { name: "Gerenciar chaves e operações Pix" })
+    .dispatchEvent("click");
+  await expect(page.getByText("chave@example.com")).toBeVisible();
+  await page.getByRole("button", { name: "Excluir" }).dispatchEvent("click");
+  await expect(page.getByRole("alert")).toHaveText("Chave Pix excluída.");
+  await page.getByLabel("ID do pagamento Pix").fill("pix-payment-1");
+  await page.getByRole("button", { name: "Solicitar devolução" }).dispatchEvent("click");
+  await expect(page.getByRole("alert")).toContainText("Devolução");
+});
+
+test("cria consentimento e abre redirecionamento Open Finance seguro", async ({ page }) => {
+  await page.addInitScript(() => {
+    window.open = (url) => {
+      (window as Window & { __openedUrl?: string }).__openedUrl = String(url);
+      return null;
+    };
+  });
+  await openDashboard(page);
+  await page.getByRole("button", { name: "Open Finance" }).dispatchEvent("click");
+  await page.getByRole("button", { name: "Banco Parceiro" }).dispatchEvent("click");
+  await expect(page.getByRole("alert")).toContainText("Consentimento criado");
+  await page.getByRole("button", { name: "Refazer vínculo" }).dispatchEvent("click");
+  await expect
+    .poll(() => page.evaluate(() => (window as Window & { __openedUrl?: string }).__openedUrl))
+    .toBe("https://bank.example.com/authorize");
+});
+
+test("abre informe de rendimentos somente por HTTPS", async ({ page }) => {
+  await page.addInitScript(() => {
+    window.open = (url) => {
+      (window as Window & { __openedUrl?: string }).__openedUrl = String(url);
+      return null;
+    };
+  });
+  await openDashboard(page);
+  await page.getByRole("button", { name: "Mais serviços da conta" }).dispatchEvent("click");
+  await page.getByRole("button", { name: "Abrir informe de 2025" }).dispatchEvent("click");
+  await expect
+    .poll(() => page.evaluate(() => (window as Window & { __openedUrl?: string }).__openedUrl))
+    .toBe("https://files.example.com/income-2025.pdf");
 });

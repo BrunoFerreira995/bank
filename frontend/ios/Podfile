@@ -17,10 +17,6 @@ end
 target 'CelcoinMobile' do
   config = use_native_modules!
 
-  # Detox is linked only in the native E2E build. It is not exposed by the app
-  # bundle at runtime in release builds.
-  pod 'Detox', :path => '../node_modules/detox/ios'
-
   use_react_native!(
     :path => config[:reactNativePath],
     # An absolute path to your application root.

@@ -1,29 +1,39 @@
+import type { ComponentProps } from "react";
 import { View } from "react-native";
 
-export function enableScreens() {
-  return undefined;
+type ScreenProps = ComponentProps<typeof View>;
+
+function WebScreen({
+  children,
+  pointerEvents,
+  style,
+  ...props
+}: ScreenProps) {
+  return (
+    <View
+      {...props}
+      collapsable={false}
+      style={[
+        style,
+        pointerEvents ? { pointerEvents } : undefined,
+      ]}
+    >
+      {children}
+    </View>
+  );
 }
-export function enableFreeze() {
-  return undefined;
-}
-export function screensEnabled() {
+
+export function enableScreens(): void {}
+export function enableFreeze(): void {}
+
+export function screensEnabled(): boolean {
   return false;
 }
-export function ScreenContainer({
-  children,
-  ...props
-}: {
-  children?: React.ReactNode;
-  [key: string]: unknown;
-}) {
-  return <View {...props}>{children}</View>;
+
+export function ScreenContainer(props: ScreenProps) {
+  return <WebScreen {...props} />;
 }
-export function Screen({
-  children,
-  ...props
-}: {
-  children?: React.ReactNode;
-  [key: string]: unknown;
-}) {
-  return <View {...props}>{children}</View>;
+
+export function Screen(props: ScreenProps) {
+  return <WebScreen {...props} />;
 }

@@ -9,7 +9,7 @@ build não contam como E2E.
 
 | Plataforma | Ambiente | Runner | Resultado |
 |---|---|---|---|
-| Web Chromium | BFF mockado no Playwright | Playwright | 33 cenários passando |
+| Web Chromium | BFF mockado no Playwright | Playwright | 37 cenários passando |
 | Android | staging/sandbox | Detox/Appium | Pendente |
 | iOS | staging/sandbox | Detox | Suíte implementada; execução depende de simulador e massa |
 
@@ -20,12 +20,28 @@ cd frontend
 npm run test:e2e:web
 ```
 
+### Cobertura web adicionada
+
+A suíte web mantém o BFF mockado dentro do Playwright e agora inclui cenários
+isolados para:
+
+| Cenário | Evidência validada |
+|---|---|
+| Pagamento Pix por chave | favorecido, valor e status retornado pelo BFF |
+| Gestão Pix | exclusão de chave e solicitação de devolução |
+| Open Finance | criação de consentimento e abertura de redirect somente HTTPS |
+| Informe de rendimentos | abertura de download somente HTTPS |
+
+Esses cenários verificam o comportamento da interface e o contrato HTTP
+mockado; não substituem a execução contra staging/sandbox nem os testes
+nativos.
+
 Comandos iOS:
 
 ```bash
 cd frontend
 cp .env.e2e-ios.example .env.e2e-ios
-npx pod-install ios
+npm run ios:pods
 npm run build:e2e:ios
 npm run test:e2e:ios
 ```
@@ -35,11 +51,39 @@ cobrem inicialização sem sessão, login (incluindo MFA opcional), logout,
 abertura de conta e deep link. O resultado só deve ser marcado como executado
 após rodar contra staging e sandbox com massa isolada e evidência publicada.
 
+Antes do Detox, o BFF indicado por `BFF_BASE_URL` deve estar acessível. Em
+staging/sandbox, use o BFF do ambiente; em execução local, inicie o BFF com os
+contratos `/mobile/v1` em `http://localhost:8080`. O SDK Celcoin ou o banco
+isoladamente não atendem às chamadas do aplicativo.
+O valor `bff-staging.example.invalid` do arquivo de exemplo é fictício e deve
+ser substituído pelo endpoint autorizado antes da execução.
+
+### Checklist de autenticação para fechar a cobertura
+
+Antes de executar ou marcar os cenários autenticados como `[x]`, confirme:
+
+- [ ] `BFF_BASE_URL` aponta para um BFF real, mock controlado ou sandbox autorizado;
+- [ ] `POST /mobile/v1/session` responde com token para a massa E2E;
+- [ ] `POST /mobile/v1/session/mfa` está provisionado quando MFA é obrigatório;
+- [ ] a conta E2E possui conta bancária ativa e massa necessária ao domínio;
+- [ ] `E2E_USER_IDENTIFIER` e `E2E_USER_PASSWORD` estão disponíveis somente no
+      secret store/ambiente de execução;
+- [ ] `E2E_MFA_CODE` está disponível ou o MFA foi desabilitado somente para a
+      massa E2E autorizada;
+- [ ] logout (`DELETE /mobile/v1/session`) invalida a sessão;
+- [ ] credencial inválida retorna erro seguro sem token na tela;
+- [ ] a mesma massa foi resetada antes de cada cenário financeiro;
+- [ ] logs, screenshots e resultado por dispositivo foram arquivados.
+
+Sem uma conta provisionada pelo BFF, o PostgreSQL do SDK ou o sandbox Celcoin
+isoladamente não fecham a cobertura de autenticação do aplicativo.
+
 ### Status da suíte iOS
 
 | Suíte | Arquivo | Cenários implementados | Status de execução |
 |---|---|---:|---|
 | Sessão | [`session.e2e.ts`](../frontend/e2e/ios/session.e2e.ts) | 2 | Implementada; staging/sandbox pendentes |
+| Autenticação | [`auth.e2e.ts`](../frontend/e2e/ios/auth.e2e.ts) | 3 | Implementada; staging/sandbox pendentes |
 | Navegação pública | [`navigation.e2e.ts`](../frontend/e2e/ios/navigation.e2e.ts) | 2 | Implementada; staging/sandbox pendentes |
 | Identidade e KYC | [`kyc.e2e.ts`](../frontend/e2e/ios/kyc.e2e.ts) | 4 | Implementada; staging/sandbox pendentes |
 | Conta e movimentações | [`account.e2e.ts`](../frontend/e2e/ios/account.e2e.ts) | 4 | Implementada; staging/sandbox pendentes |
@@ -99,6 +143,12 @@ CI por meio das variáveis `E2E_KYC_*`. Os cenários só devem ser promovidos pa
 `[x]` após execução em staging e sandbox com massa isolada e evidência
 arquivada.
 
+O início do cadastro também depende do contrato do BFF
+`POST /mobile/v1/onboardings`: a resposta deve conter `onboardingId` e
+`status` (normalmente `PENDING`). Respostas vazias ou sem `onboardingId` são
+falhas de integração e não devem ser mascaradas como cadastro concluído; o app
+exibe uma mensagem segura para esse caso.
+
 | Feature | E2E web | Android/iOS | Cenário |
 |---|---:|---:|---|
 | Cadastro PF | [x] | [ ] | CPF, contato e endereço válidos |
@@ -145,7 +195,7 @@ financeiros usam massa isolada fornecida por `E2E_PIX_*` no secret store da CI.
 
 | Feature | E2E web | Android/iOS | Cenário |
 |---|---:|---:|---|
-| Pix por chave | [ ] | [ ] | Favorecido, confirmação e pagamento |
+| Pix por chave | [x] | [ ] | Favorecido, confirmação e pagamento |
 | Pix por dados bancários | [x] | [ ] | Dados válidos e inválidos |
 | QR estático | [x] | [ ] | Leitura, validação e pagamento |
 | QR dinâmico | [x] | [ ] | Vencimento, valor e pagamento |

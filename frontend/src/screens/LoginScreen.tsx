@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Button, StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { Button, Surface, Text, TextInput } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useSessionStore } from "@/core/auth/session-store";
@@ -60,73 +61,100 @@ export function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <Text accessibilityRole="header" style={styles.title}>
-        {recovery
-          ? "Recupere seu acesso"
-          : challengeId
-          ? "Confirme sua identidade"
-          : "Acesse sua conta"}
-      </Text>
-      {!challengeId ? (
-        <TextInput
-          accessibilityLabel="CPF ou CNPJ"
-          autoCapitalize="none"
-          placeholder="CPF ou CNPJ"
-          value={identifier}
-          onChangeText={setIdentifier}
-        />
-      ) : null}
-      {!challengeId && !recovery ? (
-        <TextInput
-          accessibilityLabel="Senha"
-          placeholder="Senha"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-        />
-      ) : null}
-      {challengeId ? (
-        <TextInput
-          accessibilityLabel="Código de autenticação multifator"
-          keyboardType="number-pad"
-          placeholder="Código MFA"
-          value={mfaCode}
-          onChangeText={setMfaCode}
-        />
-      ) : null}
-      {error ? <Text accessibilityRole="alert">{error}</Text> : null}
-      <Button
-        disabled={
-          loading ||
-          !identifier ||
-          (!recovery && !challengeId && !password) ||
-          (!!challengeId && !mfaCode)
-        }
-        title={
-          loading
+      <Surface elevation={1} style={styles.panel}>
+        <Text variant="labelLarge" style={styles.eyebrow}>
+          CELCOIN BANK
+        </Text>
+        <Text accessibilityRole="header" variant="headlineMedium">
+          {recovery
+            ? "Recupere seu acesso"
+            : challengeId
+            ? "Confirme sua identidade"
+            : "Acesse sua conta"}
+        </Text>
+        <Text variant="bodyMedium" style={styles.description}>
+          Use seus dados para acessar sua conta com segurança.
+        </Text>
+        {!challengeId ? (
+          <TextInput
+            testID="login-identifier"
+            accessibilityLabel="CPF ou CNPJ"
+            autoCapitalize="none"
+            label="CPF ou CNPJ"
+            mode="outlined"
+            placeholder="CPF ou CNPJ"
+            value={identifier}
+            onChangeText={setIdentifier}
+          />
+        ) : null}
+        {!challengeId && !recovery ? (
+          <TextInput
+            testID="login-password"
+            accessibilityLabel="Senha"
+            label="Senha"
+            mode="outlined"
+            placeholder="Senha"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+          />
+        ) : null}
+        {challengeId ? (
+          <TextInput
+            testID="login-mfa-code"
+            accessibilityLabel="Código de autenticação multifator"
+            keyboardType="number-pad"
+            label="Código MFA"
+            mode="outlined"
+            placeholder="Código MFA"
+            value={mfaCode}
+            onChangeText={setMfaCode}
+          />
+        ) : null}
+        {error ? (
+          <Text accessibilityRole="alert" style={styles.error}>
+            {error}
+          </Text>
+        ) : null}
+        <Button
+          testID="login-submit"
+          disabled={
+            loading ||
+            !identifier ||
+            (!recovery && !challengeId && !password) ||
+            (!!challengeId && !mfaCode)
+          }
+          loading={loading}
+          mode="contained"
+          onPress={() => (recovery ? requestRecovery() : submitLogin())}
+        >
+          {loading
             ? "Aguarde..."
             : recovery
             ? "Enviar instruções"
             : challengeId
             ? "Confirmar código"
-            : "Entrar"
-        }
-        onPress={() => (recovery ? requestRecovery() : submitLogin())}
-      />
-      {!challengeId ? (
-        <Button
-          title={recovery ? "Voltar para entrar" : "Esqueci minha senha"}
-          onPress={() => setRecovery(!recovery)}
-        />
-      ) : null}
-      {!challengeId && !recovery ? (
-        <Button title="Abrir uma conta" onPress={() => navigation.navigate("Onboarding")} />
-      ) : null}
+            : "Entrar"}
+        </Button>
+        {!challengeId ? (
+          <Button mode="text" onPress={() => setRecovery(!recovery)}>
+            {recovery ? "Voltar para entrar" : "Esqueci minha senha"}
+          </Button>
+        ) : null}
+        {!challengeId && !recovery ? (
+          <Button mode="outlined" onPress={() => navigation.navigate("Onboarding")}>
+            Abrir uma conta
+          </Button>
+        ) : null}
+      </Surface>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, gap: 16, justifyContent: "center", padding: 24 },
-  title: { fontSize: 28, fontWeight: "700" },
+  container: { alignItems: "center", flex: 1, justifyContent: "center", padding: 24 },
+  panel: { gap: 16, maxWidth: 520, padding: 32, width: "100%" },
+  eyebrow: { color: "#006C5B", fontWeight: "700", letterSpacing: 1.2 },
+  description: { color: "#3F4946", marginBottom: 8 },
+  error: { color: "#BA1A1A" },
 });

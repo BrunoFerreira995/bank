@@ -108,7 +108,7 @@ export function PaymentsScreen() {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView testID="payments-screen" contentContainerStyle={styles.container}>
       <Text accessibilityRole="header" style={styles.title}>
         Boletos e pagamentos
       </Text>

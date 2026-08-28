@@ -60,6 +60,10 @@ export function OnboardingScreen() {
         { type: "TERMS_OF_USE", version: "2026-01", accepted: true },
         { type: "PRIVACY_POLICY", version: "2026-01", accepted: true },
       ]);
+      if (!response?.onboardingId) {
+        setMessage("Cadastro recebido, mas o BFF não retornou o identificador do onboarding.");
+        return;
+      }
       setMessage(`Cadastro iniciado: ${response.onboardingId}`);
     } catch {
       setMessage("Não foi possível iniciar o cadastro.");
