@@ -47,6 +47,7 @@ async function capture(page, name) {
   await page.waitForTimeout(200);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
   if (overflow) throw new Error(`Horizontal overflow detected while capturing ${name}`);
+  await page.screenshot({ path: path.join(outputDirectory, name.replace(/\.png$/, "-viewport.png")) });
   await page.screenshot({ path: path.join(outputDirectory, name), fullPage: true });
 }
 

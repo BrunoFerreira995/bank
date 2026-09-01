@@ -72,9 +72,10 @@ export function WebAppShell({
         </Surface>
         {isCompact && !isPhone ? <Surface elevation={0} style={styles.tabletNavigation}>
           <View style={styles.tabletNavigationContent}>
-            {links.map((link) => <Button key={link.route} compact mode={routeName === link.route ? "contained" : "text"} onPress={() => navigation.navigate(link.route)}>{link.label}</Button>)}
-            <Button compact mode="text" textColor="#BA1A1A" onPress={() => logout()}>Sair</Button>
+            {links.slice(0, 5).map((link) => <Button key={link.route} compact mode={routeName === link.route ? "contained" : "text"} onPress={() => navigation.navigate(link.route)}>{link.label}</Button>)}
+            <Button compact mode={moreOpen ? "contained" : "outlined"} onPress={() => setMoreOpen((open) => !open)}>Mais</Button>
           </View>
+          {moreOpen ? <View style={styles.tabletMoreMenu}>{links.slice(5).map((link) => <Button key={link.route} compact mode={routeName === link.route ? "contained" : "text"} onPress={() => { setMoreOpen(false); navigation.navigate(link.route); }}>{link.label}</Button>)}<Button compact mode="text" textColor="#BA1A1A" onPress={() => logout()}>Sair</Button></View> : null}
         </Surface> : null}
         <View style={styles.content}>{children}</View>
       </View>
@@ -119,6 +120,7 @@ const styles = StyleSheet.create({
   compactBrand: { color: "#006C5B", fontWeight: "800", marginRight: "auto" },
   tabletNavigation: { borderBottomColor: "#DCE5E1", borderBottomWidth: 1 },
   tabletNavigationContent: { alignItems: "center", flexDirection: "row", flexWrap: "wrap", gap: 4, paddingHorizontal: 16, paddingVertical: 8 },
+  tabletMoreMenu: { borderTopColor: "#DCE5E1", borderTopWidth: 1, flexDirection: "row", flexWrap: "wrap", gap: 4, paddingHorizontal: 16, paddingVertical: 8 },
   content: { flex: 1, minWidth: 0 },
   mobileNavigation: { backgroundColor: "#FFFFFF", borderTopColor: "#DCE5E1", borderTopWidth: 1 },
   mobileNavigationBar: { alignItems: "stretch", flexDirection: "row", justifyContent: "space-around", minHeight: layout.touchTarget + 20, paddingHorizontal: 4, paddingVertical: 4 },

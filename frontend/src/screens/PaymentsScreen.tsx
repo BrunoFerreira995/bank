@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, useWindowDimensions, View } from "react-native";
 import { Button, Card, Chip, Divider, Text, TextInput } from "react-native-paper";
 import { authorizeBill, createTopUp, listTopUpOperators, listTopUpProducts, lookupBill, lookupVehicleDebts, payBill, payVehicleDebts, validateAmount, validateBillCode, type Bill, type VehicleDebt } from "@/core/payments/payments-api";
 import { formatCurrency, formatDocument, formatPhone } from "@/utils/format";
@@ -8,6 +8,7 @@ type Operator = { id: string; name: string };
 type Product = { id: string; name: string; amount: number };
 
 export function PaymentsScreen() {
+  const { width } = useWindowDimensions();
   const [code, setCode] = useState(""); const [bill, setBill] = useState<Bill | null>(null);
   const [message, setMessage] = useState<string | null>(null); const [loading, setLoading] = useState(false);
   const [operators, setOperators] = useState<Operator[]>([]); const [products, setProducts] = useState<Product[]>([]);
@@ -25,7 +26,7 @@ export function PaymentsScreen() {
   const selectedOperator = operators.find((operator) => operator.id === operatorId)?.name; const selectedProduct = products.find((product) => product.id === productId); const openDebts = debts.filter((debt) => debt.status === "OPEN");
   return <ScrollView testID="payments-screen" contentContainerStyle={styles.container}>
     <Text accessibilityRole="header" variant="headlineMedium">Pagamentos</Text><Text variant="bodyMedium" style={styles.description}>Consulte, confira e confirme seus pagamentos com segurança.</Text>
-    <View style={styles.grid}>
+    <View style={[styles.grid, width < 600 && styles.gridNarrow]}>
       <Card mode="elevated" style={styles.mainCard}><Card.Title title="Pagar boleto" subtitle="Linha digitável ou código de barras" /><Card.Content style={styles.section}><TextInput accessibilityLabel="Linha digitável" label="Linha digitável" mode="outlined" placeholder="Digite ou cole o código" value={code} onChangeText={setCode} keyboardType="number-pad" /><Button mode="contained" loading={loading} disabled={loading} onPress={lookup}>Consultar boleto</Button>{bill ? <Card mode="outlined"><Card.Content style={styles.summary}><Text variant="titleSmall">{bill.beneficiary ?? "Beneficiário não informado"}</Text><Text variant="headlineSmall">{formatCurrency(bill.amount)}</Text><Text>Vencimento: {bill.dueDate}</Text><Button mode="contained" onPress={() => setConfirming("bill")}>Continuar para confirmação</Button></Card.Content></Card> : null}</Card.Content></Card>
       <Card mode="outlined" style={styles.sideCard}><Card.Title title="Recarga de celular" /><Card.Content style={styles.section}><Text variant="labelLarge">Escolha sua operadora</Text><View style={styles.chips}>{operators.map((operator) => <Chip key={operator.id} selected={operator.id === operatorId} onPress={() => setOperatorId(operator.id)}>{operator.name}</Chip>)}</View>{operatorId ? <><Text variant="labelLarge">Escolha o valor</Text><View style={styles.chips}>{products.map((product) => <Chip key={product.id} selected={product.id === productId} onPress={() => { setProductId(product.id); setTopUpAmount(String(product.amount)); }}>{product.name || formatCurrency(product.amount)}</Chip>)}</View></> : null}<TextInput accessibilityLabel="Telefone da recarga" label="Celular" mode="outlined" placeholder="(00) 00000-0000" keyboardType="phone-pad" value={phone} onChangeText={(value) => setPhone(formatPhone(value))} /><TextInput accessibilityLabel="Valor da recarga" label="Valor" mode="outlined" keyboardType="decimal-pad" value={topUpAmount} onChangeText={setTopUpAmount} /><Button mode="contained-tonal" onPress={requestTopUpConfirmation}>Revisar recarga</Button></Card.Content></Card>
     </View>
@@ -34,4 +35,4 @@ export function PaymentsScreen() {
     {message ? <Text accessibilityRole="alert" style={styles.message}>{message}</Text> : null}
   </ScrollView>;
 }
-const styles = StyleSheet.create({ container: { alignSelf: "center", gap: 16, maxWidth: 1240, padding: 16, width: "100%" }, description: { color: "#52605C" }, grid: { flexDirection: "row", flexWrap: "wrap", gap: 16 }, mainCard: { flex: 1.2, minWidth: 0 }, sideCard: { flex: 1, minWidth: 0 }, section: { gap: 14 }, summary: { gap: 8 }, chips: { flexDirection: "row", flexWrap: "wrap", gap: 8 }, row: { flexDirection: "row", flexWrap: "wrap", gap: 12 }, input: { flex: 1, minWidth: 0 }, debt: { flexDirection: "row", flexWrap: "wrap", gap: 4, justifyContent: "space-between", paddingVertical: 6 }, confirmation: { borderColor: "#006C5B", borderWidth: 1 }, confirmActions: { flexDirection: "row", flexWrap: "wrap", gap: 8, justifyContent: "flex-end" }, message: { color: "#006C5B", paddingVertical: 8 } });
+const styles = StyleSheet.create({ container: { alignSelf: "center", gap: 16, maxWidth: 1240, padding: 16, width: "100%" }, description: { color: "#52605C" }, grid: { flexDirection: "row", flexWrap: "wrap", gap: 16 }, gridNarrow: { flexDirection: "column" }, mainCard: { flex: 1.2, minWidth: 0 }, sideCard: { flex: 1, minWidth: 0 }, section: { gap: 14 }, summary: { gap: 8 }, chips: { flexDirection: "row", flexWrap: "wrap", gap: 8 }, row: { flexDirection: "row", flexWrap: "wrap", gap: 12 }, input: { flex: 1, minWidth: 0 }, debt: { flexDirection: "row", flexWrap: "wrap", gap: 4, justifyContent: "space-between", paddingVertical: 6 }, confirmation: { borderColor: "#006C5B", borderWidth: 1 }, confirmActions: { flexDirection: "row", flexWrap: "wrap", gap: 8, justifyContent: "flex-end" }, message: { color: "#006C5B", paddingVertical: 8 } });
