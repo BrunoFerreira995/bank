@@ -6,8 +6,12 @@ const baseUrl = process.env.WEB_SCREENSHOT_URL ?? "http://127.0.0.1:4173";
 const outputDirectory = path.resolve("artifacts", "responsive-screenshots");
 const viewports = [
   { name: "mobile", width: 375, height: 812 },
+  { name: "mobile-large", width: 430, height: 932 },
   { name: "tablet", width: 768, height: 1024 },
+  { name: "tablet-landscape", width: 1024, height: 768 },
+  { name: "notebook", width: 1280, height: 800 },
   { name: "desktop", width: 1440, height: 1000 },
+  { name: "desktop-large", width: 1920, height: 1080 },
 ];
 const pages = [
   ["Início", "dashboard"],
@@ -41,6 +45,8 @@ function installBffMock(page) {
 
 async function capture(page, name) {
   await page.waitForTimeout(200);
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+  if (overflow) throw new Error(`Horizontal overflow detected while capturing ${name}`);
   await page.screenshot({ path: path.join(outputDirectory, name), fullPage: true });
 }
 
@@ -66,7 +72,8 @@ try {
     await capture(page, `${viewport.name}-cadastro.png`);
 
     await login(page);
-    for (const [label, name] of pages) {
+    for (const [index, [label, name]] of pages.entries()) {
+      if (viewport.width < 600 && index >= 4) await page.getByRole("button", { name: "Mais opções" }).click();
       await page.getByRole("button", { name: label, exact: true }).first().click();
       await capture(page, `${viewport.name}-${name}.png`);
     }

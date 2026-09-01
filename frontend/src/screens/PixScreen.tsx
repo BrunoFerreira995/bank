@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { Button, Card, Text, TextInput } from "react-native-paper";
+import { Button, Card, SegmentedButtons, Text, TextInput } from "react-native-paper";
 import {
   createImmediateCharge,
   payByBankDetails,
@@ -25,6 +25,7 @@ export function PixScreen({
   const [document, setDocument] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [flow, setFlow] = useState<"key" | "bank" | "qr" | "manage">("key");
   const accountId = useActiveAccount((state) => state.accountId);
 
   async function pay(mode: "key" | "qr") {
@@ -95,7 +96,8 @@ export function PixScreen({
       <Text variant="bodyMedium" style={styles.description}>
         Pague com chave, dados bancários ou QR Code.
       </Text>
-      <Card mode="elevated">
+      <SegmentedButtons value={flow} onValueChange={(value) => setFlow(value as typeof flow)} buttons={[{ value: "key", label: "Por chave" }, { value: "bank", label: "Dados" }, { value: "qr", label: "QR Code" }, { value: "manage", label: "Chaves" }]} />
+      {flow === "key" ? <Card mode="elevated">
         <Card.Title title="Pix por chave" />
         <Card.Content style={styles.section}>
           <TextInput
@@ -119,8 +121,8 @@ export function PixScreen({
             Pagar por chave
           </Button>
         </Card.Content>
-      </Card>
-      <Card mode="outlined">
+      </Card> : null}
+      {flow === "bank" ? <Card mode="outlined">
         <Card.Title title="Dados bancários" />
         <Card.Content style={styles.section}>
           <View style={styles.row}>
@@ -163,8 +165,8 @@ export function PixScreen({
             Pagar por dados bancários
           </Button>
         </Card.Content>
-      </Card>
-      <Card mode="outlined">
+      </Card> : null}
+      {flow === "qr" ? <Card mode="outlined">
         <Card.Title title="QR Code e cobrança" />
         <Card.Content style={styles.section}>
           <TextInput
@@ -182,11 +184,9 @@ export function PixScreen({
           <Button disabled={loading} mode="outlined" onPress={() => createCharge()}>
             Criar cobrança imediata
           </Button>
-          <Button mode="text" onPress={() => navigation?.navigate("PixManagement")}>
-            Gerenciar chaves e operações Pix
-          </Button>
         </Card.Content>
-      </Card>
+      </Card> : null}
+      {flow === "manage" ? <Card mode="outlined"><Card.Title title="Chaves e operações Pix" subtitle="Gerencie suas chaves, cobranças e devoluções." /><Card.Content style={styles.section}><Button mode="contained" onPress={() => navigation?.navigate("PixManagement")}>Gerenciar operações Pix</Button></Card.Content></Card> : null}
       {message ? (
         <Text accessibilityRole="alert" style={styles.message}>
           {message}

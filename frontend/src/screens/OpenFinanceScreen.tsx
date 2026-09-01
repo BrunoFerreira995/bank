@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
+import { Card } from "react-native-paper";
 import { env } from "@/config/env";
 import {
   createConsent,
@@ -16,6 +17,7 @@ import {
   listLinks,
 } from "@/core/open-finance/open-finance-api";
 import { openOpenFinanceRedirect } from "@/core/open-finance/redirect-flow";
+import { sharedStyles } from "@/ui/layout";
 
 export function OpenFinanceScreen() {
   const [message, setMessage] = useState<string | null>(null);
@@ -114,7 +116,7 @@ export function OpenFinanceScreen() {
       setMessage(`Não foi possível iniciar o Brick ${product}.`);
     }
   }
-  if (!env.flags.openFinance) return <Text>Open Finance indisponível para este contrato.</Text>;
+  if (!env.flags.openFinance) return <View style={styles.unavailable}><Card mode="outlined" style={styles.unavailableCard}><Card.Content style={styles.unavailableContent}><Text style={styles.unavailableTitle}>Open Finance indisponível</Text><Text style={sharedStyles.subtitle}>Este recurso não está disponível para a conta selecionada no momento. Quando houver elegibilidade, os vínculos e pagamentos aparecerão aqui.</Text></Card.Content></Card></View>;
   return (
     <View style={styles.container}>
       <Text accessibilityRole="header" style={styles.title}>
@@ -204,4 +206,8 @@ const styles = StyleSheet.create({
   container: { flex: 1, gap: 16, padding: 24 },
   title: { fontSize: 28, fontWeight: "700" },
   subtitle: { fontSize: 20, fontWeight: "600", marginTop: 16 },
+  unavailable: { alignItems: "center", flex: 1, justifyContent: "center", padding: 24 },
+  unavailableCard: { maxWidth: 560, width: "100%" },
+  unavailableContent: { alignItems: "center", gap: 12, paddingVertical: 24 },
+  unavailableTitle: { color: "#17211E", fontSize: 24, fontWeight: "700" },
 });
