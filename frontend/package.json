@@ -12,6 +12,7 @@
     "web:build": "vite build",
     "test:e2e:web": "playwright test --config=playwright.config.ts",
     "capture:e2e:web": "node scripts/capture-web-flow-screenshots.mjs",
+    "capture:responsive:web": "node scripts/capture-responsive-screenshots.mjs",
     "preflight:e2e:ios": "node scripts/verify-ios-e2e-auth.mjs",
     "test:e2e:ios": "npm run preflight:e2e:ios && detox test --configuration ios.sim.debug --cleanup",
     "build:e2e:ios": "detox build --configuration ios.sim.debug",

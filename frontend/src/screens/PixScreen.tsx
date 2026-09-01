@@ -197,10 +197,10 @@ export function PixScreen({
 }
 
 const styles = StyleSheet.create({
-  container: { gap: 16, padding: 24 },
+  container: { alignSelf: "center", gap: 16, maxWidth: 760, padding: 16, width: "100%" },
   description: { color: "#3F4946", marginBottom: 4 },
   section: { gap: 12 },
-  row: { flexDirection: "row", gap: 12 },
-  flexInput: { flex: 1 },
+  row: { flexDirection: "row", flexWrap: "wrap", gap: 12 },
+  flexInput: { flex: 1, minWidth: 0 },
   message: { color: "#006C5B", paddingVertical: 8 },
 });

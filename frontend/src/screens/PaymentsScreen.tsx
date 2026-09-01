@@ -1,192 +1,37 @@
-import { useState } from "react";
-import { Button, ScrollView, StyleSheet, Text, TextInput } from "react-native";
-import {
-  authorizeBill,
-  createTopUp,
-  listTopUpOperators,
-  lookupBill,
-  lookupVehicleDebts,
-  payBill,
-  payVehicleDebts,
-  validateAmount,
-  validateBillCode,
-  type VehicleDebt,
-} from "@/core/payments/payments-api";
+import { useEffect, useState } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { Button, Card, Chip, Divider, Text, TextInput } from "react-native-paper";
+import { authorizeBill, createTopUp, listTopUpOperators, listTopUpProducts, lookupBill, lookupVehicleDebts, payBill, payVehicleDebts, validateAmount, validateBillCode, type Bill, type VehicleDebt } from "@/core/payments/payments-api";
+import { formatCurrency, formatDocument, formatPhone } from "@/utils/format";
+
+type Operator = { id: string; name: string };
+type Product = { id: string; name: string; amount: number };
 
 export function PaymentsScreen() {
-  const [code, setCode] = useState("");
-  const [billId, setBillId] = useState<string | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [operatorId, setOperatorId] = useState("");
-  const [productId, setProductId] = useState("");
-  const [phone, setPhone] = useState("");
-  const [topUpAmount, setTopUpAmount] = useState("");
-  const [vehicleDocument, setVehicleDocument] = useState("");
-  const [renavam, setRenavam] = useState("");
-  const [debts, setDebts] = useState<VehicleDebt[]>([]);
-
-  async function lookup() {
-    if (!validateBillCode(code))
-      return setMessage("Informe uma linha digitável ou código de barras válido.");
-    setLoading(true);
-    try {
-      const bill = await lookupBill(code);
-      setBillId(bill.id);
-      setMessage(
-        `Beneficiário: ${bill.beneficiary ?? "não informado"} · R$ ${bill.amount.toFixed(
-          2,
-        )} · vencimento ${bill.dueDate}`,
-      );
-    } catch {
-      setMessage("Não foi possível consultar o boleto.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function pay() {
-    if (!billId) return;
-    setLoading(true);
-    try {
-      await authorizeBill(billId);
-      const result = await payBill(billId, `bill-${billId}`);
-      setMessage(`Boleto ${result.status.toLowerCase()}: ${result.id}`);
-    } catch {
-      setMessage("Pagamento indisponível ou em análise.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function topUp() {
-    const value = Number(topUpAmount.replace(",", "."));
-    if (!operatorId || !productId || !phone || !validateAmount(value))
-      return setMessage("Confira operadora, produto, telefone e valor.");
-    setLoading(true);
-    try {
-      const result = await createTopUp(
-        { operatorId, productId, phone, amount: value },
-        `topup-${Date.now()}`,
-      );
-      setMessage(`Recarga ${result.status.toLowerCase()}: ${result.id}`);
-    } catch {
-      setMessage("Não foi possível realizar a recarga.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function lookupDebts() {
-    if (!vehicleDocument || !renavam) return setMessage("Informe documento e RENAVAM.");
-    setLoading(true);
-    try {
-      setDebts(await lookupVehicleDebts(vehicleDocument, renavam));
-      setMessage("Débitos consultados.");
-    } catch {
-      setMessage("Não foi possível consultar os débitos veiculares.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function payDebts() {
-    const openDebts = debts.filter((debt) => debt.status === "OPEN");
-    if (!openDebts.length) return setMessage("Não há débitos abertos para pagamento.");
-    setLoading(true);
-    try {
-      const result = await payVehicleDebts(
-        openDebts.map((debt) => debt.id),
-        `vehicle-${Date.now()}`,
-      );
-      setMessage(`Débitos ${result.status.toLowerCase()}: ${result.id}`);
-    } catch {
-      setMessage("Não foi possível pagar os débitos veiculares.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  return (
-    <ScrollView testID="payments-screen" contentContainerStyle={styles.container}>
-      <Text accessibilityRole="header" style={styles.title}>
-        Boletos e pagamentos
-      </Text>
-      <TextInput
-        accessibilityLabel="Linha digitável"
-        placeholder="Linha digitável ou código de barras"
-        value={code}
-        onChangeText={setCode}
-        keyboardType="number-pad"
-      />
-      <Button title="Consultar boleto" disabled={loading} onPress={() => lookup()} />
-      {message ? <Text accessibilityRole="alert">{message}</Text> : null}
-      {billId ? (
-        <Button title="Autorizar e pagar" disabled={loading} onPress={() => pay()} />
-      ) : null}
-      <Text style={styles.subtitle}>Recarga de celular</Text>
-      <TextInput
-        accessibilityLabel="Operadora"
-        placeholder="ID da operadora"
-        value={operatorId}
-        onChangeText={setOperatorId}
-      />
-      <TextInput
-        accessibilityLabel="Produto da recarga"
-        placeholder="ID do produto"
-        value={productId}
-        onChangeText={setProductId}
-      />
-      <TextInput
-        accessibilityLabel="Telefone da recarga"
-        placeholder="Telefone"
-        value={phone}
-        onChangeText={setPhone}
-      />
-      <TextInput
-        accessibilityLabel="Valor da recarga"
-        placeholder="Valor"
-        keyboardType="decimal-pad"
-        value={topUpAmount}
-        onChangeText={setTopUpAmount}
-      />
-      <Button title="Realizar recarga" disabled={loading} onPress={() => topUp()} />
-      <Button
-        title="Listar operadoras"
-        onPress={() =>
-          listTopUpOperators()
-            .then(() => setMessage("Operadoras carregadas."))
-            .catch(() => setMessage("Não foi possível carregar as operadoras."))
-        }
-      />
-      <Text style={styles.subtitle}>Débitos veiculares</Text>
-      <TextInput
-        accessibilityLabel="Documento veicular"
-        placeholder="CPF ou CNPJ"
-        value={vehicleDocument}
-        onChangeText={setVehicleDocument}
-      />
-      <TextInput
-        accessibilityLabel="RENAVAM"
-        placeholder="RENAVAM"
-        value={renavam}
-        onChangeText={setRenavam}
-      />
-      <Button title="Consultar débitos" disabled={loading} onPress={() => lookupDebts()} />
-      {debts.map((debt) => (
-        <Text key={debt.id}>
-          {debt.description} · R$ {debt.amount.toFixed(2)} · {debt.status}
-        </Text>
-      ))}
-      {debts.length ? (
-        <Button title="Pagar débitos selecionados" disabled={loading} onPress={() => payDebts()} />
-      ) : null}
-    </ScrollView>
-  );
+  const [code, setCode] = useState(""); const [bill, setBill] = useState<Bill | null>(null);
+  const [message, setMessage] = useState<string | null>(null); const [loading, setLoading] = useState(false);
+  const [operators, setOperators] = useState<Operator[]>([]); const [products, setProducts] = useState<Product[]>([]);
+  const [operatorId, setOperatorId] = useState(""); const [productId, setProductId] = useState(""); const [phone, setPhone] = useState(""); const [topUpAmount, setTopUpAmount] = useState("");
+  const [vehicleDocument, setVehicleDocument] = useState(""); const [renavam, setRenavam] = useState(""); const [debts, setDebts] = useState<VehicleDebt[]>([]);
+  const [confirming, setConfirming] = useState<"bill" | "topup" | "vehicle" | null>(null);
+  useEffect(() => { listTopUpOperators().then(setOperators).catch(() => setMessage("Não foi possível carregar as operadoras.")); }, []);
+  useEffect(() => { if (!operatorId) return setProducts([]); setProductId(""); listTopUpProducts(operatorId).then(setProducts).catch(() => setMessage("Não foi possível carregar os valores da operadora.")); }, [operatorId]);
+  async function lookup() { if (!validateBillCode(code)) return setMessage("Informe uma linha digitável ou código de barras válido."); setLoading(true); try { setBill(await lookupBill(code)); setMessage(null); } catch { setMessage("Não foi possível consultar o boleto."); } finally { setLoading(false); } }
+  async function pay() { if (!bill) return; setLoading(true); try { await authorizeBill(bill.id); const result = await payBill(bill.id, `bill-${bill.id}`); setMessage(`Pagamento realizado com sucesso. Identificador: ${result.id}`); setConfirming(null); } catch { setMessage("Pagamento indisponível ou em análise."); } finally { setLoading(false); } }
+  function requestTopUpConfirmation() { const value = Number(topUpAmount.replace(",", ".")); if (!operatorId || !productId || !phone || !validateAmount(value)) return setMessage("Confira operadora, produto, telefone e valor."); setConfirming("topup"); }
+  async function topUp() { setLoading(true); try { const result = await createTopUp({ operatorId, productId, phone: phone.replace(/\D/g, ""), amount: Number(topUpAmount.replace(",", ".")) }, `topup-${Date.now()}`); setMessage(`Recarga realizada com sucesso. Identificador: ${result.id}`); setConfirming(null); } catch { setMessage("Não foi possível realizar a recarga."); } finally { setLoading(false); } }
+  async function lookupDebts() { if (!vehicleDocument || !renavam) return setMessage("Informe CPF/CNPJ e RENAVAM."); setLoading(true); try { setDebts(await lookupVehicleDebts(vehicleDocument.replace(/\D/g, ""), renavam)); } catch { setMessage("Não foi possível consultar os débitos veiculares."); } finally { setLoading(false); } }
+  async function payDebts() { setLoading(true); try { const result = await payVehicleDebts(openDebts.map((debt) => debt.id), `vehicle-${Date.now()}`); setMessage(`Débitos pagos com sucesso. Identificador: ${result.id}`); setConfirming(null); } catch { setMessage("Não foi possível pagar os débitos veiculares."); } finally { setLoading(false); } }
+  const selectedOperator = operators.find((operator) => operator.id === operatorId)?.name; const selectedProduct = products.find((product) => product.id === productId); const openDebts = debts.filter((debt) => debt.status === "OPEN");
+  return <ScrollView testID="payments-screen" contentContainerStyle={styles.container}>
+    <Text accessibilityRole="header" variant="headlineMedium">Pagamentos</Text><Text variant="bodyMedium" style={styles.description}>Consulte, confira e confirme seus pagamentos com segurança.</Text>
+    <View style={styles.grid}>
+      <Card mode="elevated" style={styles.mainCard}><Card.Title title="Pagar boleto" subtitle="Linha digitável ou código de barras" /><Card.Content style={styles.section}><TextInput accessibilityLabel="Linha digitável" label="Linha digitável" mode="outlined" placeholder="Digite ou cole o código" value={code} onChangeText={setCode} keyboardType="number-pad" /><Button mode="contained" loading={loading} disabled={loading} onPress={lookup}>Consultar boleto</Button>{bill ? <Card mode="outlined"><Card.Content style={styles.summary}><Text variant="titleSmall">{bill.beneficiary ?? "Beneficiário não informado"}</Text><Text variant="headlineSmall">{formatCurrency(bill.amount)}</Text><Text>Vencimento: {bill.dueDate}</Text><Button mode="contained" onPress={() => setConfirming("bill")}>Continuar para confirmação</Button></Card.Content></Card> : null}</Card.Content></Card>
+      <Card mode="outlined" style={styles.sideCard}><Card.Title title="Recarga de celular" /><Card.Content style={styles.section}><Text variant="labelLarge">Escolha sua operadora</Text><View style={styles.chips}>{operators.map((operator) => <Chip key={operator.id} selected={operator.id === operatorId} onPress={() => setOperatorId(operator.id)}>{operator.name}</Chip>)}</View>{operatorId ? <><Text variant="labelLarge">Escolha o valor</Text><View style={styles.chips}>{products.map((product) => <Chip key={product.id} selected={product.id === productId} onPress={() => { setProductId(product.id); setTopUpAmount(String(product.amount)); }}>{product.name || formatCurrency(product.amount)}</Chip>)}</View></> : null}<TextInput accessibilityLabel="Telefone da recarga" label="Celular" mode="outlined" placeholder="(00) 00000-0000" keyboardType="phone-pad" value={phone} onChangeText={(value) => setPhone(formatPhone(value))} /><TextInput accessibilityLabel="Valor da recarga" label="Valor" mode="outlined" keyboardType="decimal-pad" value={topUpAmount} onChangeText={setTopUpAmount} /><Button mode="contained-tonal" onPress={requestTopUpConfirmation}>Revisar recarga</Button></Card.Content></Card>
+    </View>
+    <Card mode="outlined"><Card.Title title="Débitos veiculares" /><Card.Content style={styles.section}><View style={styles.row}><TextInput style={styles.input} accessibilityLabel="Documento veicular" label="CPF ou CNPJ" mode="outlined" value={vehicleDocument} onChangeText={(value) => setVehicleDocument(formatDocument(value))} /><TextInput style={styles.input} accessibilityLabel="RENAVAM" label="RENAVAM" mode="outlined" value={renavam} onChangeText={setRenavam} keyboardType="number-pad" /></View><Button mode="outlined" loading={loading} onPress={lookupDebts}>Consultar débitos</Button>{debts.map((debt) => <View key={debt.id} style={styles.debt}><Text>{debt.description}</Text><Text>{formatCurrency(debt.amount)} · {debt.status === "OPEN" ? "Em aberto" : debt.status}</Text></View>)}{openDebts.length ? <Button mode="contained" onPress={() => setConfirming("vehicle")}>Revisar pagamento de débitos</Button> : null}</Card.Content></Card>
+    {confirming ? <Card mode="elevated" style={styles.confirmation}><Card.Content style={styles.section}><Text variant="titleLarge">Confirme o pagamento</Text><Divider />{confirming === "bill" && bill ? <><Text>{bill.beneficiary}</Text><Text variant="headlineSmall">{formatCurrency(bill.amount)}</Text><Text>Vencimento: {bill.dueDate}</Text></> : null}{confirming === "topup" ? <><Text>{selectedOperator} · {phone}</Text><Text>{selectedProduct?.name}</Text><Text variant="headlineSmall">{formatCurrency(Number(topUpAmount.replace(",", ".")))}</Text></> : null}{confirming === "vehicle" ? <><Text>{openDebts.length} débito(s) selecionado(s)</Text><Text variant="headlineSmall">{formatCurrency(openDebts.reduce((total, debt) => total + debt.amount, 0))}</Text></> : null}<View style={styles.confirmActions}><Button mode="text" onPress={() => setConfirming(null)}>Voltar</Button><Button mode="contained" loading={loading} onPress={confirming === "bill" ? pay : confirming === "topup" ? topUp : payDebts}>Confirmar pagamento</Button></View></Card.Content></Card> : null}
+    {message ? <Text accessibilityRole="alert" style={styles.message}>{message}</Text> : null}
+  </ScrollView>;
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, gap: 16, justifyContent: "center", padding: 24 },
-  title: { fontSize: 28, fontWeight: "700" },
-  subtitle: { fontSize: 20, fontWeight: "600", marginTop: 12 },
-});
+const styles = StyleSheet.create({ container: { alignSelf: "center", gap: 16, maxWidth: 1240, padding: 16, width: "100%" }, description: { color: "#52605C" }, grid: { flexDirection: "row", flexWrap: "wrap", gap: 16 }, mainCard: { flex: 1.2, minWidth: 0 }, sideCard: { flex: 1, minWidth: 0 }, section: { gap: 14 }, summary: { gap: 8 }, chips: { flexDirection: "row", flexWrap: "wrap", gap: 8 }, row: { flexDirection: "row", flexWrap: "wrap", gap: 12 }, input: { flex: 1, minWidth: 0 }, debt: { flexDirection: "row", flexWrap: "wrap", gap: 4, justifyContent: "space-between", paddingVertical: 6 }, confirmation: { borderColor: "#006C5B", borderWidth: 1 }, confirmActions: { flexDirection: "row", flexWrap: "wrap", gap: 8, justifyContent: "flex-end" }, message: { color: "#006C5B", paddingVertical: 8 } });

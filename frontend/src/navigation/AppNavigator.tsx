@@ -1,6 +1,6 @@
 import { NavigationContainer, type LinkingOptions } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { useEffect } from "react";
+import { useEffect, type ComponentType } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { useSessionStore } from "@/core/auth/session-store";
 import { LoginScreen } from "@/screens/LoginScreen";
@@ -15,6 +15,7 @@ import { OperationsScreen } from "@/screens/OperationsScreen";
 import { OnboardingScreen } from "@/screens/OnboardingScreen";
 import { AccountServicesScreen } from "@/screens/AccountServicesScreen";
 import { PixManagementScreen } from "@/screens/PixManagementScreen";
+import { WebAppShell } from "@/components/WebAppShell";
 import { navigationTheme } from "@/ui/theme";
 
 type RootStackParamList = {
@@ -35,8 +36,36 @@ type RootStackParamList = {
 const Stack = createStackNavigator<RootStackParamList>();
 const linking: LinkingOptions<RootStackParamList> = {
   prefixes: ["celcoin://", "https://app.example.com"],
-  config: { screens: { Login: "login", Onboarding: "onboarding", Home: "home" } },
+  config: {
+    screens: {
+      Login: "login",
+      Onboarding: "onboarding",
+      Home: "home",
+      Statement: "extrato",
+      Profile: "perfil",
+      Pix: "pix",
+      Payments: "pagamentos",
+      FinancialProducts: "produtos",
+      OpenFinance: "open-finance",
+      Operations: "suporte",
+      AccountServices: "servicos",
+      PixManagement: "pix/chaves",
+    },
+  },
 };
+
+function withWebShell<RouteName extends keyof RootStackParamList>(
+  Screen: ComponentType<any>,
+  routeName: Exclude<RouteName, "Login" | "Onboarding" | "PixManagement">,
+) {
+  return function ScreenWithWebShell(props: any) {
+    return (
+      <WebAppShell navigation={props.navigation} routeName={routeName}>
+        <Screen {...props} />
+      </WebAppShell>
+    );
+  };
+}
 
 export function AppNavigator() {
   const { hydrated, session, restore } = useSessionStore();
@@ -54,59 +83,50 @@ export function AppNavigator() {
 
   return (
     <NavigationContainer linking={linking} theme={navigationTheme}>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
         {session ? (
           <>
             <Stack.Screen
               name="Home"
-              component={AccountDashboardScreen}
-              options={{ title: "Celcoin" }}
+              component={withWebShell(AccountDashboardScreen, "Home")}
             />
             <Stack.Screen
               name="Statement"
-              component={StatementScreen}
-              options={{ title: "Extrato" }}
+              component={withWebShell(StatementScreen, "Statement")}
             />
-            <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: "Perfil" }} />
-            <Stack.Screen name="Pix" component={PixScreen} options={{ title: "Pix" }} />
+            <Stack.Screen name="Profile" component={withWebShell(ProfileScreen, "Profile")} />
+            <Stack.Screen name="Pix" component={withWebShell(PixScreen, "Pix")} />
             <Stack.Screen
               name="PixManagement"
-              component={PixManagementScreen}
-              options={{ title: "Gestão Pix" }}
+              component={withWebShell(PixManagementScreen, "Pix")}
             />
             <Stack.Screen
               name="Payments"
-              component={PaymentsScreen}
-              options={{ title: "Boletos e pagamentos" }}
+              component={withWebShell(PaymentsScreen, "Payments")}
             />
             <Stack.Screen
               name="FinancialProducts"
-              component={FinancialProductsScreen}
-              options={{ title: "Produtos financeiros" }}
+              component={withWebShell(FinancialProductsScreen, "FinancialProducts")}
             />
             <Stack.Screen
               name="OpenFinance"
-              component={OpenFinanceScreen}
-              options={{ title: "Open Finance" }}
+              component={withWebShell(OpenFinanceScreen, "OpenFinance")}
             />
             <Stack.Screen
               name="Operations"
-              component={OperationsScreen}
-              options={{ title: "Suporte e operação" }}
+              component={withWebShell(OperationsScreen, "Operations")}
             />
             <Stack.Screen
               name="AccountServices"
-              component={AccountServicesScreen}
-              options={{ title: "Serviços da conta" }}
+              component={withWebShell(AccountServicesScreen, "AccountServices")}
             />
           </>
         ) : (
           <>
-            <Stack.Screen name="Login" component={LoginScreen} options={{ title: "Entrar" }} />
+            <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen
               name="Onboarding"
               component={OnboardingScreen}
-              options={{ title: "Abertura de conta" }}
             />
           </>
         )}
