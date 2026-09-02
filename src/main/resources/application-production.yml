@@ -1,0 +1,8 @@
+mobile:
+  bff:
+    enabled: ${MOBILE_BFF_ENABLED:true}
+springdoc:
+  api-docs:
+    enabled: ${MOBILE_BFF_OPENAPI_ENABLED:false}
+  swagger-ui:
+    enabled: false

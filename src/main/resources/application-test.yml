@@ -11,3 +11,6 @@ celcoin:
   client-secret: test-secret
   webhook:
     secret: test-webhook-secret
+mobile:
+  bff:
+    enabled: true

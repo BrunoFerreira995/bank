@@ -6,3 +6,6 @@ celcoin:
 logging:
   level:
     com.brunopedraca.celcoin: INFO
+mobile:
+  bff:
+    enabled: true

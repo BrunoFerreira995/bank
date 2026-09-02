@@ -16,6 +16,17 @@ management:
     web:
       exposure:
         include: health,info,metrics
+mobile:
+  bff:
+    enabled: ${MOBILE_BFF_ENABLED:true}
+    session-ttl: ${MOBILE_BFF_SESSION_TTL:15m}
+    refresh-ttl: ${MOBILE_BFF_REFRESH_TTL:30d}
+    mfa-challenge-ttl: ${MOBILE_BFF_MFA_CHALLENGE_TTL:5m}
+    mfa-encryption-key: ${MOBILE_BFF_MFA_ENCRYPTION_KEY:}
+    features:
+      cards: ${MOBILE_BFF_FEATURE_CARDS:false}
+      credit: ${MOBILE_BFF_FEATURE_CREDIT:false}
+      escrow: ${MOBILE_BFF_FEATURE_ESCROW:false}
 celcoin:
   enabled: true
   environment: sandbox
