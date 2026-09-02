@@ -27,6 +27,8 @@ mobile:
       cards: ${MOBILE_BFF_FEATURE_CARDS:false}
       credit: ${MOBILE_BFF_FEATURE_CREDIT:false}
       escrow: ${MOBILE_BFF_FEATURE_ESCROW:false}
+    admin:
+      enabled: ${MOBILE_BFF_ADMIN_ENABLED:false}
 celcoin:
   enabled: true
   environment: sandbox

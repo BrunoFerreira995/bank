@@ -25,7 +25,15 @@ public record CelcoinProperties(
         @Valid SslProperties ssl) {
     public record RetryProperties(int maxAttempts, @NotNull Duration initialBackoff) {}
 
-    public record WebhookProperties(String secret, long maxPayloadBytes, @NotNull Duration replayWindow) {}
+    public record WebhookProperties(
+            String secret,
+            long maxPayloadBytes,
+            @NotNull Duration replayWindow,
+            boolean allowUnsignedInTests) {
+        public WebhookProperties(String secret, long maxPayloadBytes, Duration replayWindow) {
+            this(secret, maxPayloadBytes, replayWindow, false);
+        }
+    }
 
     public record SslProperties(
             boolean enabled,

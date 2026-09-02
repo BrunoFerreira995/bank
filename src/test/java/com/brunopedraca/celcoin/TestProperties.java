@@ -19,7 +19,7 @@ public final class TestProperties {
                 Duration.ofSeconds(60),
                 false,
                 new CelcoinProperties.RetryProperties(3, Duration.ofMillis(10)),
-                new CelcoinProperties.WebhookProperties("", 1024 * 1024, Duration.ofMinutes(5)),
+                new CelcoinProperties.WebhookProperties("", 1024 * 1024, Duration.ofMinutes(5), true),
                 new CelcoinProperties.SslProperties(false, null, "PKCS12", null, null, null, "PKCS12", null));
     }
 
@@ -36,7 +36,7 @@ public final class TestProperties {
                 Duration.ofSeconds(60),
                 false,
                 new CelcoinProperties.RetryProperties(3, Duration.ofMillis(10)),
-                new CelcoinProperties.WebhookProperties("", 1024 * 1024, Duration.ofMinutes(5)),
+                new CelcoinProperties.WebhookProperties("", 1024 * 1024, Duration.ofMinutes(5), true),
                 ssl);
     }
 }

@@ -22,14 +22,20 @@ public class CelcoinWebhookSignatureVerifier {
     public void verify(byte[] payload, HttpHeaders headers) {
         String secret = properties.webhook().secret();
         if (secret == null || secret.isBlank()) {
-            return;
+            if (properties.webhook().allowUnsignedInTests()) return;
+            throw new CelcoinUnauthorizedException("Celcoin webhook signing secret is not configured");
         }
         String timestamp = headers.getFirst("X-Celcoin-Timestamp");
         String signature = headers.getFirst("X-Celcoin-Signature");
         if (timestamp == null || signature == null) {
             throw new CelcoinUnauthorizedException("Missing Celcoin webhook signature headers");
         }
-        long epochSeconds = Long.parseLong(timestamp);
+        final long epochSeconds;
+        try {
+            epochSeconds = Long.parseLong(timestamp);
+        } catch (NumberFormatException exception) {
+            throw new CelcoinUnauthorizedException("Invalid Celcoin webhook timestamp");
+        }
         long skew = Math.abs(Instant.now().getEpochSecond() - epochSeconds);
         if (skew > properties.webhook().replayWindow().toSeconds()) {
             throw new CelcoinUnauthorizedException("Celcoin webhook timestamp is outside the replay window");

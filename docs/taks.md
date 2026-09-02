@@ -158,24 +158,24 @@ escrita por suporte e administrador sem grant.
 
 ### 6.1 Webhooks
 
-- [ ] Remover comportamento fail-open quando o segredo estiver ausente.
-- [ ] Em staging/production, falhar na inicializaÃ§Ã£o ou rejeitar webhooks sem
+- [x] Remover comportamento fail-open quando o segredo estiver ausente.
+- [x] Em staging/production, falhar na inicializaÃ§Ã£o ou rejeitar webhooks sem
       configuraÃ§Ã£o vÃ¡lida.
-- [ ] Permitir configuraÃ§Ã£o sem segredo somente em perfil de teste explÃ­cito.
-- [ ] Validar assinatura em tempo constante.
-- [ ] Tratar timestamp invÃ¡lido sem retornar erro interno.
-- [ ] Validar janela antirreplay.
-- [ ] Validar limite de payload antes do processamento.
-- [ ] Deduplicar por identificador externo.
-- [ ] Testar assinatura ausente, invÃ¡lida, expirada e repetida.
+- [x] Permitir configuraÃ§Ã£o sem segredo somente em perfil de teste explÃ­cito.
+- [x] Validar assinatura em tempo constante.
+- [x] Tratar timestamp invÃ¡lido sem retornar erro interno.
+- [x] Validar janela antirreplay.
+- [x] Validar limite de payload antes do processamento.
+- [x] Deduplicar por identificador externo.
+- [x] Testar assinatura ausente, invÃ¡lida, expirada e repetida.
 
 ### 6.2 AdministraÃ§Ã£o
 
-- [ ] Proteger `GET /admin/webhooks`.
-- [ ] Proteger `POST /admin/webhooks/{id}/retry`.
-- [ ] Exigir papel administrativo/operacional apropriado.
-- [ ] Auditar consultas e reprocessamentos.
-- [ ] Desabilitar endpoints administrativos por padrÃ£o no SDK ou condicionÃ¡-los
+- [x] Proteger `GET /admin/webhooks`.
+- [x] Proteger `POST /admin/webhooks/{id}/retry`.
+- [x] Exigir papel administrativo/operacional apropriado.
+- [x] Auditar consultas e reprocessamentos.
+- [x] Desabilitar endpoints administrativos por padrÃ£o no SDK ou condicionÃ¡-los
       a configuraÃ§Ã£o explÃ­cita.
 
 ### 6.3 IdempotÃªncia concorrente
